@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-const { BASE_URL } = process.env;
+const { REACT_APP_BASE_URL } = process.env;
 
 const api = axios.create();
 
-api.defaults.baseURL = BASE_URL;
+api.defaults.baseURL = REACT_APP_BASE_URL;
 
 // api.defaults.headers = {
 //   'Access-Control-Allow-Origin': '*',

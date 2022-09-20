@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
-import Card, { CardStatus } from '../../components/Card';
+import Card from '../../components/Card';
 
-import { Cards } from '../../interfaces/Cards';
+import { Cards, CardStatus } from '../../interfaces/Cards';
 
 import { fetchVerbs } from '../../services/api';
 

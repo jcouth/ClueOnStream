@@ -1,13 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import * as S from './styles';
+import { CardStatus } from '../../interfaces/Cards';
 
-export enum CardStatus {
-  UNOPEN = 'UNOPEN',
-  OPEN = 'OPEN',
-  WRONG = 'WRONG',
-  GAME_OVER = 'GAME_OVER',
-}
+import * as S from './styles';
 
 interface Props {
   title?: string;

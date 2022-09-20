@@ -21,7 +21,7 @@ const Card: React.FC<Props> = ({ title, status, onOpen }) => {
   const [color, setColor] = useState(colors[CardStatus.UNOPEN]);
 
   const handleOpen = useCallback(() => {
-    console.log(CardStatus.UNOPEN, colors[CardStatus.UNOPEN]);
+    // animate style
     onOpen();
   }, [onOpen]);
 

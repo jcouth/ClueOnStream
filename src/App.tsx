@@ -5,7 +5,7 @@ import { ThemeProvider } from 'styled-components';
 import { GlobalStyle } from './global/styles/styles';
 import theme from './global/styles/theme';
 
-import InGame from './InGame';
+import InGame from './pages/InGame';
 
 import './App.css';
 

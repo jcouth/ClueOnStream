@@ -1,5 +1,7 @@
 import React from 'react';
 
+import * as S from './styles';
+
 const InGame = () => {
   const border = '5px solid black';
   const style = { border, borderRadius: '12px' };
@@ -7,50 +9,13 @@ const InGame = () => {
   const cards = Array(25).fill(null);
 
   return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '350px 1fr',
-        columnGap: 26,
-
-        paddingTop: 46,
-        paddingLeft: 72,
-        paddingRight: 72,
-        paddingBottom: 20,
-      }}
-    >
-      <aside
-        style={{
-          display: 'grid',
-          gridTemplateRows: '1fr 218px',
-          rowGap: 20,
-        }}
-      >
-        <div style={style}></div>
-        <div style={style}></div>
-      </aside>
-      <main
-        style={{
-          ...style,
-          display: 'grid',
-          gridTemplateRows: '1fr 60px',
-          rowGap: 22,
-
-          padding: 16,
-
-          boxSizing: 'border-box',
-        }}
-      >
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateRows: 'repeat(5, 100px)',
-            gridTemplateColumns: 'repeat(5, 160px)',
-            gap: 10,
-            justifyContent: 'center',
-            boxSizing: 'border-box',
-          }}
-        >
+    <S.Container>
+      <S.Aside>
+        <S.Chat></S.Chat>
+        <S.Cam></S.Cam>
+      </S.Aside>
+      <S.Content>
+        <S.Board>
           {cards.map((_, i) => (
             <div
               style={{
@@ -113,7 +78,7 @@ const InGame = () => {
               </div>
             </div>
           ))}
-        </div>
+        </S.Board>
         <div
           style={
             {
@@ -121,8 +86,8 @@ const InGame = () => {
             }
           }
         ></div>
-      </main>
-    </div>
+      </S.Content>
+    </S.Container>
   );
 };
 

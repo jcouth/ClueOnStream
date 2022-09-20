@@ -11,16 +11,26 @@ import * as S from './styles';
 const InGame = () => {
   const [cards, setCards] = useState<Cards[]>([]);
 
-  const randomizeAndFilter = (array: Cards[], maxItems: number) => {
+  const shuffleAndSlice = (array: string[], maxItems: number) => {
     const shuffled = [...array].sort(() => 0.5 - Math.random());
 
     return shuffled.slice(0, maxItems);
   };
 
+  const convertToCards = (array: string[]) => {
+    return [...array].map((item, index) => ({
+      id: index,
+      title: item,
+      status: CardStatus.UNOPEN,
+    }));
+  };
+
   const getVerbs = async () => {
     try {
       const { data } = await fetchVerbs();
-      const newCards = randomizeAndFilter(data, 25);
+
+      const shuffledData = shuffleAndSlice(data, 25);
+      const newCards = convertToCards(shuffledData);
 
       setCards(newCards);
     } catch (error) {

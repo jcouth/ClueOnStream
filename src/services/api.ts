@@ -1,22 +1,37 @@
+import { CardStatus } from '../components/Card';
+import { Cards } from '../interfaces/Cards';
 import { api } from './client';
 
-// api.interceptors.response.use(
-//   (response) => response,
-//   (error) => error
-// );
+api.interceptors.response.use(
+  ({ data, ...rest }) => {
+    const newData: Cards[] = (data as string)
+      .split('\n')
+      .map((item, index) => ({
+        id: index,
+        title: item,
+        status: CardStatus.UNOPEN,
+      }));
+
+    return {
+      ...rest,
+      data: newData,
+    };
+  },
+  (error) => error
+);
 
 export const fetchConjugations = () => {
-  return api.get<string[]>('/conjugações');
+  return api.get<Cards[]>('/conjugações');
 };
 
 export const fetchDicio = () => {
-  return api.get<string[]>('/dicio');
+  return api.get<Cards[]>('/dicio');
 };
 
 export const fetchWords = () => {
-  return api.get<string[]>('/palavras');
+  return api.get<Cards[]>('/palavras');
 };
 
 export const fetchVerbs = () => {
-  return api.get<string[]>('/verbos');
+  return api.get<Cards[]>('/verbos');
 };

@@ -12,7 +12,8 @@ interface Props {
 
 const colors: { [key in keyof typeof CardStatus]: string } = {
   UNOPEN: '#DBBEA1',
-  OPEN: '#D34F73',
+  RED_TEAM: '#D34F73',
+  BLUE_TEAM: '#634fd3',
   WRONG: '#3F292B',
   GAME_OVER: 'rgba(0, 0, 0, 0.5)',
 };

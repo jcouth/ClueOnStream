@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 
+import { useNavigate } from 'react-router';
+
 import { shuffleAndSlice } from '../../helpers/shuffleAndSlice';
 
 import { fetchVerbs } from '../../services/api';
@@ -9,26 +11,32 @@ import * as S from './styles';
 const MAX_CARDS = 25;
 
 const Home = () => {
-  const words = useRef<string[]>([]);
+  const allWords = useRef<string[]>([]);
+  const navigate = useNavigate();
 
   const handleNewGame = () => {
-    const cards = shuffleAndSlice(words.current, MAX_CARDS);
+    const words = shuffleAndSlice(allWords.current, MAX_CARDS);
 
-    // navigate('', cards);
+    navigate('game', {
+      state: {
+        words,
+        seconds: 10,
+      },
+    });
   };
 
   const getVerbs = async () => {
     try {
       const { data } = await fetchVerbs();
 
-      words.current = data;
+      allWords.current = data;
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    if (words.current.length === 0) {
+    if (allWords.current.length === 0) {
       getVerbs();
     }
   }, []);

@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
+import { useLocation } from 'react-router';
+
 import Card from '../../components/Card';
 
 import { Cards, CardStatus } from '../../interfaces/Cards';
@@ -18,13 +20,16 @@ interface ClueProps {
 }
 interface Props {
   words: string[];
-  secondsPerRound?: number;
+  seconds: number;
 }
 
 const DEFAULT_CLUE_DESCRIPTION = 'Aguarde até a próxima dica';
 const INTERVAL_MS = 100;
 
-const InGame: React.FC<Props> = ({ words, secondsPerRound = 5 }) => {
+const InGame: React.FC<Props> = () => {
+  const { state } = useLocation();
+  const { words, seconds } = state as Props; // Read values passed on state
+
   const progressDecay = useRef<number>(1);
   const progressRef = useRef<NodeJS.Timer>();
   const inputClueRef = useRef<HTMLInputElement>(null);
@@ -94,10 +99,10 @@ const InGame: React.FC<Props> = ({ words, secondsPerRound = 5 }) => {
     const intervalPerSecond = 1000 / INTERVAL_MS;
 
     // 100% / seconds per round / interval per second
-    const decay = 100 / secondsPerRound / intervalPerSecond;
+    const decay = 100 / seconds / intervalPerSecond;
 
     progressDecay.current = decay;
-  }, [secondsPerRound]);
+  }, [seconds]);
 
   useEffect(() => {
     getCards();

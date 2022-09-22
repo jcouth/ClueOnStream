@@ -5,7 +5,7 @@ import { ThemeProvider } from 'styled-components';
 import { GlobalStyle } from './global/styles/styles';
 import theme from './global/styles/theme';
 
-import InGame from './pages/InGame';
+import Home from './pages/Home';
 
 import './App.css';
 
@@ -25,7 +25,7 @@ function App() {
           backgroundColor: '#A37B73',
         }}
       >
-        <InGame />
+        <Home />
       </div>
     </ThemeProvider>
   );

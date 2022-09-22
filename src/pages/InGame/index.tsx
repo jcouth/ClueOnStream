@@ -1,10 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import Card from '../../components/Card';
 
 import { Cards, CardStatus } from '../../interfaces/Cards';
-
-import { fetchVerbs } from '../../services/api';
 
 import * as S from './styles';
 
@@ -19,13 +17,14 @@ interface ClueProps {
   team: Team;
 }
 interface Props {
+  words: string[];
   secondsPerRound?: number;
 }
 
 const DEFAULT_CLUE_DESCRIPTION = 'Aguarde até a próxima dica';
 const INTERVAL_MS = 100;
 
-const InGame: React.FC<Props> = ({ secondsPerRound = 5 }) => {
+const InGame: React.FC<Props> = ({ words, secondsPerRound = 5 }) => {
   const progressDecay = useRef<number>(1);
   const progressRef = useRef<NodeJS.Timer>();
   const inputClueRef = useRef<HTMLInputElement>(null);
@@ -68,36 +67,15 @@ const InGame: React.FC<Props> = ({ secondsPerRound = 5 }) => {
     });
   };
 
-  const shuffleAndSlice = (array: string[], maxItems: number) => {
-    const shuffled = [...array].sort(() => 0.5 - Math.random());
-
-    return shuffled.slice(0, maxItems);
-  };
-
-  const convertToCards = (array: string[]) => {
-    return [...array].map((item, index) => ({
+  const getCards = useCallback(() => {
+    const newCards = words.map((item, index) => ({
       id: index,
       title: item,
       status: CardStatus.UNOPEN,
     }));
-  };
 
-  const getVerbs = async () => {
-    try {
-      const { data } = await fetchVerbs();
-
-      const shuffledData = shuffleAndSlice(data, 25);
-      const newCards = convertToCards(shuffledData);
-
-      setCards(newCards);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    getVerbs();
-  }, []);
+    setCards(newCards);
+  }, [words]);
 
   useEffect(() => {
     if (progress <= 0) {
@@ -120,6 +98,10 @@ const InGame: React.FC<Props> = ({ secondsPerRound = 5 }) => {
 
     progressDecay.current = decay;
   }, [secondsPerRound]);
+
+  useEffect(() => {
+    getCards();
+  }, [getCards]);
 
   return (
     <S.Container>

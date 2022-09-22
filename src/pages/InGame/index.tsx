@@ -23,6 +23,7 @@ interface Props {
 }
 
 const DEFAULT_CLUE_DESCRIPTION = 'Aguarde até a próxima dica';
+const INTERVAL_MS = 100;
 
 const InGame: React.FC<Props> = ({ secondsPerRound = 5 }) => {
   const progressDecay = useRef<number>(1);
@@ -51,7 +52,7 @@ const InGame: React.FC<Props> = ({ secondsPerRound = 5 }) => {
 
       progressRef.current = setInterval(
         () => setProgress((oldState) => oldState - progressDecay.current),
-        100
+        INTERVAL_MS
       );
     }
   };
@@ -111,8 +112,13 @@ const InGame: React.FC<Props> = ({ secondsPerRound = 5 }) => {
   }, [progress]);
 
   useEffect(() => {
-    // 100% / seconds per round / (1000/100 (from setInterval ms))
-    progressDecay.current = 100 / secondsPerRound / 10;
+    // 1 second in ms / interval ms
+    const intervalPerSecond = 1000 / INTERVAL_MS;
+
+    // 100% / seconds per round / interval per second
+    const decay = 100 / secondsPerRound / intervalPerSecond;
+
+    progressDecay.current = decay;
   }, [secondsPerRound]);
 
   return (

@@ -13,6 +13,7 @@
     "axios": "^0.27.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router": "^6.4.1",
     "react-router-dom": "^6.4.1",
     "react-scripts": "5.0.1",
     "styled-components": "^5.3.5",
@@ -45,6 +46,7 @@
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
+    "@types/react-router": "^5.1.19",
     "@types/react-router-dom": "^5.3.3",
     "@types/styled-components": "^5.1.26"
   }

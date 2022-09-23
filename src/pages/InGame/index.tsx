@@ -78,6 +78,7 @@ const InGame: React.FC<Props> = () => {
             isOpen: true,
           }));
           setCards(newCards);
+          setProgress(0);
         } else {
           if (
             (card.status === CardStatus.RED_TEAM && clue.team === Team.RED) ||

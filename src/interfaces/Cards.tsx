@@ -1,5 +1,4 @@
 export enum CardStatus {
-  UNOPEN = 'UNOPEN',
   RED_TEAM = 'RED_TEAM',
   BLUE_TEAM = 'BLUE_TEAM',
   WRONG = 'WRONG',
@@ -10,4 +9,5 @@ export interface Cards {
   id: number;
   title: string;
   status: CardStatus;
+  isOpen: boolean;
 }

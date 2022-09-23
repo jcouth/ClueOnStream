@@ -20,7 +20,7 @@ const Home = () => {
     navigate('game', {
       state: {
         words,
-        seconds: 10,
+        seconds: 60,
       },
     });
   };

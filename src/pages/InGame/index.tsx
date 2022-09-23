@@ -5,7 +5,7 @@ import { useLocation } from 'react-router';
 import Select from '../../components/Select';
 import Card from '../../components/Card';
 
-import { shuffleAndSlice } from '../../helpers/shuffleAndSlice';
+import { shuffleArray } from '../../helpers/shuffleArray';
 
 import { Cards, CardStatus } from '../../interfaces/Cards';
 
@@ -134,7 +134,7 @@ const InGame: React.FC<Props> = () => {
       isOpen: false,
     }));
 
-    const shuffled = shuffleAndSlice(newCards);
+    const shuffled = shuffleArray(newCards);
 
     setCards(shuffled);
   }, [words]);

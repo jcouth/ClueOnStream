@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 
 import { useNavigate } from 'react-router';
 
-import { shuffleAndSlice } from '../../helpers/shuffleAndSlice';
+import { shuffleArray } from '../../helpers/shuffleArray';
 
 import { fetchVerbs } from '../../services/api';
 
@@ -15,7 +15,8 @@ const Home = () => {
   const navigate = useNavigate();
 
   const handleNewGame = () => {
-    const words = shuffleAndSlice(allWords.current, MAX_CARDS);
+    const shuffled = shuffleArray(allWords.current);
+    const words = shuffled.slice(0, MAX_CARDS);
 
     navigate('game', {
       state: {

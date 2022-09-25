@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useLocation } from 'react-router';
 
-import Select from '../../components/Select';
 import Card from '../../components/Card';
+import Cam from '../../components/Cam';
 
 import { shuffleArray } from '../../helpers/shuffleArray';
 
@@ -12,8 +12,8 @@ import { Cards, CardStatus } from '../../interfaces/Cards';
 import * as S from './styles';
 
 enum Team {
-  RED = 'Vermelho',
-  BLUE = 'Azul',
+  RED = 'red',
+  BLUE = 'blue',
 }
 
 interface ClueProps {
@@ -28,7 +28,6 @@ interface Props {
 
 const DEFAULT_CLUE_DESCRIPTION = 'Aguarde até a próxima dica';
 const INTERVAL_MS = 100;
-const OPTIONS = [1, 2, 3, 4, 5, 6];
 
 const InGame: React.FC<Props> = () => {
   const { state } = useLocation();
@@ -36,24 +35,20 @@ const InGame: React.FC<Props> = () => {
 
   const progressDecay = useRef<number>(1);
   const progressRef = useRef<NodeJS.Timer>();
-  const inputClueRef = useRef<HTMLInputElement>(null);
 
   const [cards, setCards] = useState<Cards[]>([]);
   const [clue, setClue] = useState<ClueProps>({
     description: DEFAULT_CLUE_DESCRIPTION,
     team: Team.RED,
   });
-  const [amount, setAmount] = useState<number>(0);
   const [progress, setProgress] = useState<number>(100);
   const [isStreamerTurn, setIsStreamerTurn] = useState<boolean>(true);
 
-  const handleSendClue = () => {
-    if (isStreamerTurn && inputClueRef.current?.value) {
-      const currentClue = inputClueRef.current.value;
-
+  const handleSendClue = (description: string, amount: number) => {
+    if (isStreamerTurn) {
       setIsStreamerTurn(false);
       setClue((oldState) => ({
-        description: currentClue,
+        description,
         amount,
         team: oldState.team,
       }));
@@ -144,13 +139,8 @@ const InGame: React.FC<Props> = () => {
     if (progress <= 0) {
       clearInterval(progressRef.current);
 
-      if (inputClueRef.current) {
-        inputClueRef.current.value = '';
-      }
-
       setProgress(100);
       setIsStreamerTurn(true);
-      setAmount(0);
       setClue((oldState) => ({
         description: DEFAULT_CLUE_DESCRIPTION,
         team: oldState.team === Team.RED ? Team.BLUE : Team.RED,
@@ -176,26 +166,7 @@ const InGame: React.FC<Props> = () => {
     <S.Container>
       <S.Aside>
         <S.Chat></S.Chat>
-        <S.Cam>
-          <S.CamContent>
-            <S.ClueInput
-              ref={inputClueRef}
-              aria-autocomplete='none'
-              placeholder='Digite aqui'
-              disabled={!isStreamerTurn}
-            />
-            <Select
-              selected={amount}
-              onSelect={setAmount}
-              options={OPTIONS}
-              disabled={!isStreamerTurn}
-            />
-          </S.CamContent>
-          <S.Team>Dica para o time: {clue.team}</S.Team>
-          <S.ClueButton disabled={!isStreamerTurn} onClick={handleSendClue}>
-            Enviar
-          </S.ClueButton>
-        </S.Cam>
+        <Cam team={clue.team} onSend={handleSendClue} />
       </S.Aside>
       <S.Content>
         <S.Board>

@@ -9,51 +9,17 @@ export const Container = styled.div`
 `;
 
 export const Aside = styled.div`
-  display: grid;
-  grid-template-rows: 1fr 218px;
-  row-gap: 20px;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const Chat = styled.div`
-  border: 5px solid black;
-  border-radius: 12px;
-`;
-
-export const Cam = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  flex: 1;
+  margin-bottom: 20px;
 
   border: 5px solid black;
   border-radius: 12px;
 `;
-
-export const CamContent = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-export const ClueInput = styled.input`
-  padding: 6px 12px;
-
-  border-radius: 6px;
-`;
-
-export const ClueAmountSelect = styled.button`
-  padding: 6px 12px;
-
-  border-radius: 6px;
-`;
-
-export const ClueButton = styled.button`
-  padding: 6px 12px;
-
-  border-radius: 6px;
-`;
-
-export const Team = styled.p``;
 
 export const Content = styled.div`
   display: grid;

@@ -48,7 +48,7 @@ const Cam: React.FC<Props> = ({ team, onSend }) => {
         <CameraIcon />
         <S.Title>Posicione sua câmera aqui</S.Title>
       </S.Info>
-      <S.Content team={team}>
+      <S.Content expand={expandAmounts} team={team}>
         <S.Selector
           team={team}
           expand={expandAmounts}

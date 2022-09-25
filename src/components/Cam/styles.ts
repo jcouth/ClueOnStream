@@ -73,7 +73,7 @@ export const Title = styled.p`
   text-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
 `;
 
-export const Content = styled.div<{ team: Teams }>`
+export const Content = styled.div<{ team: Teams; expand: boolean }>`
   flex-grow: 1;
   display: grid;
   grid-row-gap: 8px;
@@ -84,7 +84,10 @@ export const Content = styled.div<{ team: Teams }>`
 
   border-radius: 12px;
   background-color: ${({ theme, team }) => theme.colors.team[team].primary};
-  box-shadow: inset 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  box-shadow: inset 0px 4px 4px
+    ${({ theme, expand }) => (expand ? 'transparent' : theme.colors.shadow)};
+
+  transition: box-shadow 0.25s ease-out ${({ expand }) => (expand ? 0 : 0.5)}s;
 `;
 
 export const Controls = styled.div`
@@ -178,21 +181,23 @@ export const Selector = styled.div<{
   flex-direction: column;
 
   position: absolute;
-  top: ${({ expand, height }) => (expand ? -height : 0)}px;
+  top: ${({ expand, height }) => (expand ? -height : 12)}px;
 
-  padding: 6px 14px;
+  padding: ${({ expand }) => (expand ? 6 : 0)}px 14px;
 
   width: 100%;
-  height: ${({ expand, height }) => (expand ? height + 10 : 0)}px;
+  height: ${({ expand, height }) => (expand ? height + 12 : 0)}px;
 
   border-radius: 12px;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   background-color: ${({ theme, team }) => theme.colors.team[team].primary};
-  box-shadow: inset 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  box-shadow: inset 0px 4px 4px
+    ${({ theme, expand }) => (expand ? theme.colors.shadow : 'transparent')};
 
   overflow: hidden;
-  transition: height 0.5s ease-in-out, top 0.5s ease-in-out;
+  transition: height 0.5s ease-in-out, top 0.5s ease-in-out,
+    padding 0.5s ease-in-out, box-shadow 0.25s ease-in-out 0.125s;
 `;
 
 export const SelectorContent = styled.div`

@@ -6,16 +6,21 @@ declare module 'styled-components' {
       team: {
         red: {
           primary: string;
+          primary_90: string;
           secondary: string;
+          secondary_90: string;
           text: string;
         };
         blue: {
           primary: string;
+          primary_90: string;
           secondary: string;
+          secondary_90: string;
           text: string;
         };
       };
       white: string;
+      white_90: string;
       shadow: string;
     };
     fonts: {

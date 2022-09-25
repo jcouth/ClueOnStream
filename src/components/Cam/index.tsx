@@ -9,7 +9,7 @@ interface Props {
   onSend(clue: string, amount: number): void;
 }
 
-const AMOUNTS = [0, 1, 2, 3, 4, 5, 6];
+const AMOUNTS = [1, 2, 3, 4, 5, 6, 7];
 
 const Cam: React.FC<Props> = ({ team, onSend }) => {
   const inputRef = useRef<HTMLInputElement>(null);

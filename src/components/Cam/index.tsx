@@ -15,6 +15,7 @@ const Cam: React.FC<Props> = ({ team, onSend }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const infoDivRef = useRef<HTMLDivElement>(null);
 
+  const [shake, setShake] = useState<boolean>(false);
   const [amount, setAmount] = useState<number | null>(null);
   const [expandAmounts, setExpandAmounts] = useState<boolean>(false);
 
@@ -34,6 +35,8 @@ const Cam: React.FC<Props> = ({ team, onSend }) => {
 
       inputRef.current.value = '';
       setAmount(null);
+    } else if (!shake) {
+      setShake(true);
     }
   };
 
@@ -73,7 +76,11 @@ const Cam: React.FC<Props> = ({ team, onSend }) => {
           <S.LogOut team={team} onClick={handleLogOut}>
             <S.LogOutText team={team}>Sair</S.LogOutText>
           </S.LogOut>
-          <S.Send onClick={handleSend}>
+          <S.Send
+            className={shake ? 'shake' : ''}
+            onClick={handleSend}
+            onAnimationEnd={() => setShake(false)}
+          >
             <S.SendText team={team}>Enviar</S.SendText>
           </S.Send>
         </S.Buttons>

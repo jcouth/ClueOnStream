@@ -163,7 +163,7 @@ const InGame: React.FC<Props> = () => {
   }, [getCards]);
 
   return (
-    <S.Container>
+    <S.Container team={clue.team}>
       <S.Aside>
         <S.Chat></S.Chat>
         <Cam team={clue.team} onSend={handleSendClue} />

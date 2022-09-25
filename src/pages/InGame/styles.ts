@@ -1,11 +1,16 @@
 import styled, { css } from 'styled-components';
 
-export const Container = styled.div`
+export const Container = styled.div<{ team: 'red' | 'blue' }>`
   display: grid;
   grid-template-columns: 350px 1fr;
   column-gap: 26px;
 
   padding: 46px 72px 20px;
+
+  width: 100vw;
+  height: 100vh;
+
+  background: ${({ theme, team }) => theme.colors.team[team].primary};
 `;
 
 export const Aside = styled.div`

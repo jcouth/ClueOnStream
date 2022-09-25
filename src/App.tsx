@@ -13,20 +13,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-
-          width: '100vw',
-          height: '100vh',
-
-          backgroundColor: '#A37B73',
-        }}
-      >
-        <Router />
-      </div>
+      <Router />
     </ThemeProvider>
   );
 }

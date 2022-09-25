@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 type Teams = 'red' | 'blue';
 
@@ -21,12 +21,10 @@ const ButtonBase = styled.button`
   }
 `;
 
-const ButtonTextBase = styled.p<{ team: Teams }>`
+const ButtonTextBase = styled.p<{ team?: Teams }>`
   font-family: ${({ theme }) => theme.fonts.primary.family};
   font-weight: ${({ theme }) => theme.fonts.primary.weight};
   font-size: ${({ theme }) => theme.fonts.primary.size};
-
-  color: ${({ theme, team }) => theme.colors.team[team].primary};
 
   background-clip: text;
   background-color: rgba(0, 0, 0, 0.75);
@@ -35,6 +33,12 @@ const ButtonTextBase = styled.p<{ team: Teams }>`
 
   text-transform: uppercase;
   text-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+
+  ${({ theme, team }) =>
+    team &&
+    css`
+      color: ${theme.colors.team[team].primary};
+    `}
 `;
 
 export const Container = styled.div<{ team: Teams }>`
@@ -90,6 +94,24 @@ export const Content = styled.div<{ team: Teams; expand: boolean }>`
   transition: box-shadow 0.25s ease-out ${({ expand }) => (expand ? 0 : 0.5)}s;
 `;
 
+export const Settings = styled(ButtonBase)``;
+
+export const SettingsText = styled(ButtonTextBase)`
+  color: initial;
+`;
+
+export const LogOut = styled(ButtonBase)``;
+
+export const LogOutText = styled(ButtonTextBase)`
+  color: initial;
+`;
+
+export const Start = styled(ButtonBase)``;
+
+export const StartText = styled(ButtonTextBase)`
+  color: initial;
+`;
+
 export const Controls = styled.div`
   display: grid;
   grid-template-columns: 1fr 44px;
@@ -126,7 +148,7 @@ export const Buttons = styled(Controls)`
   grid-template-columns: 1fr 2fr;
 `;
 
-export const LogOut = styled(ButtonBase)<{ team: Teams }>`
+export const GoToMenu = styled(ButtonBase)<{ team: Teams }>`
   background-color: ${({ theme, team }) => theme.colors.team[team].secondary};
 
   &:hover {
@@ -135,7 +157,7 @@ export const LogOut = styled(ButtonBase)<{ team: Teams }>`
   }
 `;
 
-export const LogOutText = styled(ButtonTextBase)`
+export const GoToMenuText = styled(ButtonTextBase)`
   color: ${({ theme }) => theme.colors.white};
 
   background-color: none;

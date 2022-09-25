@@ -1,4 +1,6 @@
-const theme = {
+import { DefaultTheme } from 'styled-components';
+
+const theme: DefaultTheme = {
   colors: {
     team: {
       red: {
@@ -15,7 +17,13 @@ const theme = {
     white: '#FFFFFF',
     shadow: 'rgba(0, 0, 0, 0.25)',
   },
-  fonts: {},
+  fonts: {
+    primary: {
+      family: "'Inter', sans-serif",
+      weight: 700,
+      size: '16px',
+    },
+  },
 };
 
 export default theme;

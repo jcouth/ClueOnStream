@@ -18,6 +18,12 @@ declare module 'styled-components' {
       white: string;
       shadow: string;
     };
-    fonts: {};
+    fonts: {
+      primary: {
+        family: string;
+        weight: string | number;
+        size: string;
+      };
+    };
   }
 }

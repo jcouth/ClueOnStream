@@ -3,16 +3,20 @@ import 'styled-components';
 declare module 'styled-components' {
   export interface DefaultTheme {
     colors: {
-      teamRed: {
-        primary: string;
-        secondary: string;
-        text: string;
+      team: {
+        red: {
+          primary: string;
+          secondary: string;
+          text: string;
+        };
+        blue: {
+          primary: string;
+          secondary: string;
+          text: string;
+        };
       };
-      teamBlue: {
-        primary: string;
-        secondary: string;
-        text: string;
-      };
+      white: string;
+      shadow: string;
     };
     fonts: {};
   }

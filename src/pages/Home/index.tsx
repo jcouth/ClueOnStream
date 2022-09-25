@@ -11,6 +11,10 @@ import * as S from './styles';
 const MAX_CARDS = 25;
 
 const Home = () => {
+  // quantidade de pessoas no time
+  // quantas cartas faltam para cada time
+  // histórico de dicas
+  // conectar à twitch
   const allWords = useRef<string[]>([]);
   const navigate = useNavigate();
 

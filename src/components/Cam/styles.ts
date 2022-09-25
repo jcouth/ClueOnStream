@@ -3,6 +3,10 @@ import styled from 'styled-components';
 type Teams = 'red' | 'blue';
 
 const ButtonBase = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   padding: 12px;
 
   border: none;
@@ -50,6 +54,10 @@ export const Info = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  position: relative;
+
+  padding-bottom: 12px;
 `;
 
 export const Title = styled.p`
@@ -70,7 +78,8 @@ export const Content = styled.div<{ team: Teams }>`
   display: grid;
   grid-row-gap: 8px;
 
-  margin-top: 12px;
+  position: relative;
+
   padding: 18px 14px;
 
   border-radius: 12px;
@@ -132,3 +141,42 @@ export const LogOutText = styled(ButtonTextBase)`
 export const Send = styled(ButtonBase)``;
 
 export const SendText = styled(ButtonTextBase)``;
+
+export const Selector = styled.div<{
+  team: Teams;
+  expand: boolean;
+  height: number;
+}>`
+  display: flex;
+  flex-direction: column;
+
+  position: absolute;
+  top: ${({ expand, height }) => (expand ? -height : 0)}px;
+
+  padding: 6px 14px;
+
+  width: 100%;
+  height: ${({ expand, height }) => (expand ? height + 10 : 0)}px;
+
+  border-radius: 12px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  background-color: ${({ theme, team }) => theme.colors.team[team].primary};
+  box-shadow: inset 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+
+  overflow: hidden;
+  transition: height 0.5s ease-in-out, top 0.5s ease-in-out;
+`;
+
+export const SelectorContent = styled.div`
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-rows: 32px;
+  grid-column-gap: 8px;
+
+  margin-top: 4px;
+`;
+
+export const SelectorAmount = styled(Amount)``;
+
+export const SelectorAmountText = styled(AmountText)``;

@@ -35,6 +35,7 @@ const Cam: React.FC<Props> = ({ team, onSend }) => {
 
       inputRef.current.value = '';
       setAmount(null);
+      setExpandAmounts(false);
     } else if (!shake) {
       setShake(true);
     }

@@ -5,15 +5,19 @@ export const Container = styled.div<{ team: 'red' | 'blue' }>`
   grid-template-columns: 350px 1fr;
   column-gap: 26px;
 
-  padding: 46px 72px 20px;
+  padding: 20px 72px;
 
   width: 100vw;
   height: 100vh;
 
-  background: ${({ theme, team }) => theme.colors.team[team].primary};
+  background-color: ${({ theme, team }) => theme.colors.team[team].primary};
+  background-image: url(https://cdn.codenames.game/v20210210/img/bg-raster.svg);
+  /* background-image: url(https://svgsilh.com/png-512/1975573.png); */
+  mix-blend-mode: overlay;
+  background-size: cover;
 `;
 
-export const Aside = styled.div`
+export const Aside = styled.aside`
   display: flex;
   flex-direction: column;
 `;
@@ -25,6 +29,8 @@ export const Chat = styled.div`
   border: 5px solid black;
   border-radius: 12px;
 `;
+
+export const Main = styled.main``;
 
 export const Content = styled.div`
   display: grid;

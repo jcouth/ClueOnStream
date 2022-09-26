@@ -14,8 +14,6 @@ const ButtonBase = styled.button`
   background-color: ${({ theme }) => theme.colors.white};
   box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
 
-  cursor: pointer;
-
   &:hover {
     background-color: ${({ theme }) => theme.colors.white_90};
   }

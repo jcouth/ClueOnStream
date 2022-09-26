@@ -39,10 +39,6 @@ export const Container = styled.button<StyledCardProps>`
   background-color: ${({ theme }) => theme.colors.card.normal.primary};
   box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
 
-  &:hover {
-    cursor: pointer;
-  }
-
   &::before {
     content: '';
     position: absolute;

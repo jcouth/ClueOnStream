@@ -15,6 +15,8 @@ export const Container = styled.div<{ team: 'red' | 'blue' }>`
   /* background-image: url(https://svgsilh.com/png-512/1975573.png); */
   mix-blend-mode: overlay;
   background-size: cover;
+
+  transition: background-color 0.5s ease-in-out;
 `;
 
 export const Aside = styled.aside`

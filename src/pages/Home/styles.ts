@@ -10,8 +10,4 @@ export const NewGameButton = styled.button`
   padding: 6px 12px;
 
   border-radius: 12px;
-
-  &:hover {
-    cursor: pointer;
-  }
 `;

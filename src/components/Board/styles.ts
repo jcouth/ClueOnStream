@@ -29,7 +29,6 @@ export const Timer = styled.div<{ isStreamerTurn: boolean }>`
   height: 12px;
 
   border-radius: 8px;
-  background-color: white;
 
   ${({ isStreamerTurn }) =>
     isStreamerTurn &&
@@ -43,12 +42,8 @@ export const Progress = styled.div<{ progress: number; interval: string }>`
   height: 100%;
 
   border-radius: inherit;
-  background-color: red;
-  /* background-image: url('https://www.onlygfx.com/wp-content/uploads/2017/04/paint-brush-stroke-2-17.png');
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  mix-blend-mode: luminosity; */
+  background-color: ${({ theme }) => theme.colors.card.normal.primary};
+  box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
 
   transition: width ${({ interval }) => interval} ease-in-out;
 `;

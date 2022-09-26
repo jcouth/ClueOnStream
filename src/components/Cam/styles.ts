@@ -49,6 +49,8 @@ export const Container = styled.div<{ team: Teams }>`
   border-radius: 12px;
   background-color: ${({ theme, team }) => theme.colors.team[team].secondary};
   box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+
+  transition: background-color 0.5s ease-in-out;
 `;
 
 export const Info = styled.div`
@@ -89,7 +91,8 @@ export const Content = styled.div<{ team: Teams; expand: boolean }>`
   box-shadow: inset 0px 4px 4px
     ${({ theme, expand }) => (expand ? 'transparent' : theme.colors.shadow)};
 
-  transition: box-shadow 0.25s ease-out ${({ expand }) => (expand ? 0 : 0.5)}s;
+  transition: box-shadow 0.25s ease-out ${({ expand }) => (expand ? 0 : 0.5)}s,
+    background-color 0.5s ease-in-out;
 `;
 
 export const Settings = styled(ButtonBase)``;
@@ -149,9 +152,13 @@ export const Buttons = styled(Controls)`
 export const GoToMenu = styled(ButtonBase)<{ team: Teams }>`
   background-color: ${({ theme, team }) => theme.colors.team[team].secondary};
 
+  transition: background-color 0.5s ease-in-out;
+
   &:hover {
     background-color: ${({ theme, team }) =>
       theme.colors.team[team].secondary_90};
+
+    transition: none;
   }
 `;
 
@@ -190,7 +197,9 @@ export const Send = styled(ButtonBase)`
   }
 `;
 
-export const SendText = styled(ButtonTextBase)``;
+export const SendText = styled(ButtonTextBase)`
+  transition: color 0.5s ease-in-out;
+`;
 
 export const Selector = styled.div<{
   team: Teams;

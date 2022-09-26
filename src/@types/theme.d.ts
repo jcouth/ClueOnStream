@@ -9,13 +9,23 @@ declare module 'styled-components' {
           primary_90: string;
           secondary: string;
           secondary_90: string;
-          text: string;
         };
         blue: {
           primary: string;
           primary_90: string;
           secondary: string;
           secondary_90: string;
+        };
+      };
+      card: {
+        normal: {
+          primary: string;
+          secondary: string;
+          text: string;
+        };
+        gameOver: {
+          primary: string;
+          secondary: string;
           text: string;
         };
       };
@@ -28,6 +38,8 @@ declare module 'styled-components' {
         family: string;
         weight: string | number;
         size: string;
+        title: string;
+        subtitle: string;
       };
     };
   }

@@ -43,10 +43,10 @@ const Card: React.FC<Props> = ({
         <S.Percentage visible={false}>
           <S.PercentageText>47%</S.PercentageText>
         </S.Percentage>
-        <ProfileCard />
+        <ProfileCard fill={isOpen ? S.CardColors.before[type] : '#BA5A31'} />
       </S.Header>
-      <S.Content>
-        <S.ContentText>{title}</S.ContentText>
+      <S.Content isOpen={isOpen} cardType={type}>
+        <S.ContentText isOpen={isOpen}>{title}</S.ContentText>
       </S.Content>
     </S.Container>
   );

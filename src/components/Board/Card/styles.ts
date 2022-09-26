@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+
 import theme from '../../../global/styles/theme';
 
 import { CardProps, CardType } from '../../../interfaces/Card';
@@ -13,7 +14,7 @@ interface CardColorsProps {
   before: { [key in CardType]: string };
 }
 
-const CardColors: CardColorsProps = {
+export const CardColors: CardColorsProps = {
   principal: {
     red: theme.colors.team.red.primary,
     blue: theme.colors.team.blue.primary,
@@ -127,7 +128,7 @@ export const PercentageText = styled.p`
   text-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
 `;
 
-export const Content = styled.div`
+export const Content = styled.div<StyledCardProps>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -136,10 +137,11 @@ export const Content = styled.div`
   padding: 8px 12px;
 
   border-radius: 4px;
-  background-color: ${({ theme }) => theme.colors.white};
+  background-color: ${({ theme, isOpen, cardType }) =>
+    isOpen ? CardColors.before[cardType] : theme.colors.white};
 `;
 
-export const ContentText = styled.p`
+export const ContentText = styled.p<Omit<StyledCardProps, 'cardType'>>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -148,7 +150,8 @@ export const ContentText = styled.p`
   font-weight: ${({ theme }) => theme.fonts.primary.weight};
   font-size: ${({ theme }) => theme.fonts.primary.subtitle};
 
-  color: ${({ theme }) => theme.colors.card.normal.text};
+  color: ${({ theme, isOpen }) =>
+    isOpen ? theme.colors.white : theme.colors.card.normal.text};
 
   text-align: center;
   text-transform: uppercase;

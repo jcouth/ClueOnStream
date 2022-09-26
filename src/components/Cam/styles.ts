@@ -222,9 +222,9 @@ export const Selector = styled.div<{
     padding 0.5s ease-in-out, box-shadow 0.25s ease-in-out 0.125s;
 `;
 
-export const SelectorContent = styled.div`
+export const SelectorContent = styled.div<{ columns: number }>`
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-columns: repeat(${({ columns }) => columns}, minmax(0, 1fr));
   grid-template-rows: 32px;
   grid-column-gap: 8px;
 

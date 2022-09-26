@@ -12,7 +12,7 @@ interface Props {
 
 const AMOUNTS = [1, 2, 3, 4, 5, 6, 7];
 
-const Cam: React.FC<Props> = ({ team, onSend, inMenu = true }) => {
+const Cam: React.FC<Props> = ({ team, onSend, inMenu = false }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const infoDivRef = useRef<HTMLDivElement>(null);
 
@@ -74,7 +74,7 @@ const Cam: React.FC<Props> = ({ team, onSend, inMenu = true }) => {
         height={infoDivRef.current?.clientHeight || 0}
       >
         <S.Title>Selecione o número de dicas:</S.Title>
-        <S.SelectorContent>
+        <S.SelectorContent columns={AMOUNTS.length}>
           {AMOUNTS.map((value) => (
             <S.SelectorAmount
               key={value}

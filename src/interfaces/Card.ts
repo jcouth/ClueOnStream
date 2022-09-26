@@ -10,7 +10,7 @@ export enum CardType {
   GAME_OVER = 'game_over',
 }
 
-export interface Card {
+export interface CardProps {
   id: number;
   title: string;
   isOpen: boolean;

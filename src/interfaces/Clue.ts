@@ -1,4 +1,4 @@
-export interface Clue {
+export interface ClueProps {
   description: string;
   amount: number;
 }

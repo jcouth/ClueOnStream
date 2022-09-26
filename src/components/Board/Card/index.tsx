@@ -2,7 +2,7 @@ import React, { memo, useState } from 'react';
 
 import { ReactComponent as ProfileCard } from '../../../assets/profile-card.svg';
 
-import { Card as CardProps } from '../../../interfaces/Card';
+import { CardProps } from '../../../interfaces/Card';
 
 import * as S from './styles';
 

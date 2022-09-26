@@ -2,6 +2,8 @@ import React, { memo, useState } from 'react';
 
 import { ReactComponent as ProfileCard } from '../../../assets/profile-card.svg';
 
+import theme from '../../../global/styles/theme';
+
 import { CardProps } from '../../../interfaces/Card';
 
 import * as S from './styles';
@@ -43,7 +45,13 @@ const Card: React.FC<Props> = ({
         <S.Percentage visible={false}>
           <S.PercentageText>47%</S.PercentageText>
         </S.Percentage>
-        <ProfileCard fill={isOpen ? S.CardColors.before[type] : '#BA5A31'} />
+        <ProfileCard
+          fill={
+            isOpen
+              ? S.CardColors.before[type]
+              : theme.colors.card.normal.secondary
+          }
+        />
       </S.Header>
       <S.Content isOpen={isOpen} cardType={type}>
         <S.ContentText isOpen={isOpen}>{title}</S.ContentText>

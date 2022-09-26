@@ -98,16 +98,24 @@ const Board: React.FC<Props> = ({ team, clue, words, onFinishTurn }) => {
 
   return (
     <S.Container>
-      {clue ? (
-        <S.Title>
-          Dica: {clue.description}[{amount}]
-        </S.Title>
-      ) : (
-        <S.Title>Aguardando a dica da(o) streamer</S.Title>
-      )}
+      <S.Header>
+        {clue ? (
+          <>
+            <S.Clue>{clue.description}</S.Clue>
+            <S.Amount>{amount}</S.Amount>
+          </>
+        ) : (
+          <S.Title>Aguardando a dica da(o) streamer</S.Title>
+        )}
+      </S.Header>
       <S.Content>
         {cards.map((card) => (
-          <Card {...card} isStreamerTurn={clue === null} onOpen={handleOpen} />
+          <Card
+            key={card.id}
+            {...card}
+            isStreamerTurn={clue === null}
+            onOpen={handleOpen}
+          />
         ))}
       </S.Content>
     </S.Container>

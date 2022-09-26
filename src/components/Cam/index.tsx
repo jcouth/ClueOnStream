@@ -5,6 +5,7 @@ import { ReactComponent as CameraIcon } from '../../assets/camera.svg';
 import * as S from './styles';
 
 interface Props {
+  isStreamerTurn: boolean;
   team: 'red' | 'blue';
   onSend(clue: string, amount: number): void;
   inMenu?: boolean;
@@ -12,7 +13,12 @@ interface Props {
 
 const AMOUNTS = [1, 2, 3, 4, 5, 6, 7];
 
-const Cam: React.FC<Props> = ({ team, onSend, inMenu = false }) => {
+const Cam: React.FC<Props> = ({
+  isStreamerTurn,
+  team,
+  onSend,
+  inMenu = false,
+}) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const infoDivRef = useRef<HTMLDivElement>(null);
 
@@ -30,7 +36,7 @@ const Cam: React.FC<Props> = ({ team, onSend, inMenu = false }) => {
   };
 
   const handleSend = () => {
-    if (inputRef.current?.value && amount !== null) {
+    if (isStreamerTurn && inputRef.current?.value && amount !== null) {
       const clue = inputRef.current.value;
       onSend(clue, amount);
 

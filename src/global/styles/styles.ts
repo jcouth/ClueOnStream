@@ -10,5 +10,6 @@ export const GlobalStyle = createGlobalStyle`
   font-family: "Montserrat", sans-serif;
   
   text-decoration: none;
+  user-select:none;
 }
 `;

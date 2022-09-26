@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { shuffleArray } from '../../helpers/shuffleArray';
 
@@ -16,9 +16,18 @@ interface Props {
   onFinishTurn(isGameOver: boolean): void;
 }
 
+const SECONDS = 5;
+const INTERVAL = 100;
+
+// (100% * interval-in-ms) / (seconds-in-ms)
+const PROGRESS_DECAY = (100 * INTERVAL) / (SECONDS * 1000);
+
 const Board: React.FC<Props> = ({ team, clue, words, onFinishTurn }) => {
+  const progressRef = useRef<NodeJS.Timer>();
+
   const [amount, setAmount] = useState<number>(0);
   const [cards, setCards] = useState<CardProps[]>([]);
+  const [progress, setProgress] = useState<number>(100);
 
   const handleOpen = (id: CardProps['id'], type: CardProps['type']) => {
     if (clue) {
@@ -27,7 +36,7 @@ const Board: React.FC<Props> = ({ team, clue, words, onFinishTurn }) => {
           oldState.map((oldCard) => ({ ...oldCard, isOpen: true }))
         );
         onFinishTurn(true);
-        // setProgress(0);
+        setProgress(0);
       } else {
         if (
           (type === CardType.RED && team === Team.RED) ||
@@ -36,11 +45,11 @@ const Board: React.FC<Props> = ({ team, clue, words, onFinishTurn }) => {
           setAmount((oldState) => oldState - 1);
 
           if (amount === 1) {
-            //   setProgress(0);
+            setProgress(0);
             onFinishTurn(false);
           }
         } else {
-          // setProgress(0);
+          setProgress(0);
           onFinishTurn(false);
         }
 
@@ -55,6 +64,12 @@ const Board: React.FC<Props> = ({ team, clue, words, onFinishTurn }) => {
       }
     }
   };
+
+  useEffect(() => {
+    if (progress <= 0) {
+      clearInterval(progressRef.current);
+    }
+  }, [progress]);
 
   const getCards = useCallback(() => {
     const getType = (value: number) => {
@@ -89,6 +104,10 @@ const Board: React.FC<Props> = ({ team, clue, words, onFinishTurn }) => {
   const getAmount = useCallback(() => {
     if (clue) {
       setAmount(clue.amount);
+      progressRef.current = setInterval(
+        () => setProgress((oldState) => oldState - PROGRESS_DECAY),
+        INTERVAL
+      );
     }
   }, [clue]);
 
@@ -108,6 +127,9 @@ const Board: React.FC<Props> = ({ team, clue, words, onFinishTurn }) => {
           <S.Title>Aguardando a dica da(o) streamer</S.Title>
         )}
       </S.Header>
+      <S.Timer isStreamerTurn={clue === null}>
+        <S.Progress progress={progress} interval={`${INTERVAL / 1000}s`} />
+      </S.Timer>
       <S.Content>
         {cards.map((card) => (
           <Card

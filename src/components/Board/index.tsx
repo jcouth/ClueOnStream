@@ -16,7 +16,7 @@ interface Props {
   onFinishTurn(isGameOver: boolean): void;
 }
 
-const SECONDS = 5;
+const SECONDS = 60;
 const INTERVAL = 100;
 
 // (100% * interval-in-ms) / (seconds-in-ms)
@@ -68,6 +68,7 @@ const Board: React.FC<Props> = ({ team, clue, words, onFinishTurn }) => {
   useEffect(() => {
     if (progress <= 0) {
       clearInterval(progressRef.current);
+      setProgress(100);
     }
   }, [progress]);
 

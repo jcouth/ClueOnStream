@@ -18,13 +18,13 @@ export const CardColors: CardColorsProps = {
   principal: {
     red: theme.colors.team.red.primary,
     blue: theme.colors.team.blue.primary,
-    no_team: theme.colors.white,
+    no_team: theme.colors.card.normal.secondary,
     game_over: theme.colors.card.gameOver.primary,
   },
   before: {
     red: theme.colors.team.red.secondary,
     blue: theme.colors.team.blue.secondary,
-    no_team: theme.colors.white,
+    no_team: theme.colors.card.normal.primary,
     game_over: theme.colors.card.gameOver.secondary,
   },
 };
@@ -149,6 +149,7 @@ export const ContentText = styled.p<Omit<StyledCardProps, 'cardType'>>`
   color: ${({ theme, isOpen }) =>
     isOpen ? theme.colors.white : theme.colors.card.normal.text};
 
+  letter-spacing: -0.5px;
   text-align: center;
   text-transform: uppercase;
   text-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};

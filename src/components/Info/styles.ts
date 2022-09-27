@@ -187,7 +187,11 @@ export const TimerIcon = styled.div<{ team: Teams }>`
   box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
 `;
 
-export const Progress = styled.div<{ team: Teams }>`
+export const Progress = styled.div<{
+  team: Teams;
+  progress: number;
+  interval: string;
+}>`
   position: relative;
 
   margin-left: 20px;
@@ -200,16 +204,20 @@ export const Progress = styled.div<{ team: Teams }>`
   background-color: ${({ theme, team }) => theme.colors.team[team].secondary};
   box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
 
+  transition: background-color ${({ interval }) => interval} ease-in-out;
+
   &::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
 
-    width: 90%;
+    width: ${({ progress }) => progress}%;
     height: 100%;
 
-    border-radius: 12px;
+    border-radius: inherit;
     background-color: ${({ theme, team }) => theme.colors.team[team].primary};
+
+    transition: width ${({ interval }) => interval} ease-in-out;
   }
 `;

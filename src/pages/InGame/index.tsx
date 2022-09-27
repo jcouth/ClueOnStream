@@ -23,6 +23,7 @@ const InGame: React.FC<Props> = () => {
   const [team, setTeam] = useState<Team>(Team.RED);
   const [clue, setClue] = useState<ClueProps | null>(null);
   const [isStreamerTurn, setIsStreamerTurn] = useState<boolean>(true);
+  const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
 
   const handleSendClue = (description: string, amount: number) => {
     setClue({
@@ -30,6 +31,11 @@ const InGame: React.FC<Props> = () => {
       amount,
     });
     setIsStreamerTurn(false);
+    setIsTimerRunning(true);
+  };
+
+  const handleOnFinishTimer = () => {
+    setIsTimerRunning(false);
   };
 
   const handleOnFinishTurn = (isGameOver: boolean) => {
@@ -41,7 +47,11 @@ const InGame: React.FC<Props> = () => {
   return (
     <S.Container team={team}>
       <S.Aside>
-        <Info />
+        <Info
+          isStreamerTurn={isStreamerTurn}
+          team={team}
+          onFinishTimer={handleOnFinishTimer}
+        />
         <Cam
           isStreamerTurn={isStreamerTurn}
           team={team}
@@ -53,6 +63,7 @@ const InGame: React.FC<Props> = () => {
           team={team}
           clue={clue}
           words={words}
+          isTimerRunning={isTimerRunning}
           onFinishTurn={handleOnFinishTurn}
         />
       </S.Main>

@@ -1,51 +1,97 @@
-import React from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { ReactComponent as AlarmIcon } from '../../assets/alarm.svg';
 
+import { Team } from '../../interfaces/Card';
+
 import * as S from './styles';
 
-interface Props {}
+type RemainingProps = { [key in Team]: number };
 
-const Info: React.FC<Props> = ({}) => {
+type ClueProps = { team: Team; description: string; amount: number };
+
+interface HistoryProps {
+  remaining: RemainingProps;
+  clues: ClueProps[];
+}
+
+interface Props {
+  isStreamerTurn: boolean;
+  team: Team;
+  history?: HistoryProps;
+  onFinishTimer(): void;
+}
+
+const SECONDS = 5;
+const INTERVAL = 100;
+
+// (100% * interval-in-ms) / (seconds-in-ms)
+const PROGRESS_DECAY = (100 * INTERVAL) / (SECONDS * 1000);
+
+const Info: React.FC<Props> = ({
+  isStreamerTurn,
+  team,
+  history,
+  onFinishTimer,
+}) => {
+  const progressRef = useRef<NodeJS.Timer>();
+
+  const [progress, setProgress] = useState<number>(100);
+
+  const startTimer = useCallback(() => {
+    if (!isStreamerTurn) {
+      progressRef.current = setInterval(
+        () => setProgress((oldState) => oldState - PROGRESS_DECAY),
+        INTERVAL
+      );
+    }
+  }, [isStreamerTurn]);
+
+  useEffect(() => {
+    startTimer();
+  }, [startTimer]);
+
+  useEffect(() => {
+    if (progress <= 0) {
+      clearInterval(progressRef.current);
+      setProgress(100);
+      onFinishTimer();
+    }
+  }, [progress]);
+
   return (
     <S.Container>
       <S.Content>
         <S.Team team='red'>
           <S.TeamTitle>Vermelho</S.TeamTitle>
-          <S.TeamAmount>9</S.TeamAmount>
+          <S.TeamAmount>{history?.remaining.red || 9}</S.TeamAmount>
         </S.Team>
         <S.Team team='blue'>
           <S.TeamTitle>Azul</S.TeamTitle>
-          <S.TeamAmount>8</S.TeamAmount>
+          <S.TeamAmount>{history?.remaining.red || 8}</S.TeamAmount>
         </S.Team>
         <S.History>
           <S.HistoryTitle>Histórico de Dicas</S.HistoryTitle>
           <S.HistoryClues>
             <S.HistoryCluesContent>
-              <S.Clue>
-                <S.ClueTitle team='red'>Cinema</S.ClueTitle>
-                <S.ClueAmount team='red'>3</S.ClueAmount>
-              </S.Clue>
-              <S.Clue>
-                <S.ClueTitle team='blue'>Entretenimento</S.ClueTitle>
-                <S.ClueAmount team='blue'>7</S.ClueAmount>
-              </S.Clue>
-              <S.Clue>
-                <S.ClueTitle team='red'>Cinema</S.ClueTitle>
-                <S.ClueAmount team='red'>3</S.ClueAmount>
-              </S.Clue>
-              <S.Clue>
-                <S.ClueTitle team='blue'>Entretenimento</S.ClueTitle>
-                <S.ClueAmount team='blue'>7</S.ClueAmount>
-              </S.Clue>
+              {history?.clues.map((clue) => (
+                <S.Clue>
+                  <S.ClueTitle team={clue.team}>{clue.description}</S.ClueTitle>
+                  <S.ClueAmount team={clue.team}>{clue.amount}</S.ClueAmount>
+                </S.Clue>
+              ))}
             </S.HistoryCluesContent>
           </S.HistoryClues>
         </S.History>
-        <S.Timer team='red'>
-          <S.TimerIcon team='red'>
+        <S.Timer team={team}>
+          <S.TimerIcon team={team}>
             <AlarmIcon />
           </S.TimerIcon>
-          <S.Progress team='red' />
+          <S.Progress
+            team={team}
+            progress={progress}
+            interval={`${INTERVAL / 1000}s`}
+          />
         </S.Timer>
       </S.Content>
     </S.Container>

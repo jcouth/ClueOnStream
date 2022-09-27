@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { ReactComponent as AlarmIcon } from '../../assets/alarm.svg';
+
 import * as S from './styles';
 
 interface Props {}
@@ -39,10 +41,12 @@ const Info: React.FC<Props> = ({}) => {
             </S.HistoryCluesContent>
           </S.HistoryClues>
         </S.History>
-        <S.Team team='blue'>
-          <S.TeamTitle>Azul</S.TeamTitle>
-          <S.TeamAmount>8</S.TeamAmount>
-        </S.Team>
+        <S.Timer team='red'>
+          <S.TimerIcon team='red'>
+            <AlarmIcon />
+          </S.TimerIcon>
+          <S.Progress team='red' />
+        </S.Timer>
       </S.Content>
     </S.Container>
   );

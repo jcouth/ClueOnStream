@@ -19,7 +19,7 @@ export const Content = styled.div`
   grid-template-rows: auto auto 1fr auto;
   grid-row-gap: 12px;
 
-  padding: 18px 14px;
+  padding: 18px 14px 14px;
 
   border-radius: 12px;
   background-color: ${({ theme }) => theme.colors.card.normal.secondary};
@@ -157,4 +157,59 @@ export const ClueAmount = styled.p<{ team: Teams }>`
 
   text-transform: uppercase;
   text-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+`;
+
+export const Timer = styled.div<{ team: Teams }>`
+  display: flex;
+  align-items: center;
+
+  position: relative;
+
+  height: 36px;
+`;
+
+export const TimerIcon = styled.div<{ team: Teams }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 36px;
+  height: 36px;
+
+  border: 3px solid ${({ theme }) => theme.colors.white};
+  border-radius: 100px;
+  background-color: ${({ theme, team }) => theme.colors.team[team].primary};
+  box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+`;
+
+export const Progress = styled.div<{ team: Teams }>`
+  position: relative;
+
+  margin-left: 20px;
+
+  width: calc(100% - 20px);
+  height: 24px;
+
+  border: 3px solid ${({ theme }) => theme.colors.white};
+  border-radius: 12px;
+  background-color: ${({ theme, team }) => theme.colors.team[team].secondary};
+  box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 90%;
+    height: 100%;
+
+    border-radius: 12px;
+    background-color: ${({ theme, team }) => theme.colors.team[team].primary};
+  }
 `;

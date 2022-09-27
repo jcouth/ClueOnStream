@@ -59,11 +59,11 @@ const InGame: React.FC<Props> = () => {
         red:
           team === Team.RED
             ? oldState.remaining.red - cardsOpened
-            : oldState.remaining.red + openedOtherTeam,
+            : oldState.remaining.red - openedOtherTeam,
         blue:
           team === Team.BLUE
             ? oldState.remaining.blue - cardsOpened
-            : oldState.remaining.blue + openedOtherTeam,
+            : oldState.remaining.blue - openedOtherTeam,
       },
       clues: [
         ...oldState.clues,

@@ -159,7 +159,7 @@ export const ClueAmount = styled.p<{ team: Teams }>`
   text-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
 `;
 
-export const Timer = styled.div<{ team: Teams }>`
+export const Timer = styled.div`
   display: flex;
   align-items: center;
 
@@ -168,7 +168,7 @@ export const Timer = styled.div<{ team: Teams }>`
   height: 36px;
 `;
 
-export const TimerIcon = styled.div<{ team: Teams }>`
+export const TimerIcon = styled.div<{ team: Teams; isStreamerTurn: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -183,11 +183,15 @@ export const TimerIcon = styled.div<{ team: Teams }>`
 
   border: 3px solid ${({ theme }) => theme.colors.white};
   border-radius: 100px;
-  background-color: ${({ theme, team }) => theme.colors.team[team].primary};
+  background-color: ${({ theme, team, isStreamerTurn }) =>
+    isStreamerTurn
+      ? theme.colors.card.normal.secondary
+      : theme.colors.team[team].primary};
   box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
 `;
 
 export const Progress = styled.div<{
+  isStreamerTurn: boolean;
   team: Teams;
   progress: number;
   interval: string;
@@ -201,7 +205,10 @@ export const Progress = styled.div<{
 
   border: 3px solid ${({ theme }) => theme.colors.white};
   border-radius: 12px;
-  background-color: ${({ theme, team }) => theme.colors.team[team].secondary};
+  background-color: ${({ theme, team, isStreamerTurn }) =>
+    isStreamerTurn
+      ? theme.colors.card.normal.primary
+      : theme.colors.team[team].secondary};
   box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
 
   transition: background-color ${({ interval }) => interval} ease-in-out;
@@ -216,7 +223,10 @@ export const Progress = styled.div<{
     height: 100%;
 
     border-radius: inherit;
-    background-color: ${({ theme, team }) => theme.colors.team[team].primary};
+    background-color: ${({ theme, team, isStreamerTurn }) =>
+      isStreamerTurn
+        ? theme.colors.card.normal.secondary
+        : theme.colors.team[team].primary};
 
     transition: width ${({ interval }) => interval} ease-in-out;
   }

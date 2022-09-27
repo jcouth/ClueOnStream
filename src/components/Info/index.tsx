@@ -86,11 +86,12 @@ const Info: React.FC<Props> = ({
             </S.HistoryCluesContent>
           </S.HistoryClues>
         </S.History>
-        <S.Timer team={team}>
-          <S.TimerIcon team={team}>
+        <S.Timer>
+          <S.TimerIcon isStreamerTurn={isStreamerTurn} team={team}>
             <AlarmIcon />
           </S.TimerIcon>
           <S.Progress
+            isStreamerTurn={isStreamerTurn}
             team={team}
             progress={progress}
             interval={`${INTERVAL / 1000}s`}

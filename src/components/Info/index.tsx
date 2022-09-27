@@ -2,23 +2,26 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { ReactComponent as AlarmIcon } from '../../assets/alarm.svg';
 
+import { ClueProps } from '../../interfaces/Clue';
 import { Team } from '../../interfaces/Card';
 
 import * as S from './styles';
 
 type RemainingProps = { [key in Team]: number };
 
-type ClueProps = { team: Team; description: string; amount: number };
+interface HistoryClueProps extends ClueProps {
+  team: Team;
+}
 
-interface HistoryProps {
+export interface HistoryProps {
   remaining: RemainingProps;
-  clues: ClueProps[];
+  clues: HistoryClueProps[];
 }
 
 interface Props {
   isStreamerTurn: boolean;
   team: Team;
-  history?: HistoryProps;
+  history: HistoryProps;
   onFinishTimer(): void;
 }
 
@@ -64,17 +67,17 @@ const Info: React.FC<Props> = ({
       <S.Content>
         <S.Team team='red'>
           <S.TeamTitle>Vermelho</S.TeamTitle>
-          <S.TeamAmount>{history?.remaining.red || 9}</S.TeamAmount>
+          <S.TeamAmount>{history.remaining.red}</S.TeamAmount>
         </S.Team>
         <S.Team team='blue'>
           <S.TeamTitle>Azul</S.TeamTitle>
-          <S.TeamAmount>{history?.remaining.red || 8}</S.TeamAmount>
+          <S.TeamAmount>{history.remaining.blue}</S.TeamAmount>
         </S.Team>
         <S.History>
           <S.HistoryTitle>Histórico de Dicas</S.HistoryTitle>
           <S.HistoryClues>
             <S.HistoryCluesContent>
-              {history?.clues.map((clue) => (
+              {history.clues.map((clue) => (
                 <S.Clue>
                   <S.ClueTitle team={clue.team}>{clue.description}</S.ClueTitle>
                   <S.ClueAmount team={clue.team}>{clue.amount}</S.ClueAmount>

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { shuffleArray } from '../../helpers/shuffleArray';
 
@@ -16,14 +16,22 @@ interface VoteProps {
 }
 
 interface Props {
+  amountOfRedCards: number;
+  amountOfBlueCards: number;
   team: Team;
   clue: ClueProps | null;
   words: string[];
   isTimerRunning: boolean;
-  onFinishTurn(isGameOver: boolean): void;
+  onFinishTurn(
+    cardsOpened: number,
+    openedOtherTeam: number,
+    isGameOver: boolean
+  ): void;
 }
 
 const Board: React.FC<Props> = ({
+  amountOfRedCards,
+  amountOfBlueCards,
   team,
   clue,
   words,
@@ -63,6 +71,8 @@ const Board: React.FC<Props> = ({
   };
 
   const openCards = () => {
+    let opened = 0;
+    let openedOtherTeam = 0;
     let isGameOver = false;
     let newCards = [...cards];
     const cardsToOpen = cardsWithVotes
@@ -91,9 +101,16 @@ const Board: React.FC<Props> = ({
         });
 
         if (
-          (team === Team.RED && type !== CardType.RED) ||
-          (team === Team.BLUE && type !== CardType.BLUE)
+          (team === Team.RED && type === CardType.RED) ||
+          (team === Team.BLUE && type === CardType.BLUE)
         ) {
+          opened += 1;
+        } else if (
+          (team === Team.RED && type === CardType.BLUE) ||
+          (team === Team.BLUE && type === CardType.RED)
+        ) {
+          openedOtherTeam += 1;
+        } else {
           break;
         }
       }
@@ -101,16 +118,16 @@ const Board: React.FC<Props> = ({
 
     setCardsWithVotes([]);
     setTotalVotes(0);
-    onFinishTurn(isGameOver);
+    onFinishTurn(opened, openedOtherTeam, isGameOver);
     setCards(newCards);
   };
 
   const getCards = useCallback(() => {
     const getType = (value: number) => {
-      if (value < 9) {
+      if (value < amountOfRedCards) {
         return CardType.RED;
       }
-      if (value < 17) {
+      if (value < amountOfRedCards + amountOfBlueCards) {
         return CardType.BLUE;
       }
       if (value < 24) {

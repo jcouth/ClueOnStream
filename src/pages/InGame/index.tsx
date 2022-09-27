@@ -34,6 +34,7 @@ const InGame: React.FC<Props> = () => {
     },
     clues: [],
   });
+  const [winner, setWinner] = useState<Team | null>(null);
 
   const handleSendClue = (description: string, amount: number) => {
     setClue({
@@ -54,16 +55,34 @@ const InGame: React.FC<Props> = () => {
     isGameOver: boolean
   ) => {
     setIsStreamerTurn(true);
+    let {
+      remaining: { red, blue },
+    } = history;
+    const nextTeam = team === Team.RED ? Team.BLUE : Team.RED;
+
+    if (team === Team.RED) {
+      red -= cardsOpened;
+      blue -= openedOtherTeam;
+    } else {
+      red -= openedOtherTeam;
+      blue -= cardsOpened;
+    }
+
+    if (isGameOver) {
+      setWinner(nextTeam);
+      setTeam(nextTeam);
+    } else if (red === 0) {
+      setWinner(Team.RED);
+    } else if (blue === 0) {
+      setWinner(Team.BLUE);
+    } else {
+      setTeam(nextTeam);
+    }
+
     setHistory((oldState) => ({
       remaining: {
-        red:
-          team === Team.RED
-            ? oldState.remaining.red - cardsOpened
-            : oldState.remaining.red - openedOtherTeam,
-        blue:
-          team === Team.BLUE
-            ? oldState.remaining.blue - cardsOpened
-            : oldState.remaining.blue - openedOtherTeam,
+        red,
+        blue,
       },
       clues: [
         ...oldState.clues,
@@ -75,7 +94,6 @@ const InGame: React.FC<Props> = () => {
       ],
     }));
     setClue(null);
-    setTeam((oldState) => (oldState === Team.RED ? Team.BLUE : Team.RED));
   };
 
   return (
@@ -95,6 +113,7 @@ const InGame: React.FC<Props> = () => {
       </S.Aside>
       <S.Main>
         <Board
+          winner={winner}
           amountOfRedCards={AMOUNT_OF_RED_CARDS}
           amountOfBlueCards={AMOUNT_OF_BLUE_CARDS}
           team={team}

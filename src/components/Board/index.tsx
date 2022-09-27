@@ -16,6 +16,7 @@ interface VoteProps {
 }
 
 interface Props {
+  winner: Team | null;
   amountOfRedCards: number;
   amountOfBlueCards: number;
   team: Team;
@@ -30,6 +31,7 @@ interface Props {
 }
 
 const Board: React.FC<Props> = ({
+  winner,
   amountOfRedCards,
   amountOfBlueCards,
   team,
@@ -68,6 +70,16 @@ const Board: React.FC<Props> = ({
         );
       }
     }
+  };
+
+  const openAllCards = () => {
+    setCards((oldState) =>
+      oldState.map((oldCard) => ({
+        ...oldCard,
+        isOpen: true,
+        votes: 0,
+      }))
+    );
   };
 
   const openCards = () => {
@@ -124,6 +136,14 @@ const Board: React.FC<Props> = ({
     setCards(newCards);
   };
 
+  const renderTitle = () => {
+    let message = 'Aguardando a dica da(o) streamer';
+    if (winner) {
+      message = `O time ${winner === Team.RED ? 'vermelho' : 'azul'} venceu`;
+    }
+    return <S.Title>{message}</S.Title>;
+  };
+
   const getCards = useCallback(() => {
     const getType = (value: number) => {
       if (value < amountOfRedCards) {
@@ -169,6 +189,16 @@ const Board: React.FC<Props> = ({
     getAmount();
   }, [getAmount]);
 
+  const hasWinner = useCallback(() => {
+    if (winner) {
+      openAllCards();
+    }
+  }, [winner]);
+
+  useEffect(() => {
+    hasWinner();
+  }, [hasWinner]);
+
   return (
     <S.Container>
       <S.Header>
@@ -178,7 +208,7 @@ const Board: React.FC<Props> = ({
             <S.Amount>{amount}</S.Amount>
           </>
         ) : (
-          <S.Title>Aguardando a dica da(o) streamer</S.Title>
+          renderTitle()
         )}
       </S.Header>
       <S.Content>

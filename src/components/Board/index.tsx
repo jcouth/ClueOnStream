@@ -105,12 +105,14 @@ const Board: React.FC<Props> = ({
           (team === Team.BLUE && type === CardType.BLUE)
         ) {
           opened += 1;
-        } else if (
-          (team === Team.RED && type === CardType.BLUE) ||
-          (team === Team.BLUE && type === CardType.RED)
-        ) {
-          openedOtherTeam += 1;
         } else {
+          if (
+            (team === Team.RED && type === CardType.BLUE) ||
+            (team === Team.BLUE && type === CardType.RED)
+          ) {
+            openedOtherTeam += 1;
+          }
+
           break;
         }
       }

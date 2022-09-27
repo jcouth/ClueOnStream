@@ -9,6 +9,7 @@ import { CardProps } from '../../../interfaces/Card';
 import * as S from './styles';
 
 interface Props extends CardProps {
+  totalVotes: number;
   isStreamerTurn: boolean;
   onOpen(id: CardProps['id'], type: CardProps['type']): void;
 }
@@ -18,6 +19,8 @@ const Card: React.FC<Props> = ({
   title,
   isOpen,
   type,
+  votes,
+  totalVotes,
   isStreamerTurn,
   onOpen,
 }) => {
@@ -42,8 +45,10 @@ const Card: React.FC<Props> = ({
       onAnimationEnd={() => setShake(false)}
     >
       <S.Header>
-        <S.Percentage visible={false}>
-          <S.PercentageText>47%</S.PercentageText>
+        <S.Percentage visible={0 < votes}>
+          <S.PercentageText>
+            {((votes / totalVotes) * 100).toFixed(0)}%
+          </S.PercentageText>
         </S.Percentage>
         <ProfileCard
           fill={

@@ -15,4 +15,5 @@ export interface CardProps {
   title: string;
   isOpen: boolean;
   type: CardType;
+  votes: number;
 }

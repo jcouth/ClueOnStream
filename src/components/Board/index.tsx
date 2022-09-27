@@ -9,6 +9,12 @@ import * as S from './styles';
 
 import Card from './Card';
 
+interface VoteProps {
+  id: CardProps['id'];
+  type: CardProps['type'];
+  votes: CardProps['votes'];
+}
+
 interface Props {
   team: Team;
   clue: ClueProps | null;
@@ -16,7 +22,7 @@ interface Props {
   onFinishTurn(isGameOver: boolean): void;
 }
 
-const SECONDS = 60;
+const SECONDS = 5;
 const INTERVAL = 100;
 
 // (100% * interval-in-ms) / (seconds-in-ms)
@@ -28,35 +34,28 @@ const Board: React.FC<Props> = ({ team, clue, words, onFinishTurn }) => {
   const [amount, setAmount] = useState<number>(0);
   const [cards, setCards] = useState<CardProps[]>([]);
   const [progress, setProgress] = useState<number>(100);
+  const [totalVotes, setTotalVotes] = useState<number>(0);
+  const [cardsWithVotes, setCardsWithVotes] = useState<VoteProps[]>([]);
 
-  const handleOpen = (id: CardProps['id'], type: CardProps['type']) => {
+  const handleVote = (id: CardProps['id'], type: CardProps['type']) => {
     if (clue) {
-      if (type === CardType.GAME_OVER) {
-        setCards((oldState) =>
-          oldState.map((oldCard) => ({ ...oldCard, isOpen: true }))
-        );
-        onFinishTurn(true);
-        setProgress(0);
-      } else {
-        if (
-          (type === CardType.RED && team === Team.RED) ||
-          (type === CardType.BLUE && team === Team.BLUE)
-        ) {
-          setAmount((oldState) => oldState - 1);
-
-          if (amount === 1) {
-            setProgress(0);
-            onFinishTurn(false);
+      setTotalVotes((oldState) => oldState + 1);
+      setCards((oldState) =>
+        oldState.map((oldCard) => {
+          if (oldCard.id === id) {
+            return { ...oldCard, votes: oldCard.votes + 1 };
           }
-        } else {
-          setProgress(0);
-          onFinishTurn(false);
-        }
-
-        setCards((oldState) =>
+          return oldCard;
+        })
+      );
+      const filter = cardsWithVotes.filter((item) => item.id === id);
+      if (filter.length === 0) {
+        setCardsWithVotes((oldState) => [...oldState, { id, type, votes: 1 }]);
+      } else {
+        setCardsWithVotes((oldState) =>
           oldState.map((oldCard) => {
             if (oldCard.id === id) {
-              return { ...oldCard, isOpen: true };
+              return { ...oldCard, votes: oldCard.votes + 1 };
             }
             return oldCard;
           })
@@ -65,10 +64,54 @@ const Board: React.FC<Props> = ({ team, clue, words, onFinishTurn }) => {
     }
   };
 
+  const openCards = () => {
+    let isGameOver = false;
+    let newCards = [...cards];
+    const cardsToOpen = cardsWithVotes
+      .sort((a, b) => b.votes - a.votes)
+      .slice(0, clue!.amount);
+
+    for (const { id, type } of cardsToOpen) {
+      if (type === CardType.GAME_OVER) {
+        newCards = newCards.map((oldCard) => ({
+          ...oldCard,
+          isOpen: true,
+          votes: 0,
+        }));
+        isGameOver = true;
+        break;
+      } else {
+        newCards = newCards.map((oldCard) => {
+          if (oldCard.id === id) {
+            return {
+              ...oldCard,
+              isOpen: true,
+              votes: 0,
+            };
+          }
+          return { ...oldCard, votes: 0 };
+        });
+
+        if (
+          (team === Team.RED && type !== CardType.RED) ||
+          (team === Team.BLUE && type !== CardType.BLUE)
+        ) {
+          break;
+        }
+      }
+    }
+
+    setCardsWithVotes([]);
+    setTotalVotes(0);
+    onFinishTurn(isGameOver);
+    setCards(newCards);
+    setProgress(100);
+  };
+
   useEffect(() => {
     if (progress <= 0) {
       clearInterval(progressRef.current);
-      setProgress(100);
+      openCards();
     }
   }, [progress]);
 
@@ -91,6 +134,7 @@ const Board: React.FC<Props> = ({ team, clue, words, onFinishTurn }) => {
       title: item,
       isOpen: false,
       type: getType(index),
+      votes: 0,
     }));
 
     const shuffled = shuffleArray(cardsFromWords);
@@ -136,8 +180,9 @@ const Board: React.FC<Props> = ({ team, clue, words, onFinishTurn }) => {
           <Card
             key={card.id}
             {...card}
+            totalVotes={totalVotes}
             isStreamerTurn={clue === null}
-            onOpen={handleOpen}
+            onOpen={handleVote}
           />
         ))}
       </S.Content>

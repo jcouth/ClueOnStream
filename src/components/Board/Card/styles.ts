@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components';
 
 import theme from '../../../global/styles/theme';
 
-import { CardProps, CardType } from '../../../interfaces/Card';
+import { CardProps, CardType, Team } from '../../../interfaces/Card';
 
 interface StyledCardProps {
   isOpen: CardProps['isOpen'];
@@ -96,7 +96,7 @@ export const Header = styled.div`
   align-items: center;
 `;
 
-export const Percentage = styled.div<{ visible: boolean }>`
+export const Percentage = styled.div<{ team: Team; visible: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -104,7 +104,7 @@ export const Percentage = styled.div<{ visible: boolean }>`
   padding: 6px 16px;
 
   border-radius: 4px;
-  background-color: ${({ theme }) => theme.colors.team.red.primary};
+  background-color: ${({ theme, team }) => theme.colors.team[team].primary};
 
   ${({ visible }) =>
     !visible &&

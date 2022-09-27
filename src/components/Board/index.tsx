@@ -180,6 +180,7 @@ const Board: React.FC<Props> = ({ team, clue, words, onFinishTurn }) => {
           <Card
             key={card.id}
             {...card}
+            team={team}
             totalVotes={totalVotes}
             isStreamerTurn={clue === null}
             onOpen={handleVote}

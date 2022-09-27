@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router';
 
 import Board from '../../components/Board';
+import Info from '../../components/Info';
 import Cam from '../../components/Cam';
 
 import { ClueProps } from '../../interfaces/Clue';
@@ -40,7 +41,7 @@ const InGame: React.FC<Props> = () => {
   return (
     <S.Container team={team}>
       <S.Aside>
-        <S.Chat></S.Chat>
+        <Info />
         <Cam
           isStreamerTurn={isStreamerTurn}
           team={team}

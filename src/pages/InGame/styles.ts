@@ -20,8 +20,9 @@ export const Container = styled.div<{ team: 'red' | 'blue' }>`
 `;
 
 export const Aside = styled.aside`
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  grid-row-gap: 20px;
 `;
 
 export const Chat = styled.div`

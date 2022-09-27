@@ -31,6 +31,7 @@ declare module 'styled-components' {
       };
       white: string;
       white_90: string;
+      black: string;
       shadow: string;
     };
     fonts: {

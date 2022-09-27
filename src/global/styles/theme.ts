@@ -30,6 +30,7 @@ const theme: DefaultTheme = {
     },
     white: '#FFFFFF',
     white_90: '#FFFFFFE6',
+    black: '#000000',
     shadow: 'rgba(0, 0, 0, 0.25)',
   },
   fonts: {

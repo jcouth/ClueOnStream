@@ -106,11 +106,7 @@ const InGame: React.FC<Props> = () => {
             history={history}
             onFinishTimer={handleOnFinishTimer}
           />
-          <Cam
-            isStreamerTurn={isStreamerTurn}
-            team={team}
-            onSend={handleSendClue}
-          />
+          <Cam isStreamerTurn={isStreamerTurn} onSend={handleSendClue} />
         </S.Aside>
         <S.Main>
           <Board

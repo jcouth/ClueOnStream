@@ -6,21 +6,15 @@ import * as S from './styles';
 
 interface Props {
   isStreamerTurn: boolean;
-  team: 'red' | 'blue';
   onSend(clue: string, amount: number): void;
   inMenu?: boolean;
 }
 
 const AMOUNTS = [1, 2, 3, 4, 5, 6, 7];
 
-const Cam: React.FC<Props> = ({
-  isStreamerTurn,
-  team,
-  onSend,
-  inMenu = false,
-}) => {
+const Cam: React.FC<Props> = ({ isStreamerTurn, onSend, inMenu = false }) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const infoDivRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
 
   const [shake, setShake] = useState<boolean>(false);
   const [amount, setAmount] = useState<number | null>(null);
@@ -58,16 +52,16 @@ const Cam: React.FC<Props> = ({
 
   const renderInMenu = () => (
     <>
-      <S.Settings onClick={handleSettings}>
-        <S.SettingsText>Configurações</S.SettingsText>
-      </S.Settings>
+      <S.Button variant='secondary' onClick={handleSettings}>
+        <S.ButtonText>Configurações</S.ButtonText>
+      </S.Button>
       <S.Buttons>
-        <S.LogOut onClick={handleLogOut}>
-          <S.LogOutText>Deslogar</S.LogOutText>
-        </S.LogOut>
-        <S.Start onClick={handleStart}>
-          <S.StartText>Iniciar</S.StartText>
-        </S.Start>
+        <S.Button variant='secondary' onClick={handleLogOut}>
+          <S.ButtonText>Deslogar</S.ButtonText>
+        </S.Button>
+        <S.Button variant='primary' onClick={handleStart}>
+          <S.ButtonText>Iniciar</S.ButtonText>
+        </S.Button>
       </S.Buttons>
     </>
   );
@@ -75,50 +69,51 @@ const Cam: React.FC<Props> = ({
   const renderInGame = () => (
     <>
       <S.Selector
-        team={team}
         expand={expandAmounts}
-        height={infoDivRef.current?.clientHeight || 0}
+        height={headerRef.current?.clientHeight || 0}
       >
         <S.Title>Selecione o número de dicas:</S.Title>
         <S.SelectorContent columns={AMOUNTS.length}>
           {AMOUNTS.map((value) => (
-            <S.SelectorAmount
+            <S.Button
               key={value}
+              variant='tertiary'
               onClick={() => handleNewAmount(value)}
             >
-              <S.SelectorAmountText>{value}</S.SelectorAmountText>
-            </S.SelectorAmount>
+              <S.ButtonText>{value}</S.ButtonText>
+            </S.Button>
           ))}
         </S.SelectorContent>
       </S.Selector>
       <S.Controls>
         <S.Input ref={inputRef} placeholder='Digite aqui' />
-        <S.Amount onClick={handleExpandAmounts}>
-          <S.AmountText team={team}>{amount || '-'}</S.AmountText>
-        </S.Amount>
+        <S.Button variant='tertiary' onClick={handleExpandAmounts}>
+          <S.ButtonText>{amount || '-'}</S.ButtonText>
+        </S.Button>
       </S.Controls>
       <S.Buttons>
-        <S.GoToMenu team={team} onClick={handleGoToMenu}>
-          <S.GoToMenuText team={team}>Sair</S.GoToMenuText>
-        </S.GoToMenu>
-        <S.Send
+        <S.Button variant='secondary' onClick={handleGoToMenu}>
+          <S.ButtonText>Sair</S.ButtonText>
+        </S.Button>
+        <S.Button
+          variant='primary'
           className={shake ? 'shake' : ''}
           onClick={handleSend}
           onAnimationEnd={() => setShake(false)}
         >
-          <S.SendText team={team}>Enviar</S.SendText>
-        </S.Send>
+          <S.ButtonText>Enviar</S.ButtonText>
+        </S.Button>
       </S.Buttons>
     </>
   );
 
   return (
-    <S.Container team={team}>
-      <S.Info ref={infoDivRef}>
+    <S.Container>
+      <S.Header ref={headerRef}>
         <CameraIcon />
         <S.Title>Posicione sua câmera aqui</S.Title>
-      </S.Info>
-      <S.Content expand={expandAmounts} team={team}>
+      </S.Header>
+      <S.Content expand={expandAmounts}>
         {inMenu ? renderInMenu() : renderInGame()}
       </S.Content>
     </S.Container>

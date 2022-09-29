@@ -32,7 +32,6 @@ export const Content = styled.div<{ team: 'red' | 'blue' }>`
   background-color: ${({ theme, team }) => theme.colors.team[team].primary};
 
   overflow: hidden;
-
   transition: background-color 0.5s ease-in-out;
 
   &::before {

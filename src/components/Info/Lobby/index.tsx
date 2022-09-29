@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 
 import { ReactComponent as AlarmIcon } from '@assets/alarm.svg';
 import { ReactComponent as Logo } from '@assets/logo.svg';
+import Button from '@components/Button';
 import { Status } from '@interfaces/Status';
 
-import { Button, ButtonText, Title } from '../../Cam/styles';
+import { Title } from '../../Cam/styles';
 
 import * as S from './styles';
 
@@ -45,19 +46,21 @@ const Lobby: React.FC<LobbyProps> = ({ type, username, onChangeSeconds }) => {
               {OPTIONS.map((value) => (
                 <Button
                   key={value}
+                  title={value}
                   variant="tertiary"
                   onClick={() => handleOption(value)}
-                >
-                  <ButtonText>{value}</ButtonText>
-                </Button>
+                />
               ))}
             </S.SelectorContent>
           </S.Selector>
           <S.TimerContent>
             <AlarmIcon width="100%" height="36px" />
-            <Button variant="primary" isActive onClick={handleExpand}>
-              <ButtonText>{option} segundos</ButtonText>
-            </Button>
+            <Button
+              title={`${option} segundos`}
+              variant="primary"
+              isActive
+              onClick={handleExpand}
+            />
           </S.TimerContent>
         </S.Timer>
       </S.Content>

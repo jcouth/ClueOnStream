@@ -4,8 +4,9 @@ import { shuffleArray } from '@helpers/shuffleArray';
 import { CardProps, CardType, Team } from '@interfaces/Card';
 import { ClueProps } from '@interfaces/Clue';
 
-import * as S from './styles';
 import Card from './Card';
+
+import * as S from './styles';
 
 interface VoteProps {
   id: CardProps['id'];

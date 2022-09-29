@@ -1,7 +1,8 @@
 import React, { memo, useRef, useState } from 'react';
 
-import { Button, ButtonText, Title } from '../styles';
+import Button from '@components/Button';
 
+import { Title } from '../styles';
 import * as S from './styles';
 
 interface Props {
@@ -15,8 +16,8 @@ const Game: React.FC<Props> = ({ isStreamerTurn, onSend }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [shake, setShake] = useState<boolean>(false);
-  const [amount, setAmount] = useState<number | null>(null);
   const [expand, setExpand] = useState<boolean>(false);
+  const [amount, setAmount] = useState<number | null>(null);
 
   const handleNewAmount = (value: number) => {
     setAmount(value);
@@ -50,33 +51,31 @@ const Game: React.FC<Props> = ({ isStreamerTurn, onSend }) => {
           {AMOUNTS.map((value) => (
             <Button
               key={value}
+              title={value}
               variant="tertiary"
               onClick={() => handleNewAmount(value)}
-            >
-              <ButtonText>{value}</ButtonText>
-            </Button>
+            />
           ))}
         </S.SelectorContent>
       </S.Selector>
       <S.Controls>
         <S.Input ref={inputRef} placeholder="Digite aqui" />
-        <Button variant="tertiary" onClick={handleExpand}>
-          <ButtonText>{amount || '-'}</ButtonText>
-        </Button>
+        <Button
+          title={amount || '-'}
+          variant="tertiary"
+          onClick={handleExpand}
+        />
       </S.Controls>
       <S.Buttons>
-        <Button variant="secondary" onClick={handleLobby}>
-          <ButtonText>Sair</ButtonText>
-        </Button>
+        <Button title="Sair" variant="secondary" onClick={handleLobby} />
         <Button
+          title="Enviar"
           variant="primary"
           isActive={isStreamerTurn}
           className={shake ? 'shake' : ''}
           onClick={handleSend}
           onAnimationEnd={() => setShake(false)}
-        >
-          <ButtonText>Enviar</ButtonText>
-        </Button>
+        />
       </S.Buttons>
     </S.Content>
   );

@@ -15,6 +15,7 @@ export const Container = styled.div`
   background-color: ${({ theme }) => theme.colors.primary};
   background-image: url('https://cdn.codenames.game/v20210210/img/bg-raster.svg');
   background-size: cover;
+  background-repeat: no-repeat;
   mix-blend-mode: overlay;
 `;
 

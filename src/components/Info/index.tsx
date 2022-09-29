@@ -78,7 +78,11 @@ const Info: React.FC<Props> = ({
           <S.HistoryClues>
             <S.HistoryCluesContent>
               {history.clues.map((clue) => (
-                <S.Clue>
+                <S.Clue
+                  key={`${clue.description}${clue.amount}${
+                    history.remaining[clue.team]
+                  }`}
+                >
                   <S.ClueTitle team={clue.team}>{clue.description}</S.ClueTitle>
                   <S.ClueAmount team={clue.team}>{clue.amount}</S.ClueAmount>
                 </S.Clue>

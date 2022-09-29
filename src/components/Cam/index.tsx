@@ -15,9 +15,9 @@ interface Props {
 const Cam: React.FC<Props> = ({ isStreamerTurn, onSend, inLobby = false }) => {
   const handleSettings = () => {};
 
-  const handleLogOut = () => {};
+  // const handleLogOut = () => {};
 
-  const handleStart = () => {};
+  // const handleStart = () => {};
 
   const renderLobby = () => (
     <>

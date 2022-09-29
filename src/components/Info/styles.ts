@@ -9,7 +9,7 @@ export const Container = styled.div`
 
   border: 4px solid ${({ theme }) => theme.colors.white};
   border-radius: 12px;
-  background-color: ${({ theme }) => theme.colors.card.normal.primary};
+  background-color: ${({ theme }) => theme.colors.secondary};
   box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
 `;
 
@@ -22,7 +22,7 @@ export const Content = styled.div`
   padding: 18px 14px 14px;
 
   border-radius: 12px;
-  background-color: ${({ theme }) => theme.colors.card.normal.secondary};
+  background-color: ${({ theme }) => theme.colors.primary};
   box-shadow: inset 0px 4px 4px ${({ theme }) => theme.colors.shadow};
 `;
 
@@ -64,21 +64,37 @@ export const History = styled.div`
 
   padding: 12px 12px 6px;
 
-  border: 4px solid ${({ theme }) => theme.colors.white};
   border-radius: 12px;
-  background-color: ${({ theme }) => theme.colors.white_90};
-  box-shadow: inset 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  background-color: ${({ theme }) => theme.colors.secondary};
+  box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
 `;
 
 export const HistoryTitle = styled.p`
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  grid-column-gap: 8px;
+  align-items: center;
+
+  width: 100%;
+
   font-family: ${({ theme }) => theme.fonts.primary.family};
   font-weight: ${({ theme }) => theme.fonts.primary.weight};
   font-size: ${({ theme }) => theme.fonts.primary.size};
 
-  color: ${({ theme }) => theme.colors.black};
+  color: ${({ theme }) => theme.colors.white};
 
   text-transform: uppercase;
   text-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+
+  &::before,
+  &::after {
+    content: '';
+
+    width: 100%;
+    height: 2px;
+
+    background-color: ${({ theme }) => theme.colors.white};
+  }
 `;
 
 export const HistoryClues = styled.div`
@@ -88,8 +104,14 @@ export const HistoryClues = styled.div`
   margin-top: 4px;
 
   width: 100%;
+  /* height: 100%; */
 
   overflow: hidden;
+
+  /* background-color: red;
+  background-image: url('Logo.png');
+  background-repeat: no-repeat;
+  background-size: cover; */
 `;
 
 export const HistoryCluesContent = styled.div`
@@ -101,7 +123,7 @@ export const HistoryCluesContent = styled.div`
   top: 0;
   left: 0;
 
-  padding: 0 8px 6px;
+  padding-bottom: 6px;
 
   width: 100%;
   height: 100%;
@@ -184,9 +206,7 @@ export const TimerIcon = styled.div<{ team: Teams; isStreamerTurn: boolean }>`
   border: 3px solid ${({ theme }) => theme.colors.white};
   border-radius: 100px;
   background-color: ${({ theme, team, isStreamerTurn }) =>
-    isStreamerTurn
-      ? theme.colors.card.normal.secondary
-      : theme.colors.team[team].primary};
+    isStreamerTurn ? theme.colors.primary : theme.colors.team[team].primary};
   box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
 `;
 
@@ -207,7 +227,7 @@ export const Progress = styled.div<{
   border-radius: 12px;
   background-color: ${({ theme, team, isStreamerTurn }) =>
     isStreamerTurn
-      ? theme.colors.card.normal.primary
+      ? theme.colors.secondary
       : theme.colors.team[team].secondary};
   box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
 
@@ -224,9 +244,7 @@ export const Progress = styled.div<{
 
     border-radius: inherit;
     background-color: ${({ theme, team, isStreamerTurn }) =>
-      isStreamerTurn
-        ? theme.colors.card.normal.secondary
-        : theme.colors.team[team].primary};
+      isStreamerTurn ? theme.colors.primary : theme.colors.team[team].primary};
 
     transition: width ${({ interval }) => interval} ease-in-out;
   }

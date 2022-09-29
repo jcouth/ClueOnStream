@@ -79,7 +79,7 @@ export const Button = styled.button<{
 
   border: ${({ theme, variant, isActive }) =>
     variant === 'primary'
-      ? `4px solid ${isActive ? theme.colors.white : theme.colors.secondary}`
+      ? `3px solid ${isActive ? theme.colors.white : theme.colors.secondary}`
       : 'none'};
   border-radius: 6px;
   background-color: ${({ variant }) => buttonColors[variant].background};

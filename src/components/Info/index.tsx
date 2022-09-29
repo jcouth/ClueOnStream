@@ -66,11 +66,11 @@ const Info: React.FC<Props> = ({
   return (
     <S.Container>
       <S.Content>
-        <S.Team team='red'>
+        <S.Team team={Team.RED}>
           <S.TeamTitle>Vermelho</S.TeamTitle>
           <S.TeamAmount>{history.remaining.red}</S.TeamAmount>
         </S.Team>
-        <S.Team team='blue'>
+        <S.Team team={Team.BLUE}>
           <S.TeamTitle>Azul</S.TeamTitle>
           <S.TeamAmount>{history.remaining.blue}</S.TeamAmount>
         </S.Team>

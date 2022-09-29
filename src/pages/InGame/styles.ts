@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import { Team } from '../../interfaces/Card';
+
 export const Container = styled.div`
   display: flex;
   justify-content: center;
@@ -19,7 +21,7 @@ export const Container = styled.div`
   mix-blend-mode: overlay;
 `;
 
-export const Content = styled.div<{ team: 'red' | 'blue' }>`
+export const Content = styled.div<{ team: Team }>`
   display: grid;
   grid-template-columns: 350px 1fr;
   grid-column-gap: 20px;

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-type Teams = 'red' | 'blue';
+import { Team as TeamProps } from '../../interfaces/Card';
 
 export const Container = styled.div`
   display: flex;
@@ -26,7 +26,7 @@ export const Content = styled.div`
   box-shadow: inset 0px 4px 4px ${({ theme }) => theme.colors.shadow};
 `;
 
-export const Team = styled.div<{ team: Teams }>`
+export const Team = styled.div<{ team: TeamProps }>`
   display: flex;
   justify-content: space-between;
 
@@ -144,7 +144,7 @@ export const Clue = styled.div`
   margin-top: 6px;
 `;
 
-export const ClueTitle = styled.p<{ team: Teams }>`
+export const ClueTitle = styled.p<{ team: TeamProps }>`
   flex-grow: 1;
   display: flex;
   align-items: center;
@@ -167,7 +167,7 @@ export const ClueTitle = styled.p<{ team: Teams }>`
   text-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
 `;
 
-export const ClueAmount = styled.p<{ team: Teams }>`
+export const ClueAmount = styled.p<{ team: TeamProps }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -197,7 +197,10 @@ export const Timer = styled.div`
   height: 36px;
 `;
 
-export const TimerIcon = styled.div<{ team: Teams; isStreamerTurn: boolean }>`
+export const TimerIcon = styled.div<{
+  team: TeamProps;
+  isStreamerTurn: boolean;
+}>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -219,7 +222,7 @@ export const TimerIcon = styled.div<{ team: Teams; isStreamerTurn: boolean }>`
 
 export const Progress = styled.div<{
   isStreamerTurn: boolean;
-  team: Teams;
+  team: TeamProps;
   progress: number;
   interval: string;
 }>`

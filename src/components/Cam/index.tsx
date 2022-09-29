@@ -1,13 +1,11 @@
 import React from 'react';
 
-import { ReactComponent as TwitchLogo } from '../../assets/twitch-logo.svg';
-import { ReactComponent as CameraIcon } from '../../assets/camera.svg';
-
-import { Status } from '../../interfaces/Status';
-
-import Game from './Game';
+import { ReactComponent as TwitchLogo } from '@assets/twitch-logo.svg';
+import { ReactComponent as CameraIcon } from '@assets/camera.svg';
+import { Status } from '@interfaces/Status';
 
 import * as S from './styles';
+import Game from './Game';
 
 interface Props {
   type?: Status;
@@ -25,10 +23,10 @@ const Cam: React.FC<Props> = ({ type, isStreamerTurn, onSend }) => {
     if (type === Status.WAITING_START) {
       return (
         <S.Content>
-          <S.Button variant='secondary' isActive onClick={handleClick}>
+          <S.Button variant="secondary" isActive onClick={handleClick}>
             <S.ButtonText>Sair</S.ButtonText>
           </S.Button>
-          <S.Button variant='primary' isActive onClick={handleClick}>
+          <S.Button variant="primary" isActive onClick={handleClick}>
             <S.ButtonText>Iniciar</S.ButtonText>
           </S.Button>
         </S.Content>
@@ -45,8 +43,8 @@ const Cam: React.FC<Props> = ({ type, isStreamerTurn, onSend }) => {
     }
     return (
       <S.Content>
-        <S.Button variant='primary' isActive onClick={handleClick}>
-          <TwitchLogo width='72' height='100%' fill='white' />
+        <S.Button variant="primary" isActive onClick={handleClick}>
+          <TwitchLogo width="72" height="100%" fill="white" />
         </S.Button>
       </S.Content>
     );

@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import { ReactComponent as AlarmIcon } from '../../../assets/alarm.svg';
-import { ReactComponent as Logo } from '../../../assets/logo.svg';
-
-import { ClueProps } from '../../../interfaces/Clue';
-import { Team } from '../../../interfaces/Card';
+import { ReactComponent as AlarmIcon } from '@assets/alarm.svg';
+import { ReactComponent as Logo } from '@assets/logo.svg';
+import { ClueProps } from '@interfaces/Clue';
+import { Team } from '@interfaces/Card';
 
 import * as S from './styles';
 
@@ -78,7 +77,7 @@ const Game: React.FC<GameProps> = ({
           <S.HistoryTitle>Histórico de Dicas</S.HistoryTitle>
           <S.HistoryClues>
             <S.HistoryLogo>
-              <Logo width='100%' height='100%' fillOpacity={0.25} />
+              <Logo width="100%" height="100%" fillOpacity={0.25} />
             </S.HistoryLogo>
             <S.HistoryCluesContent>
               {history.clues.map((clue, index) => (

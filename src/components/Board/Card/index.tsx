@@ -1,10 +1,8 @@
 import React, { memo, useState } from 'react';
 
-import { ReactComponent as ProfileCard } from '../../../assets/profile-card.svg';
-
-import theme from '../../../global/styles/theme';
-
-import { CardProps, Team } from '../../../interfaces/Card';
+import { ReactComponent as ProfileCard } from '@assets/profile-card.svg';
+import theme from '@global/styles/theme';
+import { CardProps, Team } from '@interfaces/Card';
 
 import * as S from './styles';
 

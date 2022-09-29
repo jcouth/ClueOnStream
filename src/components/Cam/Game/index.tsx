@@ -50,7 +50,7 @@ const Game: React.FC<Props> = ({ isStreamerTurn, onSend }) => {
           {AMOUNTS.map((value) => (
             <Button
               key={value}
-              variant='tertiary'
+              variant="tertiary"
               onClick={() => handleNewAmount(value)}
             >
               <ButtonText>{value}</ButtonText>
@@ -59,17 +59,17 @@ const Game: React.FC<Props> = ({ isStreamerTurn, onSend }) => {
         </S.SelectorContent>
       </S.Selector>
       <S.Controls>
-        <S.Input ref={inputRef} placeholder='Digite aqui' />
-        <Button variant='tertiary' onClick={handleExpand}>
+        <S.Input ref={inputRef} placeholder="Digite aqui" />
+        <Button variant="tertiary" onClick={handleExpand}>
           <ButtonText>{amount || '-'}</ButtonText>
         </Button>
       </S.Controls>
       <S.Buttons>
-        <Button variant='secondary' onClick={handleLobby}>
+        <Button variant="secondary" onClick={handleLobby}>
           <ButtonText>Sair</ButtonText>
         </Button>
         <Button
-          variant='primary'
+          variant="primary"
           isActive={isStreamerTurn}
           className={shake ? 'shake' : ''}
           onClick={handleSend}

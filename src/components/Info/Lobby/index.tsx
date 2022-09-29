@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 
-import { ReactComponent as AlarmIcon } from '../../../assets/alarm.svg';
-import { ReactComponent as Logo } from '../../../assets/logo.svg';
+import { ReactComponent as AlarmIcon } from '@assets/alarm.svg';
+import { ReactComponent as Logo } from '@assets/logo.svg';
+import { Status } from '@interfaces/Status';
 
 import { Button, ButtonText, Title } from '../../Cam/styles';
-
-import { Status } from '../../../interfaces/Status';
 
 import * as S from './styles';
 
@@ -34,7 +33,7 @@ const Lobby: React.FC<LobbyProps> = ({ type, username, onChangeSeconds }) => {
   return (
     <S.Container>
       <S.LogoWrapper>
-        <Logo width='100%' height='240px' />
+        <Logo width="100%" height="240px" />
       </S.LogoWrapper>
       <S.Content>
         <S.Title>{username || 'Faça login'}</S.Title>
@@ -46,7 +45,7 @@ const Lobby: React.FC<LobbyProps> = ({ type, username, onChangeSeconds }) => {
               {OPTIONS.map((value) => (
                 <Button
                   key={value}
-                  variant='tertiary'
+                  variant="tertiary"
                   onClick={() => handleOption(value)}
                 >
                   <ButtonText>{value}</ButtonText>
@@ -55,8 +54,8 @@ const Lobby: React.FC<LobbyProps> = ({ type, username, onChangeSeconds }) => {
             </S.SelectorContent>
           </S.Selector>
           <S.TimerContent>
-            <AlarmIcon width='100%' height='36px' />
-            <Button variant='primary' isActive onClick={handleExpand}>
+            <AlarmIcon width="100%" height="36px" />
+            <Button variant="primary" isActive onClick={handleExpand}>
               <ButtonText>{option} segundos</ButtonText>
             </Button>
           </S.TimerContent>

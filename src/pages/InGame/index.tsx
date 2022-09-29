@@ -2,13 +2,12 @@ import React, { useState } from 'react';
 
 import { useLocation } from 'react-router';
 
-import Info, { HistoryProps } from '../../components/Info';
-import Board from '../../components/Board';
-import Cam from '../../components/Cam';
-
-import { ClueProps } from '../../interfaces/Clue';
-import { Status } from '../../interfaces/Status';
-import { Team } from '../../interfaces/Card';
+import Info, { HistoryProps } from '@components/Info';
+import Board from '@components/Board';
+import Cam from '@components/Cam';
+import { ClueProps } from '@interfaces/Clue';
+import { Status } from '@interfaces/Status';
+import { Team } from '@interfaces/Card';
 
 import * as S from './styles';
 
@@ -106,7 +105,7 @@ const InGame: React.FC<Props> = () => {
             team={team}
             history={history}
             type={Status.WAITING_CONNECTION}
-            username='JCOUTH'
+            username="JCOUTH"
             onFinishTimer={handleOnFinishTimer}
             onChangeSeconds={(_) => {}}
           />

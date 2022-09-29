@@ -1,12 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { shuffleArray } from '../../helpers/shuffleArray';
-
-import { CardProps, CardType, Team } from '../../interfaces/Card';
-import { ClueProps } from '../../interfaces/Clue';
+import { shuffleArray } from '@helpers/shuffleArray';
+import { CardProps, CardType, Team } from '@interfaces/Card';
+import { ClueProps } from '@interfaces/Clue';
 
 import * as S from './styles';
-
 import Card from './Card';
 
 interface VoteProps {

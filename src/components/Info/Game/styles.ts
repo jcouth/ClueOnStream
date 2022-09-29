@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { Team as TeamProps } from '../../interfaces/Card';
+import { Team as TeamProps } from '../../../interfaces/Card';
 
 export const Container = styled.div`
   display: flex;

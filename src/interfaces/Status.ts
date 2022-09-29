@@ -1,6 +1,6 @@
 export enum Status {
-  WAITING_CONNECTION = 'WAITING_CONNECTION',
-  WAITING_START = 'WAITING_START',
-  WAITING_TEAMS = 'WAITING_TEAMS',
+  WAITING_CONNECTION = 'Aguardando conexão',
+  WAITING_START = 'Aguardando streamer',
+  WAITING_TEAMS = 'Aguardando equipes',
   GAME = 'GAME',
 }

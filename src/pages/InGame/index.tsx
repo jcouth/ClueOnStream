@@ -105,7 +105,10 @@ const InGame: React.FC<Props> = () => {
             isStreamerTurn={isStreamerTurn}
             team={team}
             history={history}
+            type={Status.WAITING_CONNECTION}
+            username='JCOUTH'
             onFinishTimer={handleOnFinishTimer}
+            onChangeSeconds={(_) => {}}
           />
           <Cam
             type={Status.WAITING_CONNECTION}

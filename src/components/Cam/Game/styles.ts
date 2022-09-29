@@ -3,8 +3,6 @@ import styled from 'styled-components';
 import { Content as ParentContent } from '../styles';
 
 export const Content = styled(ParentContent)<{ expand: boolean }>`
-  position: relative;
-
   box-shadow: inset 0px 4px 4px
     ${({ theme, expand }) => (expand ? 'transparent' : theme.colors.shadow)};
 

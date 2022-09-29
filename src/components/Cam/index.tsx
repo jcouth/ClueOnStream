@@ -1,39 +1,62 @@
 import React from 'react';
 
+import { ReactComponent as TwitchLogo } from '../../assets/twitch-logo.svg';
 import { ReactComponent as CameraIcon } from '../../assets/camera.svg';
+
+import { Status } from '../../interfaces/Status';
 
 import Game from './Game';
 
 import * as S from './styles';
 
 interface Props {
+  type?: Status;
   isStreamerTurn: boolean;
   onSend(clue: string, amount: number): void;
   inLobby?: boolean;
 }
 
-const Cam: React.FC<Props> = ({ isStreamerTurn, onSend, inLobby = false }) => {
-  const handleSettings = () => {};
+const Cam: React.FC<Props> = ({
+  type,
+  isStreamerTurn,
+  onSend,
+  inLobby = false,
+}) => {
+  const handleClick = () => {};
 
-  // const handleLogOut = () => {};
-
-  // const handleStart = () => {};
-
-  const renderLobby = () => (
-    <>
-      <S.Button variant='secondary' onClick={handleSettings}>
-        <S.ButtonText>Configurações</S.ButtonText>
-      </S.Button>
-      {/* <S.Buttons>
-        <S.Button variant='secondary' onClick={handleLogOut}>
-          <S.ButtonText>Deslogar</S.ButtonText>
+  const renderContent = () => {
+    if (type === Status.GAME) {
+      return <Game isStreamerTurn={isStreamerTurn} onSend={onSend} />;
+    }
+    if (type === Status.WAITING_START) {
+      return (
+        <S.Content>
+          <S.Button variant='secondary' isActive onClick={handleClick}>
+            <S.ButtonText>Sair</S.ButtonText>
+          </S.Button>
+          <S.Button variant='primary' isActive onClick={handleClick}>
+            <S.ButtonText>Iniciar</S.ButtonText>
+          </S.Button>
+        </S.Content>
+      );
+    }
+    if (type === Status.WAITING_TEAMS) {
+      return (
+        <S.Content>
+          <S.ContentInfo>
+            Espere o chat entrar nas equipes através do palpite
+          </S.ContentInfo>
+        </S.Content>
+      );
+    }
+    return (
+      <S.Content>
+        <S.Button variant='primary' isActive onClick={handleClick}>
+          <TwitchLogo width='72' height='100%' fill='white' />
         </S.Button>
-        <S.Button variant='primary' onClick={handleStart}>
-          <S.ButtonText>Iniciar</S.ButtonText>
-        </S.Button>
-      </S.Buttons> */}
-    </>
-  );
+      </S.Content>
+    );
+  };
 
   return (
     <S.Container>
@@ -41,11 +64,7 @@ const Cam: React.FC<Props> = ({ isStreamerTurn, onSend, inLobby = false }) => {
         <CameraIcon />
         <S.Title>Posicione sua câmera aqui</S.Title>
       </S.Header>
-      {inLobby ? (
-        renderLobby()
-      ) : (
-        <Game isStreamerTurn={isStreamerTurn} onSend={onSend} />
-      )}
+      {renderContent()}
     </S.Container>
   );
 };

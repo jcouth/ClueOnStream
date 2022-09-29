@@ -31,6 +31,9 @@ export const Content = styled.div<{ team: 'red' | 'blue' }>`
 
   border-radius: 12px;
   background-color: ${({ theme, team }) => theme.colors.team[team].primary};
+  background-image: inherit;
+  background-size: inherit;
+  background-repeat: inherit;
 
   overflow: hidden;
   transition: background-color 0.5s ease-in-out;

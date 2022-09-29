@@ -78,12 +78,12 @@ const Info: React.FC<Props> = ({
           <S.HistoryTitle>Histórico de Dicas</S.HistoryTitle>
           <S.HistoryClues>
             <S.HistoryLogo>
-              <Logo width='auto' height='auto' />
+              <Logo width='100%' height='100%' />
             </S.HistoryLogo>
             <S.HistoryCluesContent>
-              {history.clues.map((clue) => (
+              {history.clues.map((clue, index) => (
                 <S.Clue
-                  key={`${clue.description}${clue.amount}${
+                  key={`${index}${clue.description}${clue.amount}${
                     history.remaining[clue.team]
                   }`}
                 >

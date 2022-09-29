@@ -104,14 +104,21 @@ export const HistoryClues = styled.div`
   margin-top: 4px;
 
   width: 100%;
-  /* height: 100%; */
 
   overflow: hidden;
+`;
 
-  /* background-color: red;
-  background-image: url('Logo.png');
-  background-repeat: no-repeat;
-  background-size: cover; */
+export const HistoryLogo = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
 `;
 
 export const HistoryCluesContent = styled.div`

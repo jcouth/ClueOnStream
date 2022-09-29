@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { ReactComponent as AlarmIcon } from '../../assets/alarm.svg';
+import { ReactComponent as Logo } from '../../assets/logo.svg';
 
 import { ClueProps } from '../../interfaces/Clue';
 import { Team } from '../../interfaces/Card';
@@ -76,6 +77,9 @@ const Info: React.FC<Props> = ({
         <S.History>
           <S.HistoryTitle>Histórico de Dicas</S.HistoryTitle>
           <S.HistoryClues>
+            <S.HistoryLogo>
+              <Logo width='auto' height='auto' />
+            </S.HistoryLogo>
             <S.HistoryCluesContent>
               {history.clues.map((clue) => (
                 <S.Clue

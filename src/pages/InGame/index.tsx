@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 
 import { useLocation } from 'react-router';
 
-import Board from '../../components/Board';
 import Info, { HistoryProps } from '../../components/Info';
+import Board from '../../components/Board';
 import Cam from '../../components/Cam';
 
 import { ClueProps } from '../../interfaces/Clue';
@@ -25,6 +25,7 @@ const InGame: React.FC<Props> = () => {
 
   const [team, setTeam] = useState<Team>(Team.RED);
   const [clue, setClue] = useState<ClueProps | null>(null);
+  const [winner, setWinner] = useState<Team | null>(null);
   const [isStreamerTurn, setIsStreamerTurn] = useState<boolean>(true);
   const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
   const [history, setHistory] = useState<HistoryProps>({
@@ -34,7 +35,6 @@ const InGame: React.FC<Props> = () => {
     },
     clues: [],
   });
-  const [winner, setWinner] = useState<Team | null>(null);
 
   const handleSendClue = (description: string, amount: number) => {
     setClue({
@@ -97,32 +97,34 @@ const InGame: React.FC<Props> = () => {
   };
 
   return (
-    <S.Container team={team}>
-      <S.Aside>
-        <Info
-          isStreamerTurn={isStreamerTurn}
-          team={team}
-          history={history}
-          onFinishTimer={handleOnFinishTimer}
-        />
-        <Cam
-          isStreamerTurn={isStreamerTurn}
-          team={team}
-          onSend={handleSendClue}
-        />
-      </S.Aside>
-      <S.Main>
-        <Board
-          winner={winner}
-          amountOfRedCards={AMOUNT_OF_RED_CARDS}
-          amountOfBlueCards={AMOUNT_OF_BLUE_CARDS}
-          team={team}
-          clue={clue}
-          words={words}
-          isTimerRunning={isTimerRunning}
-          onFinishTurn={handleOnFinishTurn}
-        />
-      </S.Main>
+    <S.Container>
+      <S.Content team={team}>
+        <S.Aside>
+          <Info
+            isStreamerTurn={isStreamerTurn}
+            team={team}
+            history={history}
+            onFinishTimer={handleOnFinishTimer}
+          />
+          <Cam
+            isStreamerTurn={isStreamerTurn}
+            team={team}
+            onSend={handleSendClue}
+          />
+        </S.Aside>
+        <S.Main>
+          <Board
+            winner={winner}
+            amountOfRedCards={AMOUNT_OF_RED_CARDS}
+            amountOfBlueCards={AMOUNT_OF_BLUE_CARDS}
+            team={team}
+            clue={clue}
+            words={words}
+            isTimerRunning={isTimerRunning}
+            onFinishTurn={handleOnFinishTurn}
+          />
+        </S.Main>
+      </S.Content>
     </S.Container>
   );
 };

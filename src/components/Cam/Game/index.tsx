@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { memo, useRef, useState } from 'react';
 
 import { Button, ButtonText, Title } from '../styles';
 
@@ -82,4 +82,4 @@ const Game: React.FC<Props> = ({ isStreamerTurn, onSend }) => {
   );
 };
 
-export default Game;
+export default memo(Game);

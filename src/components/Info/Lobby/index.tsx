@@ -5,8 +5,6 @@ import { ReactComponent as Logo } from '@assets/logo.svg';
 import Button from '@components/Button';
 import { Status } from '@interfaces/Status';
 
-import { Title } from '../../Cam/styles';
-
 import * as S from './styles';
 
 const OPTIONS = [30, 60, 90, 120, 150];
@@ -41,7 +39,7 @@ const Lobby: React.FC<LobbyProps> = ({ type, username, onChangeSeconds }) => {
         <S.Status>{type}</S.Status>
         <S.Timer expand={expand}>
           <S.Selector expand={expand} height={70}>
-            <Title>Segundos por turno:</Title>
+            <S.SelectorTitle>Segundos por turno:</S.SelectorTitle>
             <S.SelectorContent columns={OPTIONS.length}>
               {OPTIONS.map((value) => (
                 <Button

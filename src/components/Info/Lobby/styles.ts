@@ -136,6 +136,19 @@ export const Selector = styled.div<{ expand: boolean; height: number }>`
     padding 0.5s ease-in-out, box-shadow 0.25s ease-in-out 0.125s;
 `;
 
+export const SelectorTitle = styled.p`
+  margin-top: 6px;
+
+  font-family: ${({ theme }) => theme.fonts.primary.family};
+  font-weight: ${({ theme }) => theme.fonts.primary.weight};
+  font-size: ${({ theme }) => theme.fonts.primary.size};
+
+  color: ${({ theme }) => theme.colors.white};
+
+  text-transform: uppercase;
+  text-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+`;
+
 export const SelectorContent = styled.div<{ columns: number }>`
   display: grid;
   grid-template-columns: repeat(${({ columns }) => columns}, minmax(0, 1fr));

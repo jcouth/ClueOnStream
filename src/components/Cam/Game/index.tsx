@@ -2,7 +2,6 @@ import React, { memo, useRef, useState } from 'react';
 
 import Button from '@components/Button';
 
-import { Title } from '../styles';
 import * as S from './styles';
 
 interface Props {
@@ -46,7 +45,7 @@ const Game: React.FC<Props> = ({ isStreamerTurn, onSend }) => {
   return (
     <S.Content expand={expand}>
       <S.Selector expand={expand} height={66}>
-        <Title>Selecione o número de dicas:</Title>
+        <S.Title>Selecione o número de dicas:</S.Title>
         <S.SelectorContent columns={AMOUNTS.length}>
           {AMOUNTS.map((value) => (
             <Button

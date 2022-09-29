@@ -13,15 +13,9 @@ interface Props {
   type?: Status;
   isStreamerTurn: boolean;
   onSend(clue: string, amount: number): void;
-  inLobby?: boolean;
 }
 
-const Cam: React.FC<Props> = ({
-  type,
-  isStreamerTurn,
-  onSend,
-  inLobby = false,
-}) => {
+const Cam: React.FC<Props> = ({ type, isStreamerTurn, onSend }) => {
   const handleClick = () => {};
 
   const renderContent = () => {

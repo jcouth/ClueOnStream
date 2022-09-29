@@ -7,6 +7,7 @@ import Board from '../../components/Board';
 import Cam from '../../components/Cam';
 
 import { ClueProps } from '../../interfaces/Clue';
+import { Status } from '../../interfaces/Status';
 import { Team } from '../../interfaces/Card';
 
 import * as S from './styles';
@@ -106,7 +107,11 @@ const InGame: React.FC<Props> = () => {
             history={history}
             onFinishTimer={handleOnFinishTimer}
           />
-          <Cam isStreamerTurn={isStreamerTurn} onSend={handleSendClue} />
+          <Cam
+            type={Status.WAITING_CONNECTION}
+            isStreamerTurn={isStreamerTurn}
+            onSend={handleSendClue}
+          />
         </S.Aside>
         <S.Main>
           <Board

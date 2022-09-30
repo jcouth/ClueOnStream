@@ -105,7 +105,23 @@ export const HistoryClues = styled.div`
 
   width: 100%;
 
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+
   overflow: hidden;
+
+  &::before {
+    content: '';
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    box-shadow: inset 0vw 1.319vw 0.792vw -0.792vw ${({ theme }) => theme.colors.shadow};
+  }
 `;
 
 export const HistoryLogo = styled.div`

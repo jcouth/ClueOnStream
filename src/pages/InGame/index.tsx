@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { ReactComponent as PredictionIcon } from 'assets/prediction.svg';
 import { ReactComponent as BuldIcon } from 'assets/bulb.svg';
@@ -24,14 +24,16 @@ const InGame: React.FC = () => {
   [ok] título não sair do card
   [ok] animação abrir cards
   [ok] background-image pegar a url do local path
+  [ok] manter proporção quando redimensionar
+  [ok] onWin
+  abrir todo os cards que tiverem a mesma votação
+  integrar com a twitch
+  
   fonte carregar do local path
   evitar rerender quando redimensionar
-  manter proporção quando redimensionar
-  onWin
   animação transição de layouts
   limpar codigo
   performance
-  integrar com a twitch
   */
   const allWords = useRef<string[]>([]);
   const [words, setWords] = useState<string[]>([]);
@@ -55,6 +57,21 @@ const InGame: React.FC = () => {
     clues: [],
   });
 
+  const resetGame = () => {
+    setTeam(Team.RED);
+    setClue(null);
+    setWinner(null);
+    setIsStreamerTurn(true);
+    setIsTimerRunning(false);
+    setHistory({
+      remaining: {
+        red: AMOUNT_OF_RED_CARDS,
+        blue: AMOUNT_OF_BLUE_CARDS,
+      },
+      clues: [],
+    });
+  };
+
   const handleOnFinishTurn = (
     cardsOpened: number,
     openedOtherTeam: number,
@@ -76,11 +93,17 @@ const InGame: React.FC = () => {
 
     if (isGameOver) {
       setWinner(nextTeam);
+      setGameStatus(Status.FINISH_GAME);
       setTeam(nextTeam);
+      resetGame();
     } else if (red === 0) {
       setWinner(Team.RED);
+      setGameStatus(Status.FINISH_GAME);
+      resetGame();
     } else if (blue === 0) {
       setWinner(Team.BLUE);
+      setGameStatus(Status.FINISH_GAME);
+      resetGame();
     } else {
       setTeam(nextTeam);
     }
@@ -117,20 +140,9 @@ const InGame: React.FC = () => {
       // ADD loading
       setGameStatus(Status.WAITING_CONNECTION);
       setUsername(null);
-
       setSeconds(5);
-      setTeam(Team.RED);
-      setClue(null);
-      setWinner(null);
-      setIsStreamerTurn(true);
-      setIsTimerRunning(false);
-      setHistory({
-        remaining: {
-          red: AMOUNT_OF_RED_CARDS,
-          blue: AMOUNT_OF_BLUE_CARDS,
-        },
-        clues: [],
-      });
+
+      resetGame();
     } catch (error) {
       console.error(error);
     }
@@ -204,28 +216,8 @@ const InGame: React.FC = () => {
     </S.TipCard>
   );
 
-  // const [size, setSize] = useState([1516, 774]);
-  // useLayoutEffect(() => {
-  //   function updateSize() {
-  //     console.log(
-  //       `scale(${(100 - (window.innerWidth * 100) / size[0]) / 100 + 1})`
-  //     );
-  //     // console.log(window.innerWidth, window.innerHeight);
-  //     setSize([window.innerWidth, window.innerHeight]);
-  //   }
-  //   window.addEventListener('resize', updateSize);
-  //   updateSize();
-  //   return () => window.removeEventListener('resize', updateSize);
-  // }, []);
-
   return (
-    <S.Container
-      style={
-        {
-          // transform: `scale(${(100 - (size[0] * 100) / 1516) / 100 + 1})`,
-        }
-      }
-    >
+    <S.Container>
       <S.Content inLobby={gameStatus !== Status.GAME} team={team}>
         <S.Aside>
           <Info
@@ -248,7 +240,7 @@ const InGame: React.FC = () => {
           />
         </S.Aside>
         <S.Main>
-          {gameStatus === Status.GAME ? (
+          {gameStatus === Status.GAME || gameStatus === Status.FINISH_GAME ? (
             <Board
               winner={winner}
               amountOfRedCards={AMOUNT_OF_RED_CARDS}

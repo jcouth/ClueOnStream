@@ -23,6 +23,22 @@ export const Title = styled.p`
 
   text-transform: uppercase;
   text-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
+
+  &.animateTitle {
+    animation: animateTitle 1s ease-in-out;
+  }
+
+  @keyframes animateTitle {
+    0%,
+    75%,
+    100% {
+      transform: scale(1);
+    }
+    25%,
+    50% {
+      transform: scale(1.05);
+    }
+  }
 `;
 
 export const Timer = styled.div<{ isStreamerTurn: boolean }>`

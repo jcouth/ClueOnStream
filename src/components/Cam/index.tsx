@@ -36,6 +36,24 @@ const Cam: React.FC<Props> = ({
         />
       );
     }
+    if (type === Status.FINISH_GAME) {
+      return (
+        <S.Content>
+          <Button
+            title="Sair"
+            variant="secondary"
+            isActive
+            onClick={onDisconnect}
+          />
+          <Button
+            title="Novo jogo"
+            variant="primary"
+            isActive
+            onClick={onNewGame}
+          />
+        </S.Content>
+      );
+    }
     if (type === Status.WAITING_START) {
       return (
         <S.Content>

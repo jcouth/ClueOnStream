@@ -40,7 +40,9 @@ const Lobby: React.FC<LobbyProps> = ({
       </S.LogoWrapper>
       <S.Content>
         <S.Title>{username ?? 'Faça login'}</S.Title>
-        <S.Status>{type}</S.Status>
+        <S.Status>
+          {type === Status.FINISH_GAME ? Status.WAITING_START : type}
+        </S.Status>
         <S.Timer expand={expand}>
           <S.Selector expand={expand} height={4.617}>
             <S.SelectorTitle>Segundos por turno:</S.SelectorTitle>

@@ -44,6 +44,7 @@ const Board: React.FC<Props> = ({
   const [amount, setAmount] = useState<number>(0);
   const [cards, setCards] = useState<CardProps[]>([]);
   const [totalVotes, setTotalVotes] = useState<number>(0);
+  const [animateTitle, setAnimateTitle] = useState<boolean>(false);
   const [cardsWithVotes, setCardsWithVotes] = useState<VoteProps[]>([]);
 
   const handleVote = (id: CardProps['id'], type: CardProps['type']) => {
@@ -148,7 +149,14 @@ const Board: React.FC<Props> = ({
     if (winner) {
       message = `O time ${winner === Team.RED ? 'vermelho' : 'azul'} venceu`;
     }
-    return <S.Title>{message}</S.Title>;
+    return (
+      <S.Title
+        className={animateTitle ? 'animateTitle' : ''}
+        onAnimationEnd={() => setAnimateTitle(false)}
+      >
+        {message}
+      </S.Title>
+    );
   };
 
   const getCards = useCallback(() => {
@@ -186,6 +194,7 @@ const Board: React.FC<Props> = ({
 
   const getAmount = useCallback(() => {
     if (clue != null) {
+      setAnimateTitle(true);
       if (isTimerRunning) {
         setAmount(clue.amount);
       } else {

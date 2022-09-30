@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { ReactComponent as PredictionIcon } from 'assets/prediction.svg';
 import { ReactComponent as BuldIcon } from 'assets/bulb.svg';
@@ -20,6 +20,19 @@ const AMOUNT_OF_BLUE_CARDS = 8;
 const MAX_CARDS = 25;
 
 const InGame: React.FC = () => {
+  /*
+  [ok] título não sair do card
+  [ok] animação abrir cards
+  [ok] background-image pegar a url do local path
+  fonte carregar do local path
+  evitar rerender quando redimensionar
+  manter proporção quando redimensionar
+  onWin
+  animação transição de layouts
+  limpar codigo
+  performance
+  integrar com a twitch
+  */
   const allWords = useRef<string[]>([]);
   const [words, setWords] = useState<string[]>([]);
 
@@ -105,6 +118,7 @@ const InGame: React.FC = () => {
       setGameStatus(Status.WAITING_CONNECTION);
       setUsername(null);
 
+      setSeconds(5);
       setTeam(Team.RED);
       setClue(null);
       setWinner(null);
@@ -190,8 +204,28 @@ const InGame: React.FC = () => {
     </S.TipCard>
   );
 
+  // const [size, setSize] = useState([1516, 774]);
+  // useLayoutEffect(() => {
+  //   function updateSize() {
+  //     console.log(
+  //       `scale(${(100 - (window.innerWidth * 100) / size[0]) / 100 + 1})`
+  //     );
+  //     // console.log(window.innerWidth, window.innerHeight);
+  //     setSize([window.innerWidth, window.innerHeight]);
+  //   }
+  //   window.addEventListener('resize', updateSize);
+  //   updateSize();
+  //   return () => window.removeEventListener('resize', updateSize);
+  // }, []);
+
   return (
-    <S.Container>
+    <S.Container
+      style={
+        {
+          // transform: `scale(${(100 - (size[0] * 100) / 1516) / 100 + 1})`,
+        }
+      }
+    >
       <S.Content inLobby={gameStatus !== Status.GAME} team={team}>
         <S.Aside>
           <Info
@@ -230,22 +264,22 @@ const InGame: React.FC = () => {
               <S.Title>Como jogar</S.Title>
               <S.TipsToPlay>
                 {renderTipCard(
-                  <PredictionIcon width="100%" height="64px" fill="white" />,
+                  <PredictionIcon width="100%" height="4.222vw" fill="white" />,
                   'Entre em uma equipe pelo palpite da live',
                   2
                 )}
                 {renderTipCard(
-                  <BuldIcon width="100%" height="64px" fill="white" />,
+                  <BuldIcon width="100%" height="4.222vw" fill="white" />,
                   'Aguarde pela dica e turno da sua equipe',
                   4
                 )}
                 {renderTipCard(
-                  <ChatIcon width="100%" height="64px" fill="white" />,
+                  <ChatIcon width="100%" height="4.222vw" fill="white" />,
                   'Digite o que está escrito no card e envie',
                   6
                 )}
                 {renderTipCard(
-                  <OfferIcon width="100%" height="64px" fill="white" />,
+                  <OfferIcon width="100%" height="4.222vw" fill="white" />,
                   'Serão abertos os cards com maiores % de votos',
                   8
                 )}

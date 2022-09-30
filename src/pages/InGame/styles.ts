@@ -8,7 +8,7 @@ export const Container = styled.div`
   justify-content: center;
   align-items: center;
 
-  padding: 20px 72px;
+  padding: 1.319vw 4.749vw;
 
   max-width: 100vw;
   max-height: 100vh;
@@ -24,15 +24,15 @@ export const Container = styled.div`
 
 export const Content = styled.div<{ inLobby: boolean; team: Team }>`
   display: grid;
-  grid-template-columns: 350px 1fr;
-  grid-column-gap: 20px;
+  grid-template-columns: 23.087vw 1fr;
+  grid-column-gap: 1.319vw;
 
   position: relative;
 
   width: 100%;
   height: 100%;
 
-  border-radius: 12px;
+  border-radius: 0.792vw;
   background-color: ${({ theme, inLobby, team }) =>
     inLobby ? theme.colors.primary : theme.colors.team[team].primary};
 
@@ -50,7 +50,7 @@ export const Content = styled.div<{ inLobby: boolean; team: Team }>`
     height: 100%;
 
     border-radius: inherit;
-    border: 4px solid ${({ theme }) => theme.colors.white};
+    border: 0.264vw solid ${({ theme }) => theme.colors.white};
   }
 
   ${({ inLobby }) =>
@@ -65,7 +65,7 @@ export const Content = styled.div<{ inLobby: boolean; team: Team }>`
 export const Aside = styled.aside`
   display: grid;
   grid-template-rows: 1fr auto;
-  grid-row-gap: 20px;
+  grid-row-gap: 1.319vw;
 `;
 
 export const Main = styled.main`
@@ -73,38 +73,38 @@ export const Main = styled.main`
   justify-content: center;
   align-items: center;
 
-  margin-right: 20px; // same of content column gap
+  margin-right: 1.319vw; // same of content column gap
 `;
 
 export const HowToPlay = styled.div`
   display: grid;
   grid-template-rows: auto 1fr;
-  grid-row-gap: 36px;
+  grid-row-gap: 2.375vw;
   justify-content: center;
   align-items: center;
 
   position: relative;
 
-  margin: 64px;
-  padding: 48px 60px;
+  margin: 4.222vw;
+  padding: 3.166vw 3.958vw;
 
-  border: 4px solid ${({ theme }) => theme.colors.white};
-  border-radius: 12px;
+  border: 0.264vw solid ${({ theme }) => theme.colors.white};
+  border-radius: 0.792vw;
   background-color: ${({ theme }) => theme.colors.secondary};
-  box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  box-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 
   &::before {
     content: '';
     position: absolute;
-    top: 20px;
-    left: 20px;
+    top: 1.319vw;
+    left: 1.319vw;
 
-    width: calc(100% - 40px);
-    height: calc(100% - 40px);
+    width: calc(100% - 2.639vw);
+    height: calc(100% - 2.639vw);
 
     border-radius: inherit;
     background-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: inset 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+    box-shadow: inset 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
   }
 `;
 
@@ -113,19 +113,19 @@ export const Title = styled.div`
 
   font-family: ${({ theme }) => theme.fonts.primary.family};
   font-weight: ${({ theme }) => theme.fonts.primary.weight};
-  font-size: 48px;
+  font-size: 3.166vw;
 
   color: ${({ theme }) => theme.colors.white};
 
   text-align: center;
   text-transform: uppercase;
-  text-shadow: 0px 8px 8px ${({ theme }) => theme.colors.black};
+  text-shadow: 0vw 0.528vw 0.528vw ${({ theme }) => theme.colors.black};
 `;
 
 export const TipsToPlay = styled.div`
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-gap: 16px;
+  grid-gap: 1.055vw;
 `;
 
 export const TipCard = styled.div<{ delay: number }>`
@@ -136,11 +136,11 @@ export const TipCard = styled.div<{ delay: number }>`
 
   position: relative;
 
-  padding: 36px;
+  padding: 2.375vw;
 
-  border-radius: 12px;
+  border-radius: 0.792vw;
   background-color: ${({ theme }) => theme.colors.secondary};
-  box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  box-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 
   animation: blink 8s infinite;
   animation-delay: ${({ delay }) => delay}s;
@@ -160,7 +160,7 @@ export const TipCard = styled.div<{ delay: number }>`
 `;
 
 export const TipText = styled.p`
-  margin-top: 12px;
+  margin-top: 0.792vw;
 
   font-family: ${({ theme }) => theme.fonts.primary.family};
   font-weight: ${({ theme }) => theme.fonts.primary.weight};
@@ -170,7 +170,7 @@ export const TipText = styled.p`
 
   text-align: center;
   text-transform: uppercase;
-  text-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  text-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;
 
 export const TipCardButtons = styled.span`
@@ -184,30 +184,30 @@ export const TipCardButtons = styled.span`
   span {
     position: absolute;
 
-    width: 12px;
-    height: 12px;
+    width: 0.792vw;
+    height: 0.792vw;
 
-    border-radius: 100px;
+    border-radius: 6.596vw;
     background-color: ${({ theme }) => theme.colors.white};
   }
 
   span:nth-child(1) {
-    top: 12px;
-    left: 12px;
+    top: 0.792vw;
+    left: 0.792vw;
   }
 
   span:nth-child(2) {
-    top: 12px;
-    right: 12px;
+    top: 0.792vw;
+    right: 0.792vw;
   }
 
   span:nth-child(3) {
-    bottom: 12px;
-    left: 12px;
+    bottom: 0.792vw;
+    left: 0.792vw;
   }
 
   span:nth-child(4) {
-    bottom: 12px;
-    right: 12px;
+    bottom: 0.792vw;
+    right: 0.792vw;
   }
 `;

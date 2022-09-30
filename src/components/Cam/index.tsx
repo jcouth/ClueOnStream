@@ -66,7 +66,7 @@ const Cam: React.FC<Props> = ({
     return (
       <S.Content>
         <Button variant="primary" isActive onClick={onConnect}>
-          <TwitchLogo width="100%" height="24px" fill="white" />
+          <TwitchLogo width="100%" height="1.583vw" fill="white" />
         </Button>
       </S.Content>
     );

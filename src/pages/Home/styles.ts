@@ -7,7 +7,7 @@ export const Container = styled.div`
 `;
 
 export const NewGameButton = styled.button`
-  padding: 6px 12px;
+  padding: 0.396vw 0.792vw;
 
-  border-radius: 12px;
+  border-radius: 0.792vw;
 `;

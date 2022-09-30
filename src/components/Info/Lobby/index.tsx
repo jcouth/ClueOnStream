@@ -36,13 +36,13 @@ const Lobby: React.FC<LobbyProps> = ({
   return (
     <S.Container>
       <S.LogoWrapper>
-        <Logo width="100%" height="240px" />
+        <Logo width="100%" height="15.831vw" />
       </S.LogoWrapper>
       <S.Content>
         <S.Title>{username ?? 'Faça login'}</S.Title>
         <S.Status>{type}</S.Status>
         <S.Timer expand={expand}>
-          <S.Selector expand={expand} height={70}>
+          <S.Selector expand={expand} height={4.617}>
             <S.SelectorTitle>Segundos por turno:</S.SelectorTitle>
             <S.SelectorContent columns={SECONDS_OPTIONS.length}>
               {SECONDS_OPTIONS.map((value) => (
@@ -56,7 +56,7 @@ const Lobby: React.FC<LobbyProps> = ({
             </S.SelectorContent>
           </S.Selector>
           <S.TimerContent>
-            <AlarmIcon width="100%" height="36px" />
+            <AlarmIcon width="100%" height="2.375vw" />
             <Button
               title={`${seconds} segundos`}
               variant="primary"

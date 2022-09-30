@@ -5,41 +5,41 @@ import { Team as TeamProps } from 'interfaces/Card';
 export const Container = styled.div`
   display: flex;
 
-  padding: 12px 16px;
+  padding: 0.792vw 1.055vw;
 
-  border: 4px solid ${({ theme }) => theme.colors.white};
-  border-radius: 12px;
+  border: 0.264vw solid ${({ theme }) => theme.colors.white};
+  border-radius: 0.792vw;
   background-color: ${({ theme }) => theme.colors.secondary};
-  box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  box-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;
 
 export const Content = styled.div`
   flex-grow: 1;
   display: grid;
   grid-template-rows: auto auto 1fr auto;
-  grid-row-gap: 12px;
+  grid-row-gap: 0.792vw;
 
-  padding: 18px 14px 14px;
+  padding: 1.187vw 0.923vw 0.923vw;
 
-  border-radius: 12px;
+  border-radius: 0.792vw;
   background-color: ${({ theme }) => theme.colors.primary};
-  box-shadow: inset 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  box-shadow: inset 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;
 
 export const Team = styled.div<{ team: TeamProps }>`
   display: flex;
   justify-content: space-between;
 
-  padding: 0 12px;
+  padding: 0 0.792vw;
 
-  border: 4px solid ${({ theme }) => theme.colors.white};
-  border-radius: 12px;
+  border: 0.264vw solid ${({ theme }) => theme.colors.white};
+  border-radius: 0.792vw;
   background-color: ${({ theme, team }) => theme.colors.team[team].primary};
-  box-shadow: inset 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  box-shadow: inset 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;
 
 export const TeamTitle = styled.p`
-  margin-top: 12px;
+  margin-top: 0.792vw;
 
   font-family: ${({ theme }) => theme.fonts.primary.family};
   font-weight: ${({ theme }) => theme.fonts.primary.weight};
@@ -48,13 +48,13 @@ export const TeamTitle = styled.p`
   color: ${({ theme }) => theme.colors.white};
 
   text-transform: uppercase;
-  text-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  text-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;
 
 export const TeamAmount = styled(TeamTitle)`
   margin-top: unset;
 
-  font-size: 56px;
+  font-size: 3.694vw;
 `;
 
 export const History = styled.div`
@@ -62,17 +62,17 @@ export const History = styled.div`
   flex-direction: column;
   align-items: center;
 
-  padding: 12px 12px 6px;
+  padding: 0.792vw 0.792vw 0.396vw;
 
-  border-radius: 12px;
+  border-radius: 0.792vw;
   background-color: ${({ theme }) => theme.colors.secondary};
-  box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  box-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;
 
 export const HistoryTitle = styled.p`
   display: grid;
   grid-template-columns: 1fr auto 1fr;
-  grid-column-gap: 8px;
+  grid-column-gap: 0.528vw;
   align-items: center;
 
   width: 100%;
@@ -84,14 +84,14 @@ export const HistoryTitle = styled.p`
   color: ${({ theme }) => theme.colors.white};
 
   text-transform: uppercase;
-  text-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  text-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 
   &::before,
   &::after {
     content: '';
 
     width: 100%;
-    height: 2px;
+    height: 0.132vw;
 
     background-color: ${({ theme }) => theme.colors.white};
   }
@@ -101,7 +101,7 @@ export const HistoryClues = styled.div`
   flex-grow: 1;
   position: relative;
 
-  margin-top: 4px;
+  margin-top: 0.264vw;
 
   width: 100%;
 
@@ -130,7 +130,7 @@ export const HistoryCluesContent = styled.div`
   top: 0;
   left: 0;
 
-  padding-bottom: 6px;
+  padding-bottom: 0.396vw;
 
   width: 100%;
   height: 100%;
@@ -139,9 +139,9 @@ export const HistoryCluesContent = styled.div`
 export const Clue = styled.div`
   display: grid;
   grid-template-columns: 1fr auto;
-  grid-column-gap: 8px;
+  grid-column-gap: 0.528vw;
 
-  margin-top: 6px;
+  margin-top: 0.396vw;
 `;
 
 export const ClueTitle = styled.p<{ team: TeamProps }>`
@@ -149,22 +149,22 @@ export const ClueTitle = styled.p<{ team: TeamProps }>`
   display: flex;
   align-items: center;
 
-  padding: 4px 12px;
+  padding: 0.264vw 0.792vw;
 
   font-family: ${({ theme }) => theme.fonts.primary.family};
   font-weight: ${({ theme }) => theme.fonts.primary.weight};
   font-size: ${({ theme }) => theme.fonts.primary.size};
 
-  border-left: 12px solid
+  border-left: 0.792vw solid
     ${({ theme, team }) => theme.colors.team[team].primary};
-  border-radius: 6px;
+  border-radius: 0.396vw;
   background-color: ${({ theme, team }) => theme.colors.team[team].secondary};
-  box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  box-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 
   color: ${({ theme }) => theme.colors.white};
 
   text-transform: uppercase;
-  text-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  text-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;
 
 export const ClueAmount = styled.p<{ team: TeamProps }>`
@@ -172,20 +172,20 @@ export const ClueAmount = styled.p<{ team: TeamProps }>`
   justify-content: center;
   align-items: center;
 
-  padding: 4px 10px;
+  padding: 0.264vw 0.66vw;
 
   font-family: ${({ theme }) => theme.fonts.primary.family};
   font-weight: ${({ theme }) => theme.fonts.primary.weight};
   font-size: ${({ theme }) => theme.fonts.primary.size};
 
-  border-radius: 6px;
+  border-radius: 0.396vw;
   background-color: ${({ theme, team }) => theme.colors.team[team].primary};
-  box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  box-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 
   color: ${({ theme }) => theme.colors.white};
 
   text-transform: uppercase;
-  text-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  text-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;
 
 export const Timer = styled.div`
@@ -194,7 +194,7 @@ export const Timer = styled.div`
 
   position: relative;
 
-  height: 36px;
+  height: 2.375vw;
 `;
 
 export const TimerIcon = styled.div<{
@@ -210,14 +210,14 @@ export const TimerIcon = styled.div<{
   top: 0;
   left: 0;
 
-  width: 36px;
-  height: 36px;
+  width: 2.375vw;
+  height: 2.375vw;
 
-  border: 3px solid ${({ theme }) => theme.colors.white};
-  border-radius: 100px;
+  border: 0.198vw solid ${({ theme }) => theme.colors.white};
+  border-radius: 6.596vw;
   background-color: ${({ theme, team, isStreamerTurn }) =>
     isStreamerTurn ? theme.colors.primary : theme.colors.team[team].primary};
-  box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  box-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;
 
 export const Progress = styled.div<{
@@ -228,18 +228,18 @@ export const Progress = styled.div<{
 }>`
   position: relative;
 
-  margin-left: 20px;
+  margin-left: 1.319vw;
 
-  width: calc(100% - 20px);
-  height: 24px;
+  width: calc(100% - 1.319vw);
+  height: 1.583vw;
 
-  border: 3px solid ${({ theme }) => theme.colors.white};
-  border-radius: 12px;
+  border: 0.198vw solid ${({ theme }) => theme.colors.white};
+  border-radius: 0.792vw;
   background-color: ${({ theme, team, isStreamerTurn }) =>
     isStreamerTurn
       ? theme.colors.secondary
       : theme.colors.team[team].secondary};
-  box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  box-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 
   transition: background-color ${({ interval }) => interval} ease-in-out;
 

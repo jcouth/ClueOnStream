@@ -34,33 +34,33 @@ export const CardColors: CardColorsProps = {
 export const Container = styled.button<StyledCardProps>`
   position: relative;
 
-  padding: 16px;
+  padding: 1.055vw;
 
   border: none;
-  border-radius: 12px;
+  border-radius: 0.792vw;
   background-color: ${({ theme }) => theme.colors.card.normal.primary};
-  box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  box-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 
   overflow: hidden;
 
   &::before {
     content: '';
     position: absolute;
-    top: 8px;
-    left: 8px;
+    top: 0.528vw;
+    left: 0.528vw;
 
-    width: calc(100% - 16px);
-    height: calc(100% - 16px);
+    width: calc(100% - 1.055vw);
+    height: calc(100% - 1.055vw);
 
-    border: 2px solid ${({ theme }) => theme.colors.card.normal.secondary};
-    border-radius: 12px;
+    border: 0.132vw solid ${({ theme }) => theme.colors.card.normal.secondary};
+    border-radius: 0.792vw;
   }
 
   &::after {
     content: '';
     position: absolute;
-    top: 0px;
-    left: 0px;
+    top: 0vw;
+    left: 0vw;
 
     width: 100%;
     height: 100%;
@@ -108,23 +108,23 @@ export const Container = styled.button<StyledCardProps>`
   @keyframes shake {
     10%,
     90% {
-      transform: translate3d(-1px, 0, 0);
+      transform: translate3d(-0.066vw, 0, 0);
     }
 
     20%,
     80% {
-      transform: translate3d(2px, 0, 0);
+      transform: translate3d(0.132vw, 0, 0);
     }
 
     30%,
     50%,
     70% {
-      transform: translate3d(-4px, 0, 0);
+      transform: translate3d(-0.264vw, 0, 0);
     }
 
     40%,
     60% {
-      transform: translate3d(4px, 0, 0);
+      transform: translate3d(0.264vw, 0, 0);
     }
   }
 
@@ -156,9 +156,9 @@ export const Percentage = styled.div<{ team: Team; visible: boolean }>`
   justify-content: center;
   align-items: center;
 
-  padding: 6px 16px;
+  padding: 0.396vw 1.055vw;
 
-  border-radius: 4px;
+  border-radius: 0.264vw;
   background-color: ${({ theme, team }) => theme.colors.team[team].primary};
 
   ${({ visible }) =>
@@ -176,7 +176,7 @@ export const PercentageText = styled.p`
   color: ${({ theme }) => theme.colors.white};
 
   text-transform: uppercase;
-  text-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  text-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;
 
 export const Content = styled.div<StyledCardProps>`
@@ -184,10 +184,10 @@ export const Content = styled.div<StyledCardProps>`
   justify-content: center;
   align-items: center;
 
-  margin-top: 6px;
-  padding: 8px 12px;
+  margin-top: 0.396vw;
+  padding: 0.528vw 0.792vw;
 
-  border-radius: 4px;
+  border-radius: 0.264vw;
   background-color: ${({ theme }) => theme.colors.white};
 
   ${({ isOpen, revealed, cardType, delayToOpen }) =>
@@ -216,10 +216,10 @@ export const ContentText = styled.p<Omit<StyledCardProps, 'cardType'>>`
 
   color: ${({ theme }) => theme.colors.card.normal.text};
 
-  letter-spacing: -0.5px;
+  letter-spacing: -0.033vw;
   text-align: center;
   text-transform: uppercase;
-  text-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  text-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 
   ${({ isOpen, revealed, delayToOpen }) =>
     revealed

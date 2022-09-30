@@ -31,18 +31,20 @@ export const Button = styled.button<ButtonProps>`
   justify-content: center;
   align-items: center;
 
-  padding: 12px;
+  padding: 0.792vw;
 
-  max-height: 48px;
+  max-height: 3.166vw;
   height: 100%;
 
   border: ${({ theme, variant, isActive }) =>
     variant === 'primary'
-      ? `3px solid ${isActive ? theme.colors.white : theme.colors.secondary}`
+      ? `0.198vw solid ${
+          isActive ? theme.colors.white : theme.colors.secondary
+        }`
       : 'none'};
-  border-radius: 6px;
+  border-radius: 0.396vw;
   background-color: ${({ variant }) => buttonColors[variant].background};
-  box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  box-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 
   color: ${({ variant, isActive }) =>
     variant === 'primary'
@@ -62,23 +64,23 @@ export const Button = styled.button<ButtonProps>`
   @keyframes shake {
     10%,
     90% {
-      transform: translate3d(-1px, 0, 0);
+      transform: translate3d(-0.066vw, 0, 0);
     }
 
     20%,
     80% {
-      transform: translate3d(2px, 0, 0);
+      transform: translate3d(0.132vw, 0, 0);
     }
 
     30%,
     50%,
     70% {
-      transform: translate3d(-4px, 0, 0);
+      transform: translate3d(-0.264vw, 0, 0);
     }
 
     40%,
     60% {
-      transform: translate3d(4px, 0, 0);
+      transform: translate3d(0.264vw, 0, 0);
     }
   }
 `;
@@ -91,5 +93,5 @@ export const ButtonText = styled.p`
   color: inherit;
 
   text-transform: uppercase;
-  text-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  text-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;

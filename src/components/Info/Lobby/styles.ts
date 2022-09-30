@@ -6,12 +6,12 @@ export const Container = styled.div`
   display: grid;
   grid-template-rows: 1fr auto;
 
-  padding: 12px 16px;
+  padding: 0.792vw 1.055vw;
 
-  border: 4px solid ${({ theme }) => theme.colors.white};
-  border-radius: 12px;
+  border: 0.264vw solid ${({ theme }) => theme.colors.white};
+  border-radius: 0.792vw;
   background-color: ${({ theme }) => theme.colors.secondary};
-  box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  box-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;
 
 export const History = styled.div`
@@ -19,7 +19,7 @@ export const History = styled.div`
   flex-direction: column;
   align-items: center;
 
-  padding: 12px 12px 6px;
+  padding: 0.792vw 0.792vw 0.396vw;
 `;
 
 export const LogoWrapper = styled.div`
@@ -31,7 +31,7 @@ export const LogoWrapper = styled.div`
 export const Content = styled.div`
   display: grid;
   grid-template-rows: auto auto 1fr auto;
-  grid-row-gap: 12px;
+  grid-row-gap: 0.792vw;
 `;
 
 export const Title = styled.p`
@@ -45,16 +45,16 @@ export const Title = styled.p`
 
   text-align: center;
   text-transform: uppercase;
-  text-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  text-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;
 
 export const Status = styled(Title)`
   display: grid;
   grid-template-columns: 1fr auto 1fr;
-  grid-column-gap: 8px;
+  grid-column-gap: 0.528vw;
   align-items: center;
 
-  margin: 8px 0;
+  margin: 0.528vw 0;
 
   font-size: ${({ theme }) => theme.fonts.primary.size};
 
@@ -63,7 +63,7 @@ export const Status = styled(Title)`
     content: '';
 
     width: 100%;
-    height: 2px;
+    height: 0.132vw;
 
     background-color: ${({ theme }) => theme.colors.white};
   }
@@ -82,31 +82,31 @@ export const TimerIcon = styled.div<{
   top: 0;
   left: 0;
 
-  width: 36px;
-  height: 36px;
+  width: 2.375vw;
+  height: 2.375vw;
 
-  border: 3px solid ${({ theme }) => theme.colors.white};
-  border-radius: 100px;
+  border: 0.198vw solid ${({ theme }) => theme.colors.white};
+  border-radius: 6.596vw;
   background-color: ${({ theme, team, isStreamerTurn }) =>
     isStreamerTurn ? theme.colors.primary : theme.colors.team[team].primary};
-  box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  box-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;
 
 export const Timer = styled.div<{ expand: boolean }>`
   display: grid;
-  grid-row-gap: 8px;
+  grid-row-gap: 0.528vw;
   align-items: flex-end;
 
   position: relative;
 
-  padding: 12px;
-  padding-left: 20px;
+  padding: 0.792vw;
+  padding-left: 1.319vw;
 
-  border-radius: 12px;
+  border-radius: 0.792vw;
   background-color: ${({ theme }) => theme.colors.primary};
-  box-shadow: inset 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  box-shadow: inset 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 
-  box-shadow: inset 0px 4px 4px
+  box-shadow: inset 0vw 0.264vw 0.264vw
     ${({ theme, expand }) => (expand ? 'transparent' : theme.colors.shadow)};
 
   transition: box-shadow 0.25s ease-out ${({ expand }) => (expand ? 0 : 0.5)}s;
@@ -117,18 +117,18 @@ export const Selector = styled.div<{ expand: boolean; height: number }>`
   flex-direction: column;
 
   position: absolute;
-  top: ${({ expand, height }) => (expand ? -height : 10)}px;
+  top: ${({ expand, height }) => (expand ? -height : 0.66)}vw;
 
-  padding: ${({ expand }) => (expand ? 6 : 0)}px 14px;
+  padding: ${({ expand }) => (expand ? 0.396 : 0)}vw 0.923vw;
 
   width: 100%;
-  height: ${({ expand, height }) => (expand ? height + 10 : 0)}px;
+  height: ${({ expand, height }) => (expand ? height + 0.66 : 0)}vw;
 
-  border-radius: 12px;
+  border-radius: 0.792vw;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   background-color: ${({ theme }) => theme.colors.primary};
-  box-shadow: inset 0px 4px 4px
+  box-shadow: inset 0vw 0.264vw 0.264vw
     ${({ theme, expand }) => (expand ? theme.colors.shadow : 'transparent')};
 
   overflow: hidden;
@@ -137,7 +137,7 @@ export const Selector = styled.div<{ expand: boolean; height: number }>`
 `;
 
 export const SelectorTitle = styled.p`
-  margin-top: 6px;
+  margin-top: 0.396vw;
 
   font-family: ${({ theme }) => theme.fonts.primary.family};
   font-weight: ${({ theme }) => theme.fonts.primary.weight};
@@ -146,21 +146,21 @@ export const SelectorTitle = styled.p`
   color: ${({ theme }) => theme.colors.white};
 
   text-transform: uppercase;
-  text-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  text-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;
 
 export const SelectorContent = styled.div<{ columns: number }>`
   display: grid;
   grid-template-columns: repeat(${({ columns }) => columns}, minmax(0, 1fr));
-  grid-template-rows: 32px;
-  grid-column-gap: 8px;
+  grid-template-rows: 2.111vw;
+  grid-column-gap: 0.528vw;
 
-  margin-top: 4px;
+  margin-top: 0.264vw;
 `;
 
 export const TimerContent = styled.div`
   display: grid;
   grid-template-columns: auto 1fr;
-  grid-column-gap: 20px;
+  grid-column-gap: 1.319vw;
   align-items: center;
 `;

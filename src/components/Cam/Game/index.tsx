@@ -43,7 +43,7 @@ const Game: React.FC<Props> = ({ isStreamerTurn, onSend, onDisconnect }) => {
 
   return (
     <S.Content expand={expand}>
-      <S.Selector expand={expand} height={66}>
+      <S.Selector expand={expand} height={4.354}>
         <S.Title>Selecione o número de dicas:</S.Title>
         <S.SelectorContent columns={AMOUNTS.length}>
           {AMOUNTS.map((value) => (

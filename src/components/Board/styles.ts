@@ -2,8 +2,8 @@ import styled, { css } from 'styled-components';
 
 export const Container = styled.div`
   display: grid;
-  grid-template-rows: 60px 1fr;
-  grid-row-gap: 12px;
+  grid-template-rows: 3.958vw 1fr;
+  grid-row-gap: 0.792vw;
   justify-content: center;
   align-items: center;
 `;
@@ -17,18 +17,18 @@ export const Header = styled.div`
 export const Title = styled.p`
   font-family: ${({ theme }) => theme.fonts.primary.family};
   font-weight: ${({ theme }) => theme.fonts.primary.weight};
-  font-size: 30px;
+  font-size: 1.979vw;
 
   color: ${({ theme }) => theme.colors.white};
 
   text-transform: uppercase;
-  text-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  text-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;
 
 export const Timer = styled.div<{ isStreamerTurn: boolean }>`
-  height: 12px;
+  height: 0.792vw;
 
-  border-radius: 8px;
+  border-radius: 0.528vw;
 
   ${({ isStreamerTurn }) =>
     isStreamerTurn &&
@@ -43,7 +43,7 @@ export const Progress = styled.div<{ progress: number; interval: string }>`
 
   border-radius: inherit;
   background-color: ${({ theme }) => theme.colors.card.normal.primary};
-  box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  box-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 
   transition: width ${({ interval }) => interval} ease-in-out;
 `;
@@ -52,25 +52,25 @@ export const Content = styled.div`
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   grid-template-rows: repeat(5, minmax(0, 1fr));
-  grid-gap: 8px;
+  grid-gap: 0.528vw;
 
-  margin-top: 12px;
+  margin-top: 0.792vw;
 `;
 
 export const Clue = styled.div`
-  padding: 12px 18px;
+  padding: 0.792vw 1.187vw;
 
   font-family: ${({ theme }) => theme.fonts.primary.family};
   font-weight: ${({ theme }) => theme.fonts.primary.weight};
   font-size: ${({ theme }) => theme.fonts.primary.size};
 
-  border-radius: 6px;
+  border-radius: 0.396vw;
   background-color: ${({ theme }) => theme.colors.white};
-  box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  box-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 
   text-transform: uppercase;
 `;
 
 export const Amount = styled(Clue)`
-  margin-left: 8px;
+  margin-left: 0.528vw;
 `;

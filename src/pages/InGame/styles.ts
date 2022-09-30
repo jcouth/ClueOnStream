@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { Team } from 'interfaces/Card';
 
@@ -36,7 +36,8 @@ export const Content = styled.div<{ inLobby: boolean; team: Team }>`
     inLobby ? theme.colors.primary : theme.colors.team[team].primary};
 
   overflow: hidden;
-  transition: background-color 0.5s ease-in-out;
+  transition: background-color 0.5s ease-in-out,
+    background-image 0.5s ease-in-out;
 
   &::before {
     content: '';
@@ -50,6 +51,14 @@ export const Content = styled.div<{ inLobby: boolean; team: Team }>`
     border-radius: inherit;
     border: 4px solid ${({ theme }) => theme.colors.white};
   }
+
+  ${({ inLobby }) =>
+    !inLobby &&
+    css`
+      background-image: inherit;
+      background-size: inherit;
+      background-repeat: inherit;
+    `}
 `;
 
 export const Aside = styled.aside`

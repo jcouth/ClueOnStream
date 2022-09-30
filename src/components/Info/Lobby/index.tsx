@@ -7,7 +7,7 @@ import { Status } from 'interfaces/Status';
 
 import * as S from './styles';
 
-const OPTIONS = [30, 60, 90, 120, 150];
+const SECONDS_OPTIONS = [30, 45, 60, 75, 90];
 
 export interface LobbyProps {
   type: Status;
@@ -44,8 +44,8 @@ const Lobby: React.FC<LobbyProps> = ({
         <S.Timer expand={expand}>
           <S.Selector expand={expand} height={70}>
             <S.SelectorTitle>Segundos por turno:</S.SelectorTitle>
-            <S.SelectorContent columns={OPTIONS.length}>
-              {OPTIONS.map((value) => (
+            <S.SelectorContent columns={SECONDS_OPTIONS.length}>
+              {SECONDS_OPTIONS.map((value) => (
                 <Button
                   key={value}
                   title={value}

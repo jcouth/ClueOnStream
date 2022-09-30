@@ -29,7 +29,7 @@ const InGame: React.FC = () => {
   );
 
   const [team, setTeam] = useState<Team>(Team.RED);
-  const [seconds, setSeconds] = useState<number>(90);
+  const [seconds, setSeconds] = useState<number>(60);
   const [clue, setClue] = useState<ClueProps | null>(null);
   const [winner, setWinner] = useState<Team | null>(null);
   const [isStreamerTurn, setIsStreamerTurn] = useState<boolean>(true);

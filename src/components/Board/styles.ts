@@ -4,8 +4,8 @@ export const Container = styled.div`
   display: grid;
   grid-template-rows: 60px 1fr;
   grid-row-gap: 12px;
-
-  padding-top: 24px;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const Header = styled.div`
@@ -17,7 +17,7 @@ export const Header = styled.div`
 export const Title = styled.p`
   font-family: ${({ theme }) => theme.fonts.primary.family};
   font-weight: ${({ theme }) => theme.fonts.primary.weight};
-  font-size: ${({ theme }) => theme.fonts.primary.title};
+  font-size: 30px;
 
   color: ${({ theme }) => theme.colors.white};
 

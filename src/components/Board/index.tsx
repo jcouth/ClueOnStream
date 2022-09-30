@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { shuffleArray } from 'helpers/shuffleArray';
 import { CardProps, CardType, Team } from 'interfaces/Card';
@@ -39,6 +39,8 @@ const Board: React.FC<Props> = ({
   isTimerRunning,
   onFinishTurn,
 }) => {
+  const finishedByGameOver = useRef<boolean>(false);
+
   const [amount, setAmount] = useState<number>(0);
   const [cards, setCards] = useState<CardProps[]>([]);
   const [totalVotes, setTotalVotes] = useState<number>(0);
@@ -129,6 +131,7 @@ const Board: React.FC<Props> = ({
       }
     }
 
+    finishedByGameOver.current = isGameOver;
     setCardsWithVotes([]);
     setTotalVotes(0);
     onFinishTurn(opened, openedOtherTeam, isGameOver);
@@ -189,10 +192,10 @@ const Board: React.FC<Props> = ({
   }, [getAmount]);
 
   const hasWinner = useCallback(() => {
-    if (winner) {
+    if (winner && !finishedByGameOver.current) {
       openAllCards();
     }
-  }, [winner]);
+  }, [winner, finishedByGameOver.current]);
 
   useEffect(() => {
     hasWinner();

@@ -106,7 +106,6 @@ const InGame: React.FC = () => {
       setUsername(null);
 
       setTeam(Team.RED);
-      setSeconds(90);
       setClue(null);
       setWinner(null);
       setIsStreamerTurn(true);

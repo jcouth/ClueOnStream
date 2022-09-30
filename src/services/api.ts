@@ -2,7 +2,9 @@ import { api } from './client';
 
 api.interceptors.response.use(
   ({ data, ...rest }) => {
-    const newData: string[] = (data as string).split('\n');
+    const newData: string[] = (data as string)
+      .split('\n')
+      .filter((word) => word.length <= 10);
 
     return {
       ...rest,

@@ -92,22 +92,27 @@ const Board: React.FC<Props> = ({
       .sort((a, b) => b.votes - a.votes)
       .slice(0, clue!.amount);
 
+    let delayToOpen = 0;
     for (const { id, type } of cardsToOpen) {
       if (type === CardType.GAME_OVER) {
         newCards = newCards.map((oldCard) => ({
           ...oldCard,
           isOpen: true,
           votes: 0,
+          delayToOpen: oldCard.type === CardType.GAME_OVER ? 0 : 0.5,
         }));
         isGameOver = true;
         break;
       } else {
         newCards = newCards.map((oldCard) => {
           if (oldCard.id === id) {
+            delayToOpen += 0.1;
             return {
               ...oldCard,
               isOpen: true,
+              revealed: true,
               votes: 0,
+              delayToOpen,
             };
           }
           return { ...oldCard, votes: 0 };
@@ -160,12 +165,14 @@ const Board: React.FC<Props> = ({
       return CardType.GAME_OVER;
     };
 
-    const cardsFromWords = words.map((item, index) => ({
+    const cardsFromWords: CardProps[] = words.map((item, index) => ({
       id: index,
       title: item,
       isOpen: false,
+      revealed: false,
       type: getType(index),
       votes: 0,
+      delayToOpen: 0,
     }));
 
     const shuffled = shuffleArray(cardsFromWords);

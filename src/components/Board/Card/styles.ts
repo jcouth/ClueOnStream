@@ -5,7 +5,9 @@ import { CardProps, CardType, Team } from 'interfaces/Card';
 
 interface StyledCardProps {
   isOpen: CardProps['isOpen'];
+  revealed: CardProps['revealed'];
   cardType: CardProps['type'];
+  delayToOpen: CardProps['delayToOpen'];
 }
 
 interface CardColorsProps {
@@ -38,6 +40,8 @@ export const Container = styled.button<StyledCardProps>`
   background-color: ${({ theme }) => theme.colors.card.normal.primary};
   box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
 
+  overflow: hidden;
+
   &::before {
     content: '';
     position: absolute;
@@ -51,13 +55,48 @@ export const Container = styled.button<StyledCardProps>`
     border-radius: 12px;
   }
 
-  ${({ isOpen, cardType }) =>
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0px;
+    left: 0px;
+
+    width: 100%;
+    height: 100%;
+
+    background-image: url('https://as2.ftcdn.net/v2/jpg/03/01/38/69/1000_F_301386906_5rgf3LdlmG36cXq8Hm27HMBSSgGdArA5.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    mix-blend-mode: darken;
+
+    opacity: 0;
+  }
+
+  ${({ isOpen, cardType, delayToOpen }) =>
     isOpen &&
     css`
       background-color: ${CardColors.principal[cardType]};
 
+      transition: background-color 0.5s ease-out ${0.5 + delayToOpen}s;
+
       &::before {
         border-color: ${CardColors.before[cardType]};
+      }
+    `}
+
+  ${({ revealed, delayToOpen }) =>
+    revealed &&
+    css`
+      &::before {
+        opacity: 0.5;
+
+        transition: border-color 0.5s ease-out ${0.5 + delayToOpen}s,
+          opacity 0.5s ease-out ${0.5 + delayToOpen}s;
+      }
+      &::after {
+        opacity: 0.5;
+
+        transition: opacity 0.5s ease-out ${0.5 + delayToOpen}s;
       }
     `}
 
@@ -85,6 +124,22 @@ export const Container = styled.button<StyledCardProps>`
     40%,
     60% {
       transform: translate3d(4px, 0, 0);
+    }
+  }
+
+  &.opens {
+    animation: opens 1s ease-in-out ${({ delayToOpen }) => delayToOpen}s;
+  }
+
+  @keyframes opens {
+    0%,
+    75%,
+    100% {
+      transform: scale(1);
+    }
+    25%,
+    50% {
+      transform: scale(1.05);
     }
   }
 `;
@@ -132,8 +187,21 @@ export const Content = styled.div<StyledCardProps>`
   padding: 8px 12px;
 
   border-radius: 4px;
-  background-color: ${({ theme, isOpen, cardType }) =>
-    isOpen ? CardColors.before[cardType] : theme.colors.white};
+  background-color: ${({ theme }) => theme.colors.white};
+
+  ${({ isOpen, revealed, cardType, delayToOpen }) =>
+    revealed
+      ? css`
+          visibility: hidden;
+
+          transition: visibility ${0.5 + delayToOpen}s linear;
+        `
+      : isOpen &&
+        css`
+          background-color: ${CardColors.before[cardType]};
+
+          transition: background-color ${0.5 + delayToOpen}s ease-in;
+        `}
 `;
 
 export const ContentText = styled.p<Omit<StyledCardProps, 'cardType'>>`
@@ -145,11 +213,24 @@ export const ContentText = styled.p<Omit<StyledCardProps, 'cardType'>>`
   font-weight: ${({ theme }) => theme.fonts.primary.weight};
   font-size: ${({ theme }) => theme.fonts.primary.subtitle};
 
-  color: ${({ theme, isOpen }) =>
-    isOpen ? theme.colors.white : theme.colors.card.normal.text};
+  color: ${({ theme }) => theme.colors.card.normal.text};
 
   letter-spacing: -0.5px;
   text-align: center;
   text-transform: uppercase;
   text-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+
+  ${({ isOpen, revealed, delayToOpen }) =>
+    revealed
+      ? css`
+          visibility: hidden;
+
+          transition: visibility ${0.5 + delayToOpen}s linear;
+        `
+      : isOpen &&
+        css`
+          color: ${theme.colors.white};
+
+          transition: color ${0.5 + delayToOpen}s ease-in;
+        `}
 `;

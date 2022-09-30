@@ -17,8 +17,10 @@ const Card: React.FC<Props> = ({
   id,
   title,
   isOpen,
+  revealed,
   type,
   votes,
+  delayToOpen,
   team,
   totalVotes,
   isStreamerTurn,
@@ -39,9 +41,11 @@ const Card: React.FC<Props> = ({
   return (
     <S.Container
       isOpen={isOpen}
+      revealed={revealed}
       cardType={type}
+      delayToOpen={delayToOpen}
       onClick={handleOpen}
-      className={shake ? 'shake' : ''}
+      className={`${shake ? 'shake' : ''} ${isOpen ? 'opens' : ''}`}
       onAnimationEnd={() => setShake(false)}
     >
       <S.Header>
@@ -51,6 +55,7 @@ const Card: React.FC<Props> = ({
           </S.PercentageText>
         </S.Percentage>
         <ProfileCard
+          visibility={revealed ? 'hidden' : 'visible'}
           fill={
             isOpen
               ? S.CardColors.before[type]
@@ -58,8 +63,19 @@ const Card: React.FC<Props> = ({
           }
         />
       </S.Header>
-      <S.Content isOpen={isOpen} cardType={type}>
-        <S.ContentText isOpen={isOpen}>{title}</S.ContentText>
+      <S.Content
+        isOpen={isOpen}
+        revealed={revealed}
+        cardType={type}
+        delayToOpen={delayToOpen}
+      >
+        <S.ContentText
+          isOpen={isOpen}
+          revealed={revealed}
+          delayToOpen={delayToOpen}
+        >
+          {title}
+        </S.ContentText>
       </S.Content>
     </S.Container>
   );

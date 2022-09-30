@@ -1,8 +1,8 @@
 import React, { memo, useState } from 'react';
 
-import { ReactComponent as ProfileCard } from '@assets/profile-card.svg';
-import theme from '@global/styles/theme';
-import { CardProps, Team } from '@interfaces/Card';
+import { ReactComponent as ProfileCard } from 'assets/profile-card.svg';
+import theme from 'global/styles/theme';
+import { CardProps, Team } from 'interfaces/Card';
 
 import * as S from './styles';
 
@@ -10,7 +10,7 @@ interface Props extends CardProps {
   team: Team;
   totalVotes: number;
   isStreamerTurn: boolean;
-  onOpen(id: CardProps['id'], type: CardProps['type']): void;
+  onOpen: (id: CardProps['id'], type: CardProps['type']) => void;
 }
 
 const Card: React.FC<Props> = ({
@@ -45,7 +45,7 @@ const Card: React.FC<Props> = ({
       onAnimationEnd={() => setShake(false)}
     >
       <S.Header>
-        <S.Percentage team={team} visible={0 < votes}>
+        <S.Percentage team={team} visible={votes > 0}>
           <S.PercentageText>
             {((votes / totalVotes) * 100).toFixed(0)}%
           </S.PercentageText>

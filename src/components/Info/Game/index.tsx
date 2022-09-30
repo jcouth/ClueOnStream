@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import { ReactComponent as AlarmIcon } from '@assets/alarm.svg';
-import { ReactComponent as Logo } from '@assets/logo.svg';
-import { ClueProps } from '@interfaces/Clue';
-import { Team } from '@interfaces/Card';
+import { ReactComponent as AlarmIcon } from 'assets/alarm.svg';
+import { ReactComponent as Logo } from 'assets/logo.svg';
+import { ClueProps } from 'interfaces/Clue';
+import { Team } from 'interfaces/Card';
 
 import * as S from './styles';
 
@@ -22,7 +22,7 @@ export interface GameProps {
   isStreamerTurn: boolean;
   team: Team;
   history: HistoryProps;
-  onFinishTimer(): void;
+  onFinishTimer: () => void;
 }
 
 const SECONDS = 5;

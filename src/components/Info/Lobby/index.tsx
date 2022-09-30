@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 
-import { ReactComponent as AlarmIcon } from '@assets/alarm.svg';
-import { ReactComponent as Logo } from '@assets/logo.svg';
-import Button from '@components/Button';
-import { Status } from '@interfaces/Status';
+import { ReactComponent as AlarmIcon } from 'assets/alarm.svg';
+import { ReactComponent as Logo } from 'assets/logo.svg';
+import Button from 'components/Button';
+import { Status } from 'interfaces/Status';
 
 import * as S from './styles';
 
@@ -12,7 +12,7 @@ const OPTIONS = [30, 60, 90, 120, 150];
 export interface LobbyProps {
   type: Status;
   username: string;
-  onChangeSeconds(seconds: number): void;
+  onChangeSeconds: (seconds: number) => void;
 }
 
 const Lobby: React.FC<LobbyProps> = ({ type, username, onChangeSeconds }) => {

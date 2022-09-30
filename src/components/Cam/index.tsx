@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { ReactComponent as TwitchLogo } from '@assets/twitch-logo.svg';
-import { ReactComponent as CameraIcon } from '@assets/camera.svg';
-import Button from '@components/Button';
-import { Status } from '@interfaces/Status';
+import { ReactComponent as TwitchLogo } from 'assets/twitch-logo.svg';
+import { ReactComponent as CameraIcon } from 'assets/camera.svg';
+import Button from 'components/Button';
+import { Status } from 'interfaces/Status';
 
 import Game from './Game';
 
@@ -12,11 +12,13 @@ import * as S from './styles';
 interface Props {
   type?: Status;
   isStreamerTurn: boolean;
-  onSend(clue: string, amount: number): void;
+  onSend: (clue: string, amount: number) => void;
 }
 
 const Cam: React.FC<Props> = ({ type, isStreamerTurn, onSend }) => {
-  const handleClick = () => {};
+  const handleClick = () => {
+    //
+  };
 
   const renderContent = () => {
     if (type === Status.GAME) {

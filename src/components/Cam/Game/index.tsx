@@ -1,12 +1,12 @@
 import React, { memo, useRef, useState } from 'react';
 
-import Button from '@components/Button';
+import Button from 'components/Button';
 
 import * as S from './styles';
 
 interface Props {
   isStreamerTurn: boolean;
-  onSend(clue: string, amount: number): void;
+  onSend: (clue: string, amount: number) => void;
 }
 
 const AMOUNTS = [1, 2, 3, 4, 5, 6, 7];
@@ -27,7 +27,9 @@ const Game: React.FC<Props> = ({ isStreamerTurn, onSend }) => {
     setExpand((oldState) => !oldState);
   };
 
-  const handleLobby = () => {};
+  const handleLobby = () => {
+    //
+  };
 
   const handleSend = () => {
     if (isStreamerTurn && inputRef.current?.value && amount !== null) {
@@ -60,7 +62,7 @@ const Game: React.FC<Props> = ({ isStreamerTurn, onSend }) => {
       <S.Controls>
         <S.Input ref={inputRef} placeholder="Digite aqui" />
         <Button
-          title={amount || '-'}
+          title={amount ?? '-'}
           variant="tertiary"
           onClick={handleExpand}
         />

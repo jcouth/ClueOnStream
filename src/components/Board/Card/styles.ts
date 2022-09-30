@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 
-import theme from '@global/styles/theme';
-import { CardProps, CardType, Team } from '@interfaces/Card';
+import theme from 'global/styles/theme';
+import { CardProps, CardType, Team } from 'interfaces/Card';
 
 interface StyledCardProps {
   isOpen: CardProps['isOpen'];

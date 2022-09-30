@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Status } from '@interfaces/Status';
+import { Status } from 'interfaces/Status';
 
 import Game, { GameProps, HistoryProps } from './Game';
 import Lobby, { LobbyProps } from './Lobby';

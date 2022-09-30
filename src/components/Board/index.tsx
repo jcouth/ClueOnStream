@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { shuffleArray } from '@helpers/shuffleArray';
-import { CardProps, CardType, Team } from '@interfaces/Card';
-import { ClueProps } from '@interfaces/Clue';
+import { shuffleArray } from 'helpers/shuffleArray';
+import { CardProps, CardType, Team } from 'interfaces/Card';
+import { ClueProps } from 'interfaces/Clue';
 
 import Card from './Card';
 
@@ -22,11 +22,11 @@ interface Props {
   clue: ClueProps | null;
   words: string[];
   isTimerRunning: boolean;
-  onFinishTurn(
+  onFinishTurn: (
     cardsOpened: number,
     openedOtherTeam: number,
     isGameOver: boolean
-  ): void;
+  ) => void;
 }
 
 const Board: React.FC<Props> = ({
@@ -175,7 +175,7 @@ const Board: React.FC<Props> = ({
   }, [getCards]);
 
   const getAmount = useCallback(() => {
-    if (clue) {
+    if (clue != null) {
       if (isTimerRunning) {
         setAmount(clue.amount);
       } else {
@@ -201,7 +201,7 @@ const Board: React.FC<Props> = ({
   return (
     <S.Container>
       <S.Header>
-        {clue ? (
+        {clue != null ? (
           <>
             <S.Clue>{clue.description}</S.Clue>
             <S.Amount>{amount}</S.Amount>

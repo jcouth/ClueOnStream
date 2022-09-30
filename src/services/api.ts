@@ -12,18 +12,18 @@ api.interceptors.response.use(
   (error) => error
 );
 
-export const fetchConjugations = () => {
-  return api.get<string[]>('/conjugações');
+export const fetchConjugations = async () => {
+  return await api.get<string[]>('/conjugações');
 };
 
-export const fetchDicio = () => {
-  return api.get<string[]>('/dicio');
+export const fetchDicio = async () => {
+  return await api.get<string[]>('/dicio');
 };
 
-export const fetchWords = () => {
-  return api.get<string[]>('/palavras');
+export const fetchWords = async () => {
+  return await api.get<string[]>('/palavras');
 };
 
-export const fetchVerbs = () => {
-  return api.get<string[]>('/verbos');
+export const fetchVerbs = async () => {
+  return await api.get<string[]>('/verbos');
 };

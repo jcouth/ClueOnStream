@@ -2,8 +2,8 @@ import React, { useEffect, useRef } from 'react';
 
 import { useNavigate } from 'react-router';
 
-import { shuffleArray } from '@helpers/shuffleArray';
-import { fetchVerbs } from '@services/api';
+import { shuffleArray } from 'helpers/shuffleArray';
+import { fetchVerbs } from 'services/api';
 
 import * as S from './styles';
 
@@ -41,7 +41,7 @@ const Home = () => {
 
   useEffect(() => {
     if (allWords.current.length === 0) {
-      getVerbs();
+      void getVerbs();
     }
   }, []);
 

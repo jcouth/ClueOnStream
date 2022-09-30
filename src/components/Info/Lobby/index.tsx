@@ -11,16 +11,20 @@ const OPTIONS = [30, 60, 90, 120, 150];
 
 export interface LobbyProps {
   type: Status;
-  username: string;
+  username: string | null;
+  seconds: number;
   onChangeSeconds: (seconds: number) => void;
 }
 
-const Lobby: React.FC<LobbyProps> = ({ type, username, onChangeSeconds }) => {
-  const [option, setOption] = useState<number>(90);
+const Lobby: React.FC<LobbyProps> = ({
+  type,
+  username,
+  seconds,
+  onChangeSeconds,
+}) => {
   const [expand, setExpand] = useState<boolean>(false);
 
   const handleOption = (value: number) => {
-    setOption(value);
     setExpand(false);
     onChangeSeconds(value);
   };
@@ -35,7 +39,7 @@ const Lobby: React.FC<LobbyProps> = ({ type, username, onChangeSeconds }) => {
         <Logo width="100%" height="240px" />
       </S.LogoWrapper>
       <S.Content>
-        <S.Title>{username || 'Faça login'}</S.Title>
+        <S.Title>{username ?? 'Faça login'}</S.Title>
         <S.Status>{type}</S.Status>
         <S.Timer expand={expand}>
           <S.Selector expand={expand} height={70}>
@@ -54,7 +58,7 @@ const Lobby: React.FC<LobbyProps> = ({ type, username, onChangeSeconds }) => {
           <S.TimerContent>
             <AlarmIcon width="100%" height="36px" />
             <Button
-              title={`${option} segundos`}
+              title={`${seconds} segundos`}
               variant="primary"
               isActive
               onClick={handleExpand}

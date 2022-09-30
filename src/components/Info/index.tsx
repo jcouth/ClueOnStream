@@ -15,6 +15,7 @@ const Info: React.FC<Props> = ({
   history,
   type,
   username,
+  seconds,
   onFinishTimer,
   onChangeSeconds,
 }) => {
@@ -23,10 +24,16 @@ const Info: React.FC<Props> = ({
       isStreamerTurn={isStreamerTurn}
       team={team}
       history={history}
+      seconds={seconds}
       onFinishTimer={onFinishTimer}
     />
   ) : (
-    <Lobby type={type} username={username} onChangeSeconds={onChangeSeconds} />
+    <Lobby
+      type={type}
+      username={username}
+      seconds={seconds}
+      onChangeSeconds={onChangeSeconds}
+    />
   );
 };
 

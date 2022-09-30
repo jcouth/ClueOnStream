@@ -12,17 +12,29 @@ import * as S from './styles';
 interface Props {
   type?: Status;
   isStreamerTurn: boolean;
+  onConnect: () => void;
+  onDisconnect: () => void;
+  onNewGame: () => void;
   onSend: (clue: string, amount: number) => void;
 }
 
-const Cam: React.FC<Props> = ({ type, isStreamerTurn, onSend }) => {
-  const handleClick = () => {
-    //
-  };
-
+const Cam: React.FC<Props> = ({
+  type,
+  isStreamerTurn,
+  onConnect,
+  onDisconnect,
+  onNewGame,
+  onSend,
+}) => {
   const renderContent = () => {
     if (type === Status.GAME) {
-      return <Game isStreamerTurn={isStreamerTurn} onSend={onSend} />;
+      return (
+        <Game
+          isStreamerTurn={isStreamerTurn}
+          onSend={onSend}
+          onDisconnect={onDisconnect}
+        />
+      );
     }
     if (type === Status.WAITING_START) {
       return (
@@ -31,13 +43,13 @@ const Cam: React.FC<Props> = ({ type, isStreamerTurn, onSend }) => {
             title="Sair"
             variant="secondary"
             isActive
-            onClick={handleClick}
+            onClick={onDisconnect}
           />
           <Button
             title="Iniciar"
             variant="primary"
             isActive
-            onClick={handleClick}
+            onClick={onNewGame}
           />
         </S.Content>
       );
@@ -53,8 +65,8 @@ const Cam: React.FC<Props> = ({ type, isStreamerTurn, onSend }) => {
     }
     return (
       <S.Content>
-        <Button variant="primary" isActive onClick={handleClick}>
-          <TwitchLogo width="72" height="100%" fill="white" />
+        <Button variant="primary" isActive onClick={onConnect}>
+          <TwitchLogo width="100%" height="24px" fill="white" />
         </Button>
       </S.Content>
     );

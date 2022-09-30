@@ -117,12 +117,12 @@ export const Selector = styled.div<{ expand: boolean; height: number }>`
   flex-direction: column;
 
   position: absolute;
-  top: ${({ expand, height }) => (expand ? -height : 12)}px;
+  top: ${({ expand, height }) => (expand ? -height : 10)}px;
 
   padding: ${({ expand }) => (expand ? 6 : 0)}px 14px;
 
   width: 100%;
-  height: ${({ expand, height }) => (expand ? height + 12 : 0)}px;
+  height: ${({ expand, height }) => (expand ? height + 10 : 0)}px;
 
   border-radius: 12px;
   border-bottom-left-radius: 0;

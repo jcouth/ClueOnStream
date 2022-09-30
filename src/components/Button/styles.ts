@@ -33,6 +33,9 @@ export const Button = styled.button<ButtonProps>`
 
   padding: 12px;
 
+  max-height: 48px;
+  height: 100%;
+
   border: ${({ theme, variant, isActive }) =>
     variant === 'primary'
       ? `3px solid ${isActive ? theme.colors.white : theme.colors.secondary}`

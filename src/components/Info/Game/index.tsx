@@ -7,6 +7,12 @@ import { Team } from 'interfaces/Card';
 
 import * as S from './styles';
 
+interface Properties {
+  seconds: number;
+  interval: number;
+  decay: number;
+}
+
 type RemainingProps = { [key in Team]: number };
 
 interface HistoryClueProps extends ClueProps {
@@ -22,37 +28,50 @@ export interface GameProps {
   isStreamerTurn: boolean;
   team: Team;
   history: HistoryProps;
+  seconds: number;
   onFinishTimer: () => void;
 }
-
-const SECONDS = 5;
-const INTERVAL = 100;
-
-// (100% * interval-in-ms) / (seconds-in-ms)
-const PROGRESS_DECAY = (100 * INTERVAL) / (SECONDS * 1000);
 
 const Game: React.FC<GameProps> = ({
   isStreamerTurn,
   team,
   history,
+  seconds,
   onFinishTimer,
 }) => {
   const progressRef = useRef<NodeJS.Timer>();
 
   const [progress, setProgress] = useState<number>(100);
+  const [properties, setProperties] = useState<Properties | null>(null);
 
   const startTimer = useCallback(() => {
-    if (!isStreamerTurn) {
+    if (!isStreamerTurn && properties) {
       progressRef.current = setInterval(
-        () => setProgress((oldState) => oldState - PROGRESS_DECAY),
-        INTERVAL
+        () => setProgress((oldState) => oldState - properties.decay),
+        properties.interval
       );
     }
-  }, [isStreamerTurn]);
+  }, [isStreamerTurn, properties]);
 
   useEffect(() => {
     startTimer();
   }, [startTimer]);
+
+  const init = useCallback(() => {
+    const interval = 100;
+    // (100% * interval-in-ms) / (seconds-in-ms)
+    const decay = (100 * interval) / (seconds * 1000);
+
+    setProperties({
+      seconds,
+      interval,
+      decay,
+    });
+  }, [seconds]);
+
+  useEffect(() => {
+    init();
+  }, [init]);
 
   useEffect(() => {
     if (progress <= 0) {
@@ -101,7 +120,7 @@ const Game: React.FC<GameProps> = ({
             isStreamerTurn={isStreamerTurn}
             team={team}
             progress={progress}
-            interval={`${INTERVAL / 1000}s`}
+            interval={properties ? `${properties.interval / 1000}s` : '0s'}
           />
         </S.Timer>
       </S.Content>

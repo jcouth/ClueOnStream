@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
 
+import CardOverlay from 'assets/card-overlay.svg';
 import theme from 'global/styles/theme';
 import { CardProps, CardType, Team } from 'interfaces/Card';
 
@@ -64,7 +65,7 @@ export const Container = styled.button<StyledCardProps>`
     width: 100%;
     height: 100%;
 
-    background-image: url('https://as2.ftcdn.net/v2/jpg/03/01/38/69/1000_F_301386906_5rgf3LdlmG36cXq8Hm27HMBSSgGdArA5.jpg');
+    background-image: url(${CardOverlay});
     background-size: cover;
     background-repeat: no-repeat;
     mix-blend-mode: darken;

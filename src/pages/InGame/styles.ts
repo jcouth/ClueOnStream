@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
 
+import Overlay from 'assets/overlay.svg';
 import { Team } from 'interfaces/Card';
 
 export const Container = styled.div`
@@ -15,7 +16,7 @@ export const Container = styled.div`
   height: 100vh;
 
   background-color: ${({ theme }) => theme.colors.primary};
-  background-image: url('https://cdn.codenames.game/v20210210/img/bg-raster.svg');
+  background-image: url(${Overlay});
   background-size: cover;
   background-repeat: no-repeat;
   mix-blend-mode: overlay;

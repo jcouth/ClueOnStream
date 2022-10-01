@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useOutletContext } from 'react-router';
+import { Client as ClientTMI } from 'tmi.js';
 
 import { Status } from 'components/Info/Lobby/styles';
 import { shuffleArray } from 'helpers/shuffleArray';
@@ -33,15 +34,31 @@ const Board: React.FC = () => {
     handleClue,
     reset,
   } = useGame();
-  const { words } = useOutletContext<{ words: string[] }>();
+  const { words, username } = useOutletContext<{
+    words: string[];
+    username: string | null;
+  }>();
 
   const finishedByGameOver = useRef<boolean>(false);
+  const [client, setClient] = useState<ClientTMI | null>(null);
 
   const [amount, setAmount] = useState<number>(0);
   const [cards, setCards] = useState<CardProps[]>([]);
   const [totalVotes, setTotalVotes] = useState<number>(0);
   const [animateTitle, setAnimateTitle] = useState<boolean>(false);
   const [cardsWithVotes, setCardsWithVotes] = useState<VoteProps[]>([]);
+
+  const disconnectClient = () => {
+    void (async () => {
+      try {
+        await client?.disconnect();
+
+        setClient(null);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  };
 
   const handleOnFinishTurn = (
     cardsOpened: number,
@@ -67,14 +84,17 @@ const Board: React.FC = () => {
       handleStatus(Status.FINISH_GAME);
       handleTeam(nextTeam);
       reset();
+      disconnectClient();
     } else if (red === 0) {
       handleWinner(Team.RED);
       handleStatus(Status.FINISH_GAME);
       reset();
+      disconnectClient();
     } else if (blue === 0) {
       handleWinner(Team.BLUE);
       handleStatus(Status.FINISH_GAME);
       reset();
+      disconnectClient();
     } else {
       handleTeam(nextTeam);
     }
@@ -119,6 +139,17 @@ const Board: React.FC = () => {
             return oldCard;
           })
         );
+      }
+    }
+  };
+
+  const handleCheckVote = (message: string, userTeam: Team | null) => {
+    if (userTeam && userTeam === team) {
+      const [filtered] = cards.filter(
+        (item) => item.title === message.toLowerCase()
+      );
+      if (filtered) {
+        handleVote(filtered.id, filtered.type);
       }
     }
   };
@@ -265,6 +296,32 @@ const Board: React.FC = () => {
   useEffect(() => {
     getCards();
   }, [getCards]);
+
+  useEffect(() => {
+    if (username && client === null) {
+      const init = async () => {
+        try {
+          const _client = new ClientTMI({
+            channels: [username],
+          });
+
+          await _client.connect();
+
+          _client.on('message', (_, __, message) => {
+            // conferir se está em uma equipe
+            // conferir se está no turno da equipe dele
+            handleCheckVote(message, Team.RED);
+          });
+
+          setClient(_client);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      void init();
+    }
+  }, [username]);
+
   return (
     <S.Container>
       <S.Header>

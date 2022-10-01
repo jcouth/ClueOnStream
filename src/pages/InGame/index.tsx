@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { Client as ClientTMI } from 'tmi.js';
 import { Outlet, Routes, Route, useNavigate } from 'react-router';
 
 import Lobby from 'components/Info/Lobby';
@@ -45,7 +44,6 @@ const InGame: React.FC = () => {
   const [words, setWords] = useState<string[]>([]);
 
   const [token, setToken] = useState<string>('');
-  const [client, setClient] = useState<ClientTMI | null>(null);
   const [username, setUsername] = useState<string | null>(null);
   const [isAnimating, setIsAnimating] = useState<boolean>(true);
 
@@ -58,21 +56,9 @@ const InGame: React.FC = () => {
       const { data } = await fetchUser(token);
       const [userData] = data.data;
 
-      const _client = new ClientTMI({
-        // options: { debug: true },
-        // identity: {
-        //   username: 'ClueOnStream',
-        //   password: 'oauth:kt2w01vfqtm6rkmm7b1ru7ra23xvmo',
-        // },
-        channels: [userData.display_name],
-      });
-
       setToken(token);
       setUsername(userData.display_name);
-      setClient(_client);
       handleStatus(Status.WAITING_START);
-
-      await _client.connect();
     } catch (error) {
       console.error(error);
     }
@@ -82,10 +68,8 @@ const InGame: React.FC = () => {
     void (async () => {
       try {
         await logout(token);
-        await client?.disconnect();
 
         setUsername(null);
-        setClient(null);
         handleStatus(Status.WAITING_CONNECTION);
         reset();
 
@@ -156,25 +140,6 @@ const InGame: React.FC = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (client) {
-      // console.log(client);
-      // const init = async () => {
-      //   client.on('message', (channel, tags, message, self) => {
-      //     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      //     console.log(`${tags['display-name']}: ${message}`);
-      //     // // Ignore echoed messages.
-      //     // if (self) return;
-      //     // if (message.toLowerCase() === '!hello') {
-      //     //   // "@alca, heya!"
-      //     //   void client.say(channel, `@${tags.username ?? 'teste'}, heya!`);
-      //     // }
-      //   });
-      // };
-      // void init();
-    }
-  }, [client]);
-
   return (
     <S.Container>
       <S.Content
@@ -191,7 +156,7 @@ const InGame: React.FC = () => {
           <Cam onDisconnect={handleDisconnect} onNewGame={handleNewGame} />
         </S.Aside>
         <S.Main>
-          <Outlet context={{ words }} />
+          <Outlet context={{ words, username }} />
         </S.Main>
       </S.Content>
     </S.Container>

@@ -42,7 +42,6 @@ export const Content = styled.div<{ inLobby: boolean; team: Team }>`
 
   &::before {
     content: '';
-    z-index: 1;
     position: absolute;
     top: 0;
     left: 0;

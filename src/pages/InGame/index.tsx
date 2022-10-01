@@ -1,12 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { Client as ClientTMI } from 'tmi.js';
-import { useParams } from 'react-router';
+import { Outlet } from 'react-router';
 
-import { ReactComponent as PredictionIcon } from 'assets/prediction.svg';
-import { ReactComponent as BuldIcon } from 'assets/bulb.svg';
-import { ReactComponent as ChatIcon } from 'assets/chat.svg';
-import { ReactComponent as OfferIcon } from 'assets/offer.svg';
 import Info, { HistoryProps } from 'components/Info';
 import Board from 'components/Board';
 import Cam from 'components/Cam';
@@ -22,14 +18,6 @@ import * as S from './styles';
 const AMOUNT_OF_RED_CARDS = 9;
 const AMOUNT_OF_BLUE_CARDS = 8;
 const MAX_CARDS = 25;
-
-type ParamsProps =
-  | {
-      access_token?: string;
-      scope?: string;
-      token_type?: string;
-    }
-  | Record<string, string | undefined>;
 
 const InGame: React.FC = () => {
   /*
@@ -47,8 +35,6 @@ const InGame: React.FC = () => {
   limpar codigo
   performance
   */
-  const params = useParams();
-
   const allWords = useRef<string[]>([]);
   const [words, setWords] = useState<string[]>([]);
 
@@ -145,8 +131,6 @@ const InGame: React.FC = () => {
     try {
       const { data } = await fetchUser(token);
       const [userData] = data.data;
-
-      console.log(userData);
 
       const _client = new ClientTMI({
         // options: { debug: true },
@@ -325,31 +309,7 @@ const InGame: React.FC = () => {
               onFinishTurn={handleOnFinishTurn}
             />
           ) : (
-            <S.HowToPlay>
-              <S.Title>Como jogar</S.Title>
-              <S.TipsToPlay>
-                {renderTipCard(
-                  <PredictionIcon width="100%" height="4.222vw" fill="white" />,
-                  'Entre em uma equipe pelo palpite da live',
-                  2
-                )}
-                {renderTipCard(
-                  <BuldIcon width="100%" height="4.222vw" fill="white" />,
-                  'Aguarde pela dica e turno da sua equipe',
-                  4
-                )}
-                {renderTipCard(
-                  <ChatIcon width="100%" height="4.222vw" fill="white" />,
-                  'Digite o que está escrito no card e envie',
-                  6
-                )}
-                {renderTipCard(
-                  <OfferIcon width="100%" height="4.222vw" fill="white" />,
-                  'Serão abertos os cards com maiores % de votos',
-                  8
-                )}
-              </S.TipsToPlay>
-            </S.HowToPlay>
+            <Outlet />
           )}
         </S.Main>
       </S.Content>

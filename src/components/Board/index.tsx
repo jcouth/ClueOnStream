@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
+import { Status } from 'components/Info/Lobby/styles';
 import { shuffleArray } from 'helpers/shuffleArray';
+import { useGame } from 'hooks/useGame';
 import { CardProps, CardType, Team } from 'interfaces/Card';
-import { ClueProps } from 'interfaces/Clue';
 
 import Card from './Card';
 
@@ -15,30 +16,26 @@ interface VoteProps {
 }
 
 interface Props {
-  winner: Team | null;
-  amountOfRedCards: number;
-  amountOfBlueCards: number;
-  team: Team;
-  clue: ClueProps | null;
   words: string[];
-  isTimerRunning: boolean;
-  onFinishTurn: (
-    cardsOpened: number,
-    openedOtherTeam: number,
-    isGameOver: boolean
-  ) => void;
 }
 
-const Board: React.FC<Props> = ({
-  winner,
-  amountOfRedCards,
-  amountOfBlueCards,
-  team,
-  clue,
-  words,
-  isTimerRunning,
-  onFinishTurn,
-}) => {
+const Board: React.FC<Props> = ({ words }) => {
+  const {
+    winner,
+    amount: { red: amountOfRedCards, blue: amountOfBlueCards },
+    team,
+    clue,
+    history,
+    isTimerRunning,
+    handleIsStreamerTurn,
+    handleWinner,
+    handleStatus,
+    handleTeam,
+    handleHistory,
+    handleClue,
+    reset,
+  } = useGame();
+
   const finishedByGameOver = useRef<boolean>(false);
 
   const [amount, setAmount] = useState<number>(0);
@@ -46,6 +43,59 @@ const Board: React.FC<Props> = ({
   const [totalVotes, setTotalVotes] = useState<number>(0);
   const [animateTitle, setAnimateTitle] = useState<boolean>(false);
   const [cardsWithVotes, setCardsWithVotes] = useState<VoteProps[]>([]);
+
+  const handleOnFinishTurn = (
+    cardsOpened: number,
+    openedOtherTeam: number,
+    isGameOver: boolean
+  ) => {
+    handleIsStreamerTurn(true);
+    let {
+      remaining: { red, blue },
+    } = history;
+    const nextTeam = team === Team.RED ? Team.BLUE : Team.RED;
+
+    if (team === Team.RED) {
+      red -= cardsOpened;
+      blue -= openedOtherTeam;
+    } else {
+      red -= openedOtherTeam;
+      blue -= cardsOpened;
+    }
+
+    if (isGameOver) {
+      handleWinner(nextTeam);
+      handleStatus(Status.FINISH_GAME);
+      handleTeam(nextTeam);
+      reset();
+    } else if (red === 0) {
+      handleWinner(Team.RED);
+      handleStatus(Status.FINISH_GAME);
+      reset();
+    } else if (blue === 0) {
+      handleWinner(Team.BLUE);
+      handleStatus(Status.FINISH_GAME);
+      reset();
+    } else {
+      handleTeam(nextTeam);
+    }
+
+    handleHistory((oldState) => ({
+      remaining: {
+        red,
+        blue,
+      },
+      clues: [
+        ...oldState.clues,
+        {
+          team,
+          description: clue!.description,
+          amount: clue!.amount,
+        },
+      ],
+    }));
+    handleClue(null);
+  };
 
   const handleVote = (id: CardProps['id'], type: CardProps['type']) => {
     if (isTimerRunning) {
@@ -140,8 +190,8 @@ const Board: React.FC<Props> = ({
     finishedByGameOver.current = isGameOver;
     setCardsWithVotes([]);
     setTotalVotes(0);
-    onFinishTurn(opened, openedOtherTeam, isGameOver);
     setCards(newCards);
+    handleOnFinishTurn(opened, openedOtherTeam, isGameOver);
   };
 
   const renderTitle = () => {
@@ -158,6 +208,31 @@ const Board: React.FC<Props> = ({
       </S.Title>
     );
   };
+
+  const getAmount = useCallback(() => {
+    if (clue != null) {
+      setAnimateTitle(true);
+      if (isTimerRunning) {
+        setAmount(clue.amount);
+      } else {
+        openCards();
+      }
+    }
+  }, [clue, isTimerRunning]);
+
+  useEffect(() => {
+    getAmount();
+  }, [getAmount]);
+
+  const hasWinner = useCallback(() => {
+    if (winner && !finishedByGameOver.current) {
+      openAllCards();
+    }
+  }, [winner, finishedByGameOver.current]);
+
+  useEffect(() => {
+    hasWinner();
+  }, [hasWinner]);
 
   const getCards = useCallback(() => {
     const getType = (value: number) => {
@@ -191,32 +266,6 @@ const Board: React.FC<Props> = ({
   useEffect(() => {
     getCards();
   }, [getCards]);
-
-  const getAmount = useCallback(() => {
-    if (clue != null) {
-      setAnimateTitle(true);
-      if (isTimerRunning) {
-        setAmount(clue.amount);
-      } else {
-        openCards();
-      }
-    }
-  }, [clue, isTimerRunning]);
-
-  useEffect(() => {
-    getAmount();
-  }, [getAmount]);
-
-  const hasWinner = useCallback(() => {
-    if (winner && !finishedByGameOver.current) {
-      openAllCards();
-    }
-  }, [winner, finishedByGameOver.current]);
-
-  useEffect(() => {
-    hasWinner();
-  }, [hasWinner]);
-
   return (
     <S.Container>
       <S.Header>

@@ -5,6 +5,7 @@ import uuid from 'react-uuid';
 import { ReactComponent as TwitchLogo } from 'assets/twitch-logo.svg';
 import { ReactComponent as CameraIcon } from 'assets/camera.svg';
 import Button from 'components/Button';
+import { useGame } from 'hooks/useGame';
 import { Status } from 'interfaces/Status';
 
 import Game from './Game';
@@ -19,20 +20,19 @@ const {
 } = process.env;
 
 interface Props {
-  type?: Status;
-  isStreamerTurn: boolean;
   onDisconnect: () => void;
   onNewGame: () => void;
-  onSend: (clue: string, amount: number) => void;
 }
 
-const Cam: React.FC<Props> = ({
-  type,
-  isStreamerTurn,
-  onDisconnect,
-  onNewGame,
-  onSend,
-}) => {
+const Cam: React.FC<Props> = ({ onDisconnect, onNewGame }) => {
+  const {
+    status,
+    isStreamerTurn,
+    handleClue,
+    handleIsStreamerTurn,
+    handleIsTimerRunning,
+  } = useGame();
+
   const handleConnect = (
     e: React.MouseEvent<HTMLAnchorElement, globalThis.MouseEvent>
   ) => {
@@ -53,17 +53,26 @@ const Cam: React.FC<Props> = ({
     window.location.href = url;
   };
 
+  const handleSendClue = (description: string, amount: number) => {
+    handleClue({
+      description,
+      amount,
+    });
+    handleIsStreamerTurn(false);
+    handleIsTimerRunning(true);
+  };
+
   const renderContent = () => {
-    if (type === Status.GAME) {
+    if (status === Status.GAME) {
       return (
         <Game
           isStreamerTurn={isStreamerTurn}
-          onSend={onSend}
+          onSend={handleSendClue}
           onDisconnect={onDisconnect}
         />
       );
     }
-    if (type === Status.FINISH_GAME) {
+    if (status === Status.FINISH_GAME) {
       return (
         <S.Content>
           <Button
@@ -81,7 +90,7 @@ const Cam: React.FC<Props> = ({
         </S.Content>
       );
     }
-    if (type === Status.WAITING_START) {
+    if (status === Status.WAITING_START) {
       return (
         <S.Content>
           <Button
@@ -99,7 +108,7 @@ const Cam: React.FC<Props> = ({
         </S.Content>
       );
     }
-    if (type === Status.WAITING_TEAMS) {
+    if (status === Status.WAITING_TEAMS) {
       return (
         <S.Content>
           <S.ContentInfo>

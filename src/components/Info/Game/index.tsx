@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { ReactComponent as AlarmIcon } from 'assets/alarm.svg';
 import { ReactComponent as Logo } from 'assets/logo.svg';
+import { useGame } from 'hooks/useGame';
 import { ClueProps } from 'interfaces/Clue';
 import { Team } from 'interfaces/Card';
 
@@ -24,21 +25,10 @@ export interface HistoryProps {
   clues: HistoryClueProps[];
 }
 
-export interface GameProps {
-  isStreamerTurn: boolean;
-  team: Team;
-  history: HistoryProps;
-  seconds: number;
-  onFinishTimer: () => void;
-}
+const Game: React.FC = () => {
+  const { seconds, isStreamerTurn, team, history, handleIsTimerRunning } =
+    useGame();
 
-const Game: React.FC<GameProps> = ({
-  isStreamerTurn,
-  team,
-  history,
-  seconds,
-  onFinishTimer,
-}) => {
   const progressRef = useRef<NodeJS.Timer>();
 
   const [progress, setProgress] = useState<number>(100);
@@ -77,9 +67,9 @@ const Game: React.FC<GameProps> = ({
     if (progress <= 0) {
       clearInterval(progressRef.current);
       setProgress(100);
-      onFinishTimer();
+      handleIsTimerRunning(false);
     }
-  }, [progress, onFinishTimer]);
+  }, [progress, handleIsTimerRunning]);
 
   return (
     <S.Container>

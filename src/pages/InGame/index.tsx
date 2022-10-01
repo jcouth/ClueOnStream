@@ -3,21 +3,16 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Client as ClientTMI } from 'tmi.js';
 import { Outlet } from 'react-router';
 
-import Info, { HistoryProps } from 'components/Info';
+import Info from 'components/Info';
 import Board from 'components/Board';
 import Cam from 'components/Cam';
 import { shuffleArray } from 'helpers/shuffleArray';
-import { ClueProps } from 'interfaces/Clue';
+import { useGame } from 'hooks/useGame';
 import { Status } from 'interfaces/Status';
-import { Team } from 'interfaces/Card';
 import { fetchVerbs } from 'services/words/api';
 import { fetchUser } from 'services/twitch/api';
 
 import * as S from './styles';
-
-const AMOUNT_OF_RED_CARDS = 9;
-const AMOUNT_OF_BLUE_CARDS = 8;
-const MAX_CARDS = 25;
 
 const InGame: React.FC = () => {
   /*
@@ -35,97 +30,18 @@ const InGame: React.FC = () => {
   limpar codigo
   performance
   */
+  const {
+    team,
+    amount: { max },
+    status,
+    handleStatus,
+  } = useGame();
+
   const allWords = useRef<string[]>([]);
   const [words, setWords] = useState<string[]>([]);
 
   const [username, setUsername] = useState<string | null>(null);
   const [client, setClient] = useState<ClientTMI | null>(null);
-
-  const [gameStatus, setGameStatus] = useState<Status>(
-    Status.WAITING_CONNECTION
-  );
-
-  const [team, setTeam] = useState<Team>(Team.RED);
-  const [seconds, setSeconds] = useState<number>(60);
-  const [clue, setClue] = useState<ClueProps | null>(null);
-  const [winner, setWinner] = useState<Team | null>(null);
-  const [isStreamerTurn, setIsStreamerTurn] = useState<boolean>(true);
-  const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
-  const [history, setHistory] = useState<HistoryProps>({
-    remaining: {
-      red: AMOUNT_OF_RED_CARDS,
-      blue: AMOUNT_OF_BLUE_CARDS,
-    },
-    clues: [],
-  });
-
-  const resetGame = () => {
-    setTeam(Team.RED);
-    setClue(null);
-    setWinner(null);
-    setIsStreamerTurn(true);
-    setIsTimerRunning(false);
-    setHistory({
-      remaining: {
-        red: AMOUNT_OF_RED_CARDS,
-        blue: AMOUNT_OF_BLUE_CARDS,
-      },
-      clues: [],
-    });
-  };
-
-  const handleOnFinishTurn = (
-    cardsOpened: number,
-    openedOtherTeam: number,
-    isGameOver: boolean
-  ) => {
-    setIsStreamerTurn(true);
-    let {
-      remaining: { red, blue },
-    } = history;
-    const nextTeam = team === Team.RED ? Team.BLUE : Team.RED;
-
-    if (team === Team.RED) {
-      red -= cardsOpened;
-      blue -= openedOtherTeam;
-    } else {
-      red -= openedOtherTeam;
-      blue -= cardsOpened;
-    }
-
-    if (isGameOver) {
-      setWinner(nextTeam);
-      setGameStatus(Status.FINISH_GAME);
-      setTeam(nextTeam);
-      resetGame();
-    } else if (red === 0) {
-      setWinner(Team.RED);
-      setGameStatus(Status.FINISH_GAME);
-      resetGame();
-    } else if (blue === 0) {
-      setWinner(Team.BLUE);
-      setGameStatus(Status.FINISH_GAME);
-      resetGame();
-    } else {
-      setTeam(nextTeam);
-    }
-
-    setHistory((oldState) => ({
-      remaining: {
-        red,
-        blue,
-      },
-      clues: [
-        ...oldState.clues,
-        {
-          team,
-          description: clue!.description,
-          amount: clue!.amount,
-        },
-      ],
-    }));
-    setClue(null);
-  };
 
   const handleConnect = async (token: string) => {
     try {
@@ -172,34 +88,17 @@ const InGame: React.FC = () => {
       // ADD loading
 
       const shuffled = shuffleArray(allWords.current);
-      const newWords = shuffled.slice(0, MAX_CARDS);
+      const newWords = shuffled.slice(0, max);
 
       setWords(newWords);
-      setGameStatus(Status.WAITING_TEAMS);
+      handleStatus(Status.WAITING_TEAMS);
 
       setTimeout(() => {
-        setGameStatus(Status.GAME);
+        handleStatus(Status.GAME);
       }, 5000);
     } catch (error) {
       console.error(error);
     }
-  };
-
-  const handleOnFinishTimer = () => {
-    setIsTimerRunning(false);
-  };
-
-  const handleSendClue = (description: string, amount: number) => {
-    setClue({
-      description,
-      amount,
-    });
-    setIsStreamerTurn(false);
-    setIsTimerRunning(true);
-  };
-
-  const handleChangeSeconds = (newSeconds: number) => {
-    setSeconds(newSeconds);
   };
 
   const getVerbs = async () => {
@@ -257,57 +156,16 @@ const InGame: React.FC = () => {
     }
   }, [client]);
 
-  const renderTipCard = (
-    icon: React.ReactNode,
-    title: string,
-    index: number
-  ) => (
-    <S.TipCard delay={index}>
-      <S.TipCardButtons>
-        <span />
-        <span />
-        <span />
-        <span />
-      </S.TipCardButtons>
-      {icon}
-      <S.TipText>{title}</S.TipText>
-    </S.TipCard>
-  );
-
   return (
     <S.Container>
-      <S.Content inLobby={gameStatus !== Status.GAME} team={team}>
+      <S.Content inLobby={status !== Status.GAME} team={team}>
         <S.Aside>
-          <Info
-            isStreamerTurn={isStreamerTurn}
-            team={team}
-            history={history}
-            type={gameStatus}
-            username={username}
-            seconds={seconds}
-            onFinishTimer={handleOnFinishTimer}
-            onChangeSeconds={handleChangeSeconds}
-          />
-          <Cam
-            type={gameStatus}
-            isStreamerTurn={isStreamerTurn}
-            onDisconnect={handleDisconnect}
-            onNewGame={handleNewGame}
-            onSend={handleSendClue}
-          />
+          <Info username={username} status={status} />
+          <Cam onDisconnect={handleDisconnect} onNewGame={handleNewGame} />
         </S.Aside>
         <S.Main>
-          {gameStatus === Status.GAME || gameStatus === Status.FINISH_GAME ? (
-            <Board
-              winner={winner}
-              amountOfRedCards={AMOUNT_OF_RED_CARDS}
-              amountOfBlueCards={AMOUNT_OF_BLUE_CARDS}
-              team={team}
-              clue={clue}
-              words={words}
-              isTimerRunning={isTimerRunning}
-              onFinishTurn={handleOnFinishTurn}
-            />
+          {status === Status.GAME || status === Status.FINISH_GAME ? (
+            <Board words={words} />
           ) : (
             <Outlet />
           )}

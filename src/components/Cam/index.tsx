@@ -48,7 +48,7 @@ const Cam: React.FC<Props> = ({ onDisconnect, onNewGame }) => {
       REACT_APP_TWITCH_SCOPES ?? ''
     }&state=${twitchState}`;
 
-    localStorage.setItem('@ClueOnStream::twitch_state', twitchState);
+    localStorage.setItem('@ClueOnStream::state', twitchState);
 
     window.location.href = url;
   };

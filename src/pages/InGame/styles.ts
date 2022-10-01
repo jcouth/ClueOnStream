@@ -42,6 +42,7 @@ export const Content = styled.div<{ inLobby: boolean; team: Team }>`
 
   &::before {
     content: '';
+    z-index: 1;
     position: absolute;
     top: 0;
     left: 0;
@@ -60,6 +61,29 @@ export const Content = styled.div<{ inLobby: boolean; team: Team }>`
       background-size: inherit;
       background-repeat: inherit;
     `}
+
+  &.animate {
+    animation: animate 0.75s ease-out;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes animate {
+    0% {
+      font-size: initial;
+
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    50% {
+      font-size: initial;
+    }
+    100% {
+      font-size: ${({ theme }) => theme.fonts.primary.subtitle};
+
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
 `;
 
 export const Aside = styled.aside`

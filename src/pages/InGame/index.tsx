@@ -23,6 +23,8 @@ const InGame: React.FC = () => {
   [ok] onWin
   [ok] integrar com a twitch
   separar equipes pelo prediction
+  pegar votos pelo chat
+  attrs
   
   fonte carregar do local path
   evitar rerender quando redimensionar
@@ -44,11 +46,16 @@ const InGame: React.FC = () => {
   const [words, setWords] = useState<string[]>([]);
 
   const [token, setToken] = useState<string>('');
-  const [username, setUsername] = useState<string | null>(null);
   const [client, setClient] = useState<ClientTMI | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
+  const [isAnimating, setIsAnimating] = useState<boolean>(true);
 
   const handleConnect = async (token: string) => {
     try {
+      localStorage.removeItem('@ClueOnStream::twitch_access_token');
+      localStorage.removeItem('@ClueOnStream::twitch_state');
+      localStorage.removeItem('@ClueOnStream::state');
+
       const { data } = await fetchUser(token);
       const [userData] = data.data;
 
@@ -93,8 +100,6 @@ const InGame: React.FC = () => {
 
   const handleNewGame = () => {
     try {
-      // ADD loading
-
       const shuffled = shuffleArray(allWords.current);
       const newWords = shuffled.slice(0, max);
 
@@ -127,16 +132,27 @@ const InGame: React.FC = () => {
       if (parsedHash.get('access_token')) {
         const accessToken = parsedHash.get('access_token');
         const state = parsedHash.get('state');
+        localStorage.setItem(
+          '@ClueOnStream::twitch_access_token',
+          accessToken ?? ''
+        );
+        localStorage.setItem('@ClueOnStream::twitch_state', state ?? '');
+        navigate('/');
+      }
+    } else {
+      const accessToken = localStorage.getItem(
+        '@ClueOnStream::twitch_access_token'
+      );
+      const state = localStorage.getItem('@ClueOnStream::twitch_state');
 
-        if (
-          accessToken &&
-          state === localStorage.getItem('@ClueOnStream::twitch_state')
-        ) {
-          void handleConnect(accessToken);
+      if (
+        accessToken &&
+        state === localStorage.getItem('@ClueOnStream::twitch_state')
+      ) {
+        void handleConnect(accessToken);
 
-          if (allWords.current.length === 0) {
-            void getVerbs();
-          }
+        if (allWords.current.length === 0) {
+          void getVerbs();
         }
       }
     }
@@ -163,7 +179,12 @@ const InGame: React.FC = () => {
 
   return (
     <S.Container>
-      <S.Content inLobby={status !== Status.GAME} team={team}>
+      <S.Content
+        inLobby={status !== Status.GAME}
+        team={team}
+        className={isAnimating ? 'animate' : ''}
+        onAnimationEnd={() => setIsAnimating(false)}
+      >
         <S.Aside>
           <Routes>
             <Route path="/game" element={<Game />} />

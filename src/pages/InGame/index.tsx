@@ -10,7 +10,7 @@ import { shuffleArray } from 'helpers/shuffleArray';
 import { useGame } from 'hooks/useGame';
 import { Status } from 'interfaces/Status';
 import { fetchVerbs } from 'services/words/api';
-import { fetchUser } from 'services/twitch/api';
+import { fetchUser, logout } from 'services/twitch/api';
 
 import * as S from './styles';
 
@@ -35,12 +35,15 @@ const InGame: React.FC = () => {
     amount: { max },
     status,
     handleStatus,
+    handleSeconds,
+    reset,
   } = useGame();
   const navigate = useNavigate();
 
   const allWords = useRef<string[]>([]);
   const [words, setWords] = useState<string[]>([]);
 
+  const [token, setToken] = useState<string>('');
   const [username, setUsername] = useState<string | null>(null);
   const [client, setClient] = useState<ClientTMI | null>(null);
 
@@ -58,6 +61,7 @@ const InGame: React.FC = () => {
         channels: [userData.display_name],
       });
 
+      setToken(token);
       setUsername(userData.display_name);
       setClient(_client);
       handleStatus(Status.WAITING_START);
@@ -69,19 +73,22 @@ const InGame: React.FC = () => {
   };
 
   const handleDisconnect = () => {
-    // void (async () => {
-    //   try {
-    //     await client?.disconnect();
-    //     // await logout();
-    //     setUsername(null);
-    //     setClient(null);
-    //     setGameStatus(Status.WAITING_CONNECTION);
-    //     setSeconds(5);
-    //     resetGame();
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // })();
+    void (async () => {
+      try {
+        await logout(token);
+        await client?.disconnect();
+
+        setUsername(null);
+        setClient(null);
+        handleStatus(Status.WAITING_CONNECTION);
+        handleSeconds(5);
+        reset();
+
+        navigate('/');
+      } catch (error) {
+        console.error(error);
+      }
+    })();
   };
 
   const handleNewGame = () => {
@@ -96,6 +103,7 @@ const InGame: React.FC = () => {
 
       setTimeout(() => {
         handleStatus(Status.GAME);
+
         navigate('/game');
       }, 5000);
     } catch (error) {

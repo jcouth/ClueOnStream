@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
+import { useOutletContext } from 'react-router';
+
 import { Status } from 'components/Info/Lobby/styles';
 import { shuffleArray } from 'helpers/shuffleArray';
 import { useGame } from 'hooks/useGame';
@@ -15,11 +17,7 @@ interface VoteProps {
   votes: CardProps['votes'];
 }
 
-interface Props {
-  words: string[];
-}
-
-const Board: React.FC<Props> = ({ words }) => {
+const Board: React.FC = () => {
   const {
     winner,
     amount: { red: amountOfRedCards, blue: amountOfBlueCards },
@@ -35,6 +33,7 @@ const Board: React.FC<Props> = ({ words }) => {
     handleClue,
     reset,
   } = useGame();
+  const { words } = useOutletContext<{ words: string[] }>();
 
   const finishedByGameOver = useRef<boolean>(false);
 

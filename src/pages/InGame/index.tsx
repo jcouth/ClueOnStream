@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { Client as ClientTMI } from 'tmi.js';
-import { Outlet } from 'react-router';
+import { Outlet, useNavigate } from 'react-router';
 
-import Info from 'components/Info';
-import Board from 'components/Board';
+import Lobby from 'components/Info/Lobby';
+import Game from 'components/Info/Game';
 import Cam from 'components/Cam';
 import { shuffleArray } from 'helpers/shuffleArray';
 import { useGame } from 'hooks/useGame';
@@ -21,8 +21,8 @@ const InGame: React.FC = () => {
   [ok] background-image pegar a url do local path
   [ok] manter proporção quando redimensionar
   [ok] onWin
-  abrir todo os cards que tiverem a mesma votação
-  integrar com a twitch
+  [ok] integrar com a twitch
+  separar equipes pelo prediction
   
   fonte carregar do local path
   evitar rerender quando redimensionar
@@ -36,6 +36,7 @@ const InGame: React.FC = () => {
     status,
     handleStatus,
   } = useGame();
+  const navigate = useNavigate();
 
   const allWords = useRef<string[]>([]);
   const [words, setWords] = useState<string[]>([]);
@@ -57,11 +58,11 @@ const InGame: React.FC = () => {
         channels: [userData.display_name],
       });
 
-      await _client.connect();
-
       setUsername(userData.display_name);
       setClient(_client);
-      // setGameStatus(Status.WAITING_START);
+      handleStatus(Status.WAITING_START);
+
+      await _client.connect();
     } catch (error) {
       console.error(error);
     }
@@ -95,6 +96,7 @@ const InGame: React.FC = () => {
 
       setTimeout(() => {
         handleStatus(Status.GAME);
+        navigate('/game');
       }, 5000);
     } catch (error) {
       console.error(error);
@@ -118,20 +120,15 @@ const InGame: React.FC = () => {
         const accessToken = parsedHash.get('access_token');
         const state = parsedHash.get('state');
 
-        console.log(
-          '@ClueOnStream::twitch_state',
-          localStorage.getItem('@ClueOnStream::twitch_state')
-        );
-
         if (
           accessToken &&
           state === localStorage.getItem('@ClueOnStream::twitch_state')
         ) {
           void handleConnect(accessToken);
 
-          // if (allWords.current.length === 0) {
-          //   void getVerbs();
-          // }
+          if (allWords.current.length === 0) {
+            void getVerbs();
+          }
         }
       }
     }
@@ -160,15 +157,11 @@ const InGame: React.FC = () => {
     <S.Container>
       <S.Content inLobby={status !== Status.GAME} team={team}>
         <S.Aside>
-          <Info username={username} status={status} />
+          {status === Status.GAME ? <Game /> : <Lobby username={username} />}
           <Cam onDisconnect={handleDisconnect} onNewGame={handleNewGame} />
         </S.Aside>
         <S.Main>
-          {status === Status.GAME || status === Status.FINISH_GAME ? (
-            <Board words={words} />
-          ) : (
-            <Outlet />
-          )}
+          <Outlet context={{ words }} />
         </S.Main>
       </S.Content>
     </S.Container>

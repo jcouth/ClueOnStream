@@ -23,8 +23,9 @@ export const Container = styled.div`
     top: 1.319vw;
     left: 1.319vw;
 
-    width: calc(100% - 2.639vw);
-    height: calc(100% - 2.639vw);
+    --size: calc(100% - 2.639vw);
+    width: var(--size);
+    height: var(--size);
 
     border-radius: inherit;
     background-color: ${({ theme }) => theme.colors.primary};
@@ -53,8 +54,9 @@ export const Content = styled.div`
 `;
 
 export const Card = styled.div<{ delay: number }>`
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-row-gap: 0.792vw;
   justify-content: center;
   align-items: center;
 
@@ -84,8 +86,6 @@ export const Card = styled.div<{ delay: number }>`
 `;
 
 export const CardText = styled.p`
-  margin-top: 0.792vw;
-
   font-family: ${({ theme }) => theme.fonts.primary.family};
   font-weight: ${({ theme }) => theme.fonts.primary.weight};
   font-size: ${({ theme }) => theme.fonts.primary.subtitle};

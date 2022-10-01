@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { Client as ClientTMI } from 'tmi.js';
-import { Outlet, useNavigate } from 'react-router';
+import { Outlet, Routes, Route, useNavigate } from 'react-router';
 
 import Lobby from 'components/Info/Lobby';
 import Game from 'components/Info/Game';
@@ -165,7 +165,10 @@ const InGame: React.FC = () => {
     <S.Container>
       <S.Content inLobby={status !== Status.GAME} team={team}>
         <S.Aside>
-          {status === Status.GAME ? <Game /> : <Lobby username={username} />}
+          <Routes>
+            <Route path="/game" element={<Game />} />
+            <Route path="*" element={<Lobby username={username} />} />
+          </Routes>
           <Cam onDisconnect={handleDisconnect} onNewGame={handleNewGame} />
         </S.Aside>
         <S.Main>

@@ -37,7 +37,6 @@ const InGame: React.FC = () => {
     amount: { max },
     status,
     handleStatus,
-    handleSeconds,
     reset,
   } = useGame();
   const navigate = useNavigate();
@@ -88,7 +87,6 @@ const InGame: React.FC = () => {
         setUsername(null);
         setClient(null);
         handleStatus(Status.WAITING_CONNECTION);
-        handleSeconds(5);
         reset();
 
         navigate('/');

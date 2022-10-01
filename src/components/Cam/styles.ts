@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import { buttonCssStyle, ButtonProps } from 'components/Button/styles';
+
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -62,4 +64,8 @@ export const ContentInfo = styled(Title)`
   height: 100%;
 
   text-align: center;
+`;
+
+export const ButtonLink = styled.a<ButtonProps>`
+  ${buttonCssStyle}
 `;

@@ -1,5 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+import { Client as ClientTMI } from 'tmi.js';
+import { useParams } from 'react-router';
+
 import { ReactComponent as PredictionIcon } from 'assets/prediction.svg';
 import { ReactComponent as BuldIcon } from 'assets/bulb.svg';
 import { ReactComponent as ChatIcon } from 'assets/chat.svg';
@@ -11,13 +14,22 @@ import { shuffleArray } from 'helpers/shuffleArray';
 import { ClueProps } from 'interfaces/Clue';
 import { Status } from 'interfaces/Status';
 import { Team } from 'interfaces/Card';
-import { fetchVerbs } from 'services/api';
+import { fetchVerbs } from 'services/words/api';
+import { fetchUser } from 'services/twitch/api';
 
 import * as S from './styles';
 
 const AMOUNT_OF_RED_CARDS = 9;
 const AMOUNT_OF_BLUE_CARDS = 8;
 const MAX_CARDS = 25;
+
+type ParamsProps =
+  | {
+      access_token?: string;
+      scope?: string;
+      token_type?: string;
+    }
+  | Record<string, string | undefined>;
 
 const InGame: React.FC = () => {
   /*
@@ -35,10 +47,14 @@ const InGame: React.FC = () => {
   limpar codigo
   performance
   */
+  const params = useParams();
+
   const allWords = useRef<string[]>([]);
   const [words, setWords] = useState<string[]>([]);
 
   const [username, setUsername] = useState<string | null>(null);
+  const [client, setClient] = useState<ClientTMI | null>(null);
+
   const [gameStatus, setGameStatus] = useState<Status>(
     Status.WAITING_CONNECTION
   );
@@ -125,27 +141,46 @@ const InGame: React.FC = () => {
     setClue(null);
   };
 
-  const handleConnect = () => {
+  const handleConnect = async (token: string) => {
     try {
-      // ADD loading
-      setGameStatus(Status.WAITING_START);
-      setUsername('jCouth');
+      const { data } = await fetchUser(token);
+      const [userData] = data.data;
+
+      console.log(userData);
+
+      const _client = new ClientTMI({
+        // options: { debug: true },
+        // identity: {
+        //   username: 'ClueOnStream',
+        //   password: 'oauth:kt2w01vfqtm6rkmm7b1ru7ra23xvmo',
+        // },
+        channels: [userData.display_name],
+      });
+
+      await _client.connect();
+
+      setUsername(userData.display_name);
+      setClient(_client);
+      // setGameStatus(Status.WAITING_START);
     } catch (error) {
       console.error(error);
     }
   };
 
   const handleDisconnect = () => {
-    try {
-      // ADD loading
-      setGameStatus(Status.WAITING_CONNECTION);
-      setUsername(null);
-      setSeconds(5);
-
-      resetGame();
-    } catch (error) {
-      console.error(error);
-    }
+    // void (async () => {
+    //   try {
+    //     await client?.disconnect();
+    //     // await logout();
+    //     setUsername(null);
+    //     setClient(null);
+    //     setGameStatus(Status.WAITING_CONNECTION);
+    //     setSeconds(5);
+    //     resetGame();
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // })();
   };
 
   const handleNewGame = () => {
@@ -194,10 +229,49 @@ const InGame: React.FC = () => {
   };
 
   useEffect(() => {
-    if (allWords.current.length === 0) {
-      void getVerbs();
+    if (document.location.hash && document.location.hash !== '') {
+      const parsedHash = new URLSearchParams(window.location.hash.slice(1));
+      if (parsedHash.get('access_token')) {
+        const accessToken = parsedHash.get('access_token');
+        const state = parsedHash.get('state');
+
+        console.log(
+          '@ClueOnStream::twitch_state',
+          localStorage.getItem('@ClueOnStream::twitch_state')
+        );
+
+        if (
+          accessToken &&
+          state === localStorage.getItem('@ClueOnStream::twitch_state')
+        ) {
+          void handleConnect(accessToken);
+
+          // if (allWords.current.length === 0) {
+          //   void getVerbs();
+          // }
+        }
+      }
     }
   }, []);
+
+  useEffect(() => {
+    if (client) {
+      // console.log(client);
+      // const init = async () => {
+      //   client.on('message', (channel, tags, message, self) => {
+      //     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      //     console.log(`${tags['display-name']}: ${message}`);
+      //     // // Ignore echoed messages.
+      //     // if (self) return;
+      //     // if (message.toLowerCase() === '!hello') {
+      //     //   // "@alca, heya!"
+      //     //   void client.say(channel, `@${tags.username ?? 'teste'}, heya!`);
+      //     // }
+      //   });
+      // };
+      // void init();
+    }
+  }, [client]);
 
   const renderTipCard = (
     icon: React.ReactNode,
@@ -233,7 +307,6 @@ const InGame: React.FC = () => {
           <Cam
             type={gameStatus}
             isStreamerTurn={isStreamerTurn}
-            onConnect={handleConnect}
             onDisconnect={handleDisconnect}
             onNewGame={handleNewGame}
             onSend={handleSendClue}

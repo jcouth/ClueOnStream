@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import InGame from 'pages/InGame';
@@ -8,6 +9,7 @@ const Router = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<InGame />} />
+        <Route path="*" element={<InGame />} />
       </Routes>
     </BrowserRouter>
   );

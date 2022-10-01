@@ -1,5 +1,7 @@
 import React from 'react';
 
+import uuid from 'react-uuid';
+
 import { ReactComponent as TwitchLogo } from 'assets/twitch-logo.svg';
 import { ReactComponent as CameraIcon } from 'assets/camera.svg';
 import Button from 'components/Button';
@@ -9,10 +11,16 @@ import Game from './Game';
 
 import * as S from './styles';
 
+const {
+  REACT_APP_TWITCH_LOGIN_URL,
+  REACT_APP_TWITCH_CLIENT_ID,
+  REACT_APP_TWITCH_REDIRECT_URL,
+  REACT_APP_TWITCH_SCOPES,
+} = process.env;
+
 interface Props {
   type?: Status;
   isStreamerTurn: boolean;
-  onConnect: () => void;
   onDisconnect: () => void;
   onNewGame: () => void;
   onSend: (clue: string, amount: number) => void;
@@ -21,11 +29,30 @@ interface Props {
 const Cam: React.FC<Props> = ({
   type,
   isStreamerTurn,
-  onConnect,
   onDisconnect,
   onNewGame,
   onSend,
 }) => {
+  const handleConnect = (
+    e: React.MouseEvent<HTMLAnchorElement, globalThis.MouseEvent>
+  ) => {
+    e.preventDefault();
+
+    const twitchState = uuid();
+
+    const url = `${REACT_APP_TWITCH_LOGIN_URL ?? ''}/authorize?client_id=${
+      REACT_APP_TWITCH_CLIENT_ID ?? ''
+    }&redirect_uri=${encodeURIComponent(
+      REACT_APP_TWITCH_REDIRECT_URL ?? ''
+    )}&response_type=token&scope=${
+      REACT_APP_TWITCH_SCOPES ?? ''
+    }&state=${twitchState}`;
+
+    localStorage.setItem('@ClueOnStream::twitch_state', twitchState);
+
+    window.location.href = url;
+  };
+
   const renderContent = () => {
     if (type === Status.GAME) {
       return (
@@ -83,9 +110,14 @@ const Cam: React.FC<Props> = ({
     }
     return (
       <S.Content>
-        <Button variant="primary" isActive onClick={onConnect}>
+        <S.ButtonLink
+          href="#"
+          onClick={handleConnect}
+          variant="primary"
+          isActive
+        >
           <TwitchLogo width="100%" height="1.583vw" fill="white" />
-        </Button>
+        </S.ButtonLink>
       </S.Content>
     );
   };

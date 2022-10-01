@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import theme from 'global/styles/theme';
 
@@ -26,7 +26,7 @@ export interface ButtonProps {
   isActive?: boolean;
 }
 
-export const Button = styled.button<ButtonProps>`
+export const buttonCssStyle = css<ButtonProps>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -83,6 +83,10 @@ export const Button = styled.button<ButtonProps>`
       transform: translate3d(0.264vw, 0, 0);
     }
   }
+`;
+
+export const Button = styled.button<ButtonProps>`
+  ${buttonCssStyle}
 `;
 
 export const ButtonText = styled.p`

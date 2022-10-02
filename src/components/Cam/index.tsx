@@ -124,6 +124,7 @@ const Cam: React.FC<Props> = ({ onDisconnect, onNewGame }) => {
           onClick={handleConnect}
           variant="primary"
           isActive
+          aria-label="Botão de conectar-se à twitch"
         >
           <TwitchLogo width="100%" height="1.583vw" fill="white" />
         </S.ButtonLink>

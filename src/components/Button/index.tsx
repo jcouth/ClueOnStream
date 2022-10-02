@@ -23,7 +23,13 @@ const Button: React.FC<Props> = ({
   onClick,
   ...rest
 }) => (
-  <S.Button variant={variant} isActive={isActive} onClick={onClick} {...rest}>
+  <S.Button
+    type="button"
+    variant={variant}
+    isActive={isActive}
+    onClick={onClick}
+    {...rest}
+  >
     {title ? <S.ButtonText>{title}</S.ButtonText> : children}
   </S.Button>
 );

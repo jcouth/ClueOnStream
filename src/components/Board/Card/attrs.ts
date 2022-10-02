@@ -35,6 +35,7 @@ export const container = ({
   delayToOpen,
 }: ContainerProps) => {
   return {
+    type: 'button',
     style: {
       backgroundColor: isOpen ? CardColors.principal[cardType] : undefined,
       transition: isOpen
@@ -51,7 +52,7 @@ export interface PercentageProps {
 export const percentage = ({ team, visible }: PercentageProps) => {
   return {
     style: {
-      visibiliy: visible ? 'hidden' : undefined,
+      visibility: !visible ? 'hidden' : undefined,
       backgroundColor: theme.colors.team[team].primary,
     },
   };

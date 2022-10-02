@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { useOutletContext } from 'react-router';
 
@@ -22,9 +22,6 @@ const Board: React.FC = () => {
     words: string[];
   }>();
   const game = useGame();
-
-  const hasListener = useRef<boolean>(false);
-  const finishedByGameOver = useRef<boolean>(false);
 
   const [amount, setAmount] = useState<number>(0);
   const [cards, setCards] = useState<CardProps[]>([]);
@@ -161,7 +158,6 @@ const Board: React.FC = () => {
       }
     }
 
-    finishedByGameOver.current = isGameOver;
     setCardsWithVotes([]);
     setTotalVotes(0);
     setCards(newCards);
@@ -204,7 +200,6 @@ const Board: React.FC = () => {
   };
 
   const callback: OnMessageCallback = (_, __, message) => {
-    console.log(message, game.isTimerRunning);
     handleVote(message, Team.RED);
   };
 
@@ -241,46 +236,10 @@ const Board: React.FC = () => {
   }, [game.clue, game.isTimerRunning]);
 
   const initClientListener = useCallback(() => {
-    let message = 'initClientListener';
-    if (game.client) {
-      message += ' -> client';
-      if (game.isTimerRunning) {
-        message += ' -> [timer] if';
-        if (hasListener.current) {
-          message += ' -> [hasListener] if';
-        } else {
-          message += ' -> [hasListener] else || add listener';
-          game.client.addListener('message', callback);
-          hasListener.current = true;
-        }
-      } else {
-        message += ' -> [timer] else';
-        if (hasListener.current) {
-          message += ' -> [hasListener] if || remove listener';
-          game.client.removeListener('message', callback);
-          hasListener.current = false;
-        } else {
-          message += ' -> [hasListener] else';
-        }
-      }
+    if (game.client && game.isTimerRunning) {
+      game.client.addListener('message', callback);
     }
-    console.log(message);
-
-    return () => {
-      let message = '[return] initClientListener';
-      if (game.client) {
-        message += ' -> client';
-        if (hasListener.current) {
-          message += ' -> [hasListener] if || remove listener';
-          game.client.removeListener('message', callback);
-          hasListener.current = false;
-        } else {
-          message += ' -> [hasListener] else';
-        }
-      }
-      console.log(message);
-    };
-  }, [game.client, game.isTimerRunning, hasListener.current]);
+  }, [game.client, game.isTimerRunning]);
 
   const initCards = useCallback(() => {
     if (words.length > 0) {
@@ -319,6 +278,12 @@ const Board: React.FC = () => {
 
   useEffect(() => {
     initClientListener();
+
+    return () => {
+      if (game.client) {
+        game.client.removeListener('message', callback);
+      }
+    };
   }, [initClientListener]);
 
   useEffect(() => {

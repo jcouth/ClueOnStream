@@ -155,7 +155,7 @@ export const HistoryCluesContent = styled.div`
 
 export const Clue = styled.div`
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr 1.979vw;
   grid-column-gap: 0.528vw;
 
   margin-top: 0.396vw;

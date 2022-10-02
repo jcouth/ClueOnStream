@@ -9,14 +9,14 @@ import { Status } from 'interfaces/Status';
 import InGame from 'pages/InGame';
 
 const Router = () => {
-  const { status } = useGame();
+  // const { status } = useGame();
 
   const PrivateRoute: React.FC<{ children: React.ReactElement }> = ({
     children,
   }) => {
-    if (status !== Status.GAME) {
-      return <Navigate to="/" />;
-    }
+    // if (status !== Status.GAME) {
+    //   return <Navigate to="/" />;
+    // }
     return children;
   };
 

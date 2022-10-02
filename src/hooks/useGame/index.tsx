@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useMemo, useState } from 'react';
 
+import { ChatUserstate, Client as ClientTMI } from 'tmi.js';
+
 import { HistoryProps } from 'components/Info';
 import { ClueProps } from 'interfaces/Clue';
 import { Status } from 'interfaces/Status';
@@ -35,13 +37,22 @@ interface StateActions extends States {
   handleHistory: React.Dispatch<React.SetStateAction<States['history']>>;
 }
 
+export type OnMessageCallback = (
+  channel: string,
+  userstate: ChatUserstate,
+  message: string,
+  self: boolean
+) => void;
+
 interface GameContextData extends StateActions {
   amount: {
     red: number;
     blue: number;
     max: number;
   };
+  client: ClientTMI | null;
   reset: () => void;
+  initClient: (username: string) => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
@@ -54,6 +65,8 @@ const MAX_CARDS = 25;
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const [client, setClient] = useState<ClientTMI | null>(null);
+
   const [team, setTeam] = useState<Team>(Team.RED);
   const [seconds, setSeconds] = useState<number>(60);
   const [cards, setCards] = useState<CardProps[]>([]);
@@ -87,6 +100,20 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
+  const initClient = async (username: string) => {
+    if (client === null) {
+      try {
+        const _client = new ClientTMI({
+          channels: [username],
+        });
+        await _client.connect();
+        setClient(_client);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
   const provider = useMemo(
     () => ({
       amount: {
@@ -94,6 +121,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         blue: AMOUNT_OF_BLUE_CARDS,
         max: MAX_CARDS,
       },
+      client,
       cards,
       status,
       team,
@@ -115,8 +143,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       handleIsTimerRunning: setIsTimerRunning,
       handleHistory: setHistory,
       reset,
+      initClient,
     }),
     [
+      setClient,
       setCards,
       setStatus,
       setTeam,
@@ -128,6 +158,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       setIsTimerRunning,
       setHistory,
       reset,
+      initClient,
     ]
   );
 

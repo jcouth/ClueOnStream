@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useOutletContext } from 'react-router';
-import { Client as ClientTMI } from 'tmi.js';
 
 import { Status } from 'components/Info/Lobby/styles';
 import { shuffleArray } from 'helpers/shuffleArray';
-import { useGame } from 'hooks/useGame';
+import { OnMessageCallback, useGame } from 'hooks/useGame';
 import { CardProps, CardType, Team } from 'interfaces/Card';
 
 import Card from './Card';
@@ -19,37 +18,37 @@ interface VoteProps {
 }
 
 const Board: React.FC = () => {
-  const { words, username } = useOutletContext<{
+  const { words } = useOutletContext<{
     words: string[];
-    username: string | null;
   }>();
   const game = useGame();
 
+  const hasListener = useRef<boolean>(false);
   const finishedByGameOver = useRef<boolean>(false);
-  const [client, setClient] = useState<ClientTMI | null>(null);
 
   const [amount, setAmount] = useState<number>(0);
+  const [cards, setCards] = useState<CardProps[]>([]);
+  const [totalVotes, setTotalVotes] = useState<number>(0);
   const [animateTitle, setAnimateTitle] = useState<boolean>(false);
   const [cardsWithVotes, setCardsWithVotes] = useState<VoteProps[]>([]);
 
   //
 
   const disconnectClient = () => {
-    void (async () => {
-      try {
-        await client?.disconnect();
-
-        setClient(null);
-      } catch (error) {
-        console.error(error);
-      }
-    })();
+    // void (async () => {
+    //   try {
+    //     await client?.disconnect();
+    //     setClient(null);
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // })();
   };
 
   //
 
   const handleOpenAllCards = () => {
-    game.handleCards((oldState) =>
+    setCards((oldState) =>
       oldState.map((oldCard) => ({
         ...oldCard,
         isOpen: true,
@@ -113,7 +112,7 @@ const Board: React.FC = () => {
     let opened = 0;
     let openedOtherTeam = 0;
     let isGameOver = false;
-    let newCards = [...game.cards];
+    let newCards = [...cards];
     const cardsToOpen = cardsWithVotes
       .sort((a, b) => b.votes - a.votes)
       .slice(0, game.clue!.amount);
@@ -164,8 +163,8 @@ const Board: React.FC = () => {
 
     finishedByGameOver.current = isGameOver;
     setCardsWithVotes([]);
-    game.handleTotalVotes(0);
-    game.handleCards(newCards);
+    setTotalVotes(0);
+    setCards(newCards);
     handleOnFinishTurn(opened, openedOtherTeam, isGameOver);
   };
 
@@ -174,8 +173,8 @@ const Board: React.FC = () => {
       const lowerCase = message.toLowerCase();
       let type: CardType;
 
-      game.handleTotalVotes((oldState) => oldState + 1);
-      game.handleCards((oldState) =>
+      setTotalVotes((oldState) => oldState + 1);
+      setCards((oldState) =>
         oldState.map((oldCard) => {
           if (oldCard.title === lowerCase) {
             type = oldCard.type;
@@ -202,6 +201,11 @@ const Board: React.FC = () => {
         );
       }
     }
+  };
+
+  const callback: OnMessageCallback = (_, __, message) => {
+    console.log(message, game.isTimerRunning);
+    handleVote(message, Team.RED);
   };
 
   //
@@ -236,33 +240,50 @@ const Board: React.FC = () => {
     }
   }, [game.clue, game.isTimerRunning]);
 
-  const initClient = useCallback(() => {
-    if (username && client === null) {
-      const init = async () => {
-        try {
-          const _client = new ClientTMI({
-            channels: [username],
-          });
-
-          await _client.connect();
-
-          _client.on('message', (_, __, message) => {
-            // conferir se está em uma equipe
-            // conferir se está no turno da equipe dele
-            handleVote(message, Team.RED);
-          });
-
-          setClient(_client);
-        } catch (error) {
-          console.error(error);
+  const initClientListener = useCallback(() => {
+    let message = 'initClientListener';
+    if (game.client) {
+      message += ' -> client';
+      if (game.isTimerRunning) {
+        message += ' -> [timer] if';
+        if (hasListener.current) {
+          message += ' -> [hasListener] if';
+        } else {
+          message += ' -> [hasListener] else || add listener';
+          game.client.addListener('message', callback);
+          hasListener.current = true;
         }
-      };
-      void init();
+      } else {
+        message += ' -> [timer] else';
+        if (hasListener.current) {
+          message += ' -> [hasListener] if || remove listener';
+          game.client.removeListener('message', callback);
+          hasListener.current = false;
+        } else {
+          message += ' -> [hasListener] else';
+        }
+      }
     }
-  }, [username]);
+    console.log(message);
+
+    return () => {
+      let message = '[return] initClientListener';
+      if (game.client) {
+        message += ' -> client';
+        if (hasListener.current) {
+          message += ' -> [hasListener] if || remove listener';
+          game.client.removeListener('message', callback);
+          hasListener.current = false;
+        } else {
+          message += ' -> [hasListener] else';
+        }
+      }
+      console.log(message);
+    };
+  }, [game.client, game.isTimerRunning, hasListener.current]);
 
   const initCards = useCallback(() => {
-    if (game.cards.length === 0) {
+    if (words.length > 0) {
       const getType = (value: number) => {
         if (value < game.amount.red) {
           return CardType.RED;
@@ -288,17 +309,17 @@ const Board: React.FC = () => {
 
       const shuffled = shuffleArray(cardsFromWords);
 
-      game.handleCards(shuffled);
+      setCards(shuffled);
     }
-  }, [words, game.cards]);
+  }, [words]);
 
   useEffect(() => {
     getAmount();
   }, [getAmount]);
 
   useEffect(() => {
-    initClient();
-  }, [initClient]);
+    initClientListener();
+  }, [initClientListener]);
 
   useEffect(() => {
     initCards();
@@ -317,13 +338,13 @@ const Board: React.FC = () => {
         )}
       </S.Header>
       <S.Content>
-        {game.cards.map((card) => (
+        {cards.map((card) => (
           <Card
             key={card.id}
             {...card}
             team={game.team}
-            totalVotes={game.totalVotes}
-            isStreamerTurn={game.clue === null}
+            totalVotes={totalVotes}
+            isStreamerTurn={game.isStreamerTurn}
             onOpen={() => {
               //
             }}

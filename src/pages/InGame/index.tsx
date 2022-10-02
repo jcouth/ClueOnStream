@@ -37,6 +37,7 @@ const InGame: React.FC = () => {
     status,
     handleStatus,
     reset,
+    initClient,
   } = useGame();
   const navigate = useNavigate();
 
@@ -59,6 +60,7 @@ const InGame: React.FC = () => {
       setToken(token);
       setUsername(userData.display_name);
       handleStatus(Status.WAITING_START);
+      initClient(userData.display_name);
     } catch (error) {
       console.error(error);
     }

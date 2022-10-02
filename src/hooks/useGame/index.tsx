@@ -3,9 +3,10 @@ import React, { createContext, useContext, useMemo, useState } from 'react';
 import { HistoryProps } from 'components/Info';
 import { ClueProps } from 'interfaces/Clue';
 import { Status } from 'interfaces/Status';
-import { Team } from 'interfaces/Card';
+import { CardProps, Team } from 'interfaces/Card';
 
 interface States {
+  cards: CardProps[];
   status: Status;
   team: Team;
   seconds: number;
@@ -17,6 +18,7 @@ interface States {
 }
 
 interface StateActions extends States {
+  handleCards: React.Dispatch<React.SetStateAction<States['cards']>>;
   handleStatus: React.Dispatch<React.SetStateAction<States['status']>>;
   handleTeam: React.Dispatch<React.SetStateAction<States['team']>>;
   handleSeconds: React.Dispatch<React.SetStateAction<States['seconds']>>;
@@ -50,13 +52,14 @@ const MAX_CARDS = 25;
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [status, setStatus] = useState<Status>(Status.WAITING_CONNECTION);
   const [team, setTeam] = useState<Team>(Team.RED);
   const [seconds, setSeconds] = useState<number>(60);
-  const [clue, setClue] = useState<ClueProps | null>(null);
+  const [cards, setCards] = useState<CardProps[]>([]);
   const [winner, setWinner] = useState<Team | null>(null);
+  const [clue, setClue] = useState<ClueProps | null>(null);
   const [isStreamerTurn, setIsStreamerTurn] = useState<boolean>(true);
   const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
+  const [status, setStatus] = useState<Status>(Status.WAITING_CONNECTION);
   const [history, setHistory] = useState<HistoryProps>({
     remaining: {
       red: AMOUNT_OF_RED_CARDS,
@@ -66,6 +69,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   });
 
   const reset = () => {
+    setCards([]);
     setTeam(Team.RED);
     setClue(null);
     setWinner(null);
@@ -87,6 +91,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         blue: AMOUNT_OF_BLUE_CARDS,
         max: MAX_CARDS,
       },
+      cards,
       status,
       team,
       seconds,
@@ -95,6 +100,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       isStreamerTurn,
       isTimerRunning,
       history,
+      handleCards: setCards,
       handleStatus: setStatus,
       handleTeam: setTeam,
       handleSeconds: setSeconds,
@@ -106,6 +112,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       reset,
     }),
     [
+      setCards,
       setStatus,
       setTeam,
       setSeconds,

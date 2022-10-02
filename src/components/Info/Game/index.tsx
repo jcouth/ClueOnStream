@@ -106,12 +106,14 @@ const Game: React.FC = () => {
           <S.TimerIcon isStreamerTurn={isStreamerTurn} team={team}>
             <AlarmIcon />
           </S.TimerIcon>
-          <S.Progress
-            isStreamerTurn={isStreamerTurn}
-            team={team}
-            progress={progress}
-            interval={properties ? `${properties.interval / 1000}s` : '0s'}
-          />
+          <S.TimerBar isStreamerTurn={isStreamerTurn} team={team}>
+            <S.Progress
+              isStreamerTurn={isStreamerTurn}
+              team={team}
+              progress={progress}
+              interval={properties ? properties.interval / 1000 : 0}
+            />
+          </S.TimerBar>
         </S.Timer>
       </S.Content>
     </S.Container>

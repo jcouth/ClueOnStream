@@ -13,40 +13,27 @@ import Card from './Card';
 import * as S from './styles';
 
 interface VoteProps {
-  id: CardProps['id'];
+  title: CardProps['title'];
   type: CardProps['type'];
   votes: CardProps['votes'];
 }
 
 const Board: React.FC = () => {
-  const {
-    winner,
-    amount: { red: amountOfRedCards, blue: amountOfBlueCards },
-    team,
-    clue,
-    history,
-    isTimerRunning,
-    handleIsStreamerTurn,
-    handleWinner,
-    handleStatus,
-    handleTeam,
-    handleHistory,
-    handleClue,
-    reset,
-  } = useGame();
   const { words, username } = useOutletContext<{
     words: string[];
     username: string | null;
   }>();
+  const game = useGame();
 
+  const totalVotes = useRef<number>(0);
   const finishedByGameOver = useRef<boolean>(false);
   const [client, setClient] = useState<ClientTMI | null>(null);
 
   const [amount, setAmount] = useState<number>(0);
-  const [cards, setCards] = useState<CardProps[]>([]);
-  const [totalVotes, setTotalVotes] = useState<number>(0);
   const [animateTitle, setAnimateTitle] = useState<boolean>(false);
   const [cardsWithVotes, setCardsWithVotes] = useState<VoteProps[]>([]);
+
+  //
 
   const disconnectClient = () => {
     void (async () => {
@@ -60,102 +47,10 @@ const Board: React.FC = () => {
     })();
   };
 
-  const handleOnFinishTurn = (
-    cardsOpened: number,
-    openedOtherTeam: number,
-    isGameOver: boolean
-  ) => {
-    handleIsStreamerTurn(true);
-    let {
-      remaining: { red, blue },
-    } = history;
-    const nextTeam = team === Team.RED ? Team.BLUE : Team.RED;
+  //
 
-    if (team === Team.RED) {
-      red -= cardsOpened;
-      blue -= openedOtherTeam;
-    } else {
-      red -= openedOtherTeam;
-      blue -= cardsOpened;
-    }
-
-    if (isGameOver) {
-      handleWinner(nextTeam);
-      handleStatus(Status.FINISH_GAME);
-      handleTeam(nextTeam);
-      reset();
-      disconnectClient();
-    } else if (red === 0) {
-      handleWinner(Team.RED);
-      handleStatus(Status.FINISH_GAME);
-      reset();
-      disconnectClient();
-    } else if (blue === 0) {
-      handleWinner(Team.BLUE);
-      handleStatus(Status.FINISH_GAME);
-      reset();
-      disconnectClient();
-    } else {
-      handleTeam(nextTeam);
-    }
-
-    handleHistory((oldState) => ({
-      remaining: {
-        red,
-        blue,
-      },
-      clues: [
-        ...oldState.clues,
-        {
-          team,
-          description: clue!.description,
-          amount: clue!.amount,
-        },
-      ],
-    }));
-    handleClue(null);
-  };
-
-  const handleVote = (id: CardProps['id'], type: CardProps['type']) => {
-    if (isTimerRunning) {
-      setTotalVotes((oldState) => oldState + 1);
-      setCards((oldState) =>
-        oldState.map((oldCard) => {
-          if (oldCard.id === id) {
-            return { ...oldCard, votes: oldCard.votes + 1 };
-          }
-          return oldCard;
-        })
-      );
-      const filter = cardsWithVotes.filter((item) => item.id === id);
-      if (filter.length === 0) {
-        setCardsWithVotes((oldState) => [...oldState, { id, type, votes: 1 }]);
-      } else {
-        setCardsWithVotes((oldState) =>
-          oldState.map((oldCard) => {
-            if (oldCard.id === id) {
-              return { ...oldCard, votes: oldCard.votes + 1 };
-            }
-            return oldCard;
-          })
-        );
-      }
-    }
-  };
-
-  const handleCheckVote = (message: string, userTeam: Team | null) => {
-    if (userTeam && userTeam === team) {
-      const [filtered] = cards.filter(
-        (item) => item.title === message.toLowerCase()
-      );
-      if (filtered) {
-        handleVote(filtered.id, filtered.type);
-      }
-    }
-  };
-
-  const openAllCards = () => {
-    setCards((oldState) =>
+  const handleOpenAllCards = () => {
+    game.handleCards((oldState) =>
       oldState.map((oldCard) => ({
         ...oldCard,
         isOpen: true,
@@ -164,17 +59,68 @@ const Board: React.FC = () => {
     );
   };
 
-  const openCards = () => {
+  const handleOnFinishTurn = (
+    cardsOpened: number,
+    openedOtherTeam: number,
+    isGameOver: boolean
+  ) => {
+    game.handleIsStreamerTurn(true);
+    let {
+      remaining: { red, blue },
+    } = game.history;
+    const nextTeam = game.team === Team.RED ? Team.BLUE : Team.RED;
+
+    if (game.team === Team.RED) {
+      red -= cardsOpened;
+      blue -= openedOtherTeam;
+    } else {
+      red -= openedOtherTeam;
+      blue -= cardsOpened;
+    }
+
+    game.handleHistory((oldState) => ({
+      remaining: {
+        red,
+        blue,
+      },
+      clues: [
+        ...oldState.clues,
+        {
+          team: game.team,
+          description: game.clue!.description,
+          amount: game.clue!.amount,
+        },
+      ],
+    }));
+
+    if (isGameOver || red === 0 || blue === 0) {
+      if (isGameOver) {
+        game.handleWinner(nextTeam);
+      } else {
+        game.handleWinner(red === 0 ? Team.RED : Team.BLUE);
+        handleOpenAllCards();
+      }
+      game.handleStatus(Status.FINISH_GAME);
+      game.handleTeam(nextTeam);
+      game.reset();
+      disconnectClient();
+    } else {
+      game.handleClue(null);
+      game.handleTeam(nextTeam);
+    }
+  };
+
+  const handleOpen = () => {
     let opened = 0;
     let openedOtherTeam = 0;
     let isGameOver = false;
-    let newCards = [...cards];
+    let newCards = [...game.cards];
     const cardsToOpen = cardsWithVotes
       .sort((a, b) => b.votes - a.votes)
-      .slice(0, clue!.amount);
+      .slice(0, game.clue!.amount);
 
     let delayToOpen = 0;
-    for (const { id, type } of cardsToOpen) {
+    for (const { title, type } of cardsToOpen) {
       if (type === CardType.GAME_OVER) {
         newCards = newCards.map((oldCard) => ({
           ...oldCard,
@@ -186,7 +132,7 @@ const Board: React.FC = () => {
         break;
       } else {
         newCards = newCards.map((oldCard) => {
-          if (oldCard.id === id) {
+          if (oldCard.title === title) {
             delayToOpen += 0.1;
             return {
               ...oldCard,
@@ -200,14 +146,14 @@ const Board: React.FC = () => {
         });
 
         if (
-          (team === Team.RED && type === CardType.RED) ||
-          (team === Team.BLUE && type === CardType.BLUE)
+          (game.team === Team.RED && type === CardType.RED) ||
+          (game.team === Team.BLUE && type === CardType.BLUE)
         ) {
           opened += 1;
         } else {
           if (
-            (team === Team.RED && type === CardType.BLUE) ||
-            (team === Team.BLUE && type === CardType.RED)
+            (game.team === Team.RED && type === CardType.BLUE) ||
+            (game.team === Team.BLUE && type === CardType.RED)
           ) {
             openedOtherTeam += 1;
           }
@@ -218,16 +164,59 @@ const Board: React.FC = () => {
     }
 
     finishedByGameOver.current = isGameOver;
+    totalVotes.current = 0;
     setCardsWithVotes([]);
-    setTotalVotes(0);
-    setCards(newCards);
+    game.handleCards(newCards);
     handleOnFinishTurn(opened, openedOtherTeam, isGameOver);
   };
 
+  const handleVote = (message: string, userTeam: Team | null) => {
+    if (userTeam === game.team && game.isTimerRunning) {
+      const lowerCase = message.toLowerCase();
+
+      game.handleCards((oldCards) =>
+        oldCards.map((currentCard) => {
+          if (currentCard.title === lowerCase) {
+            totalVotes.current += 1;
+
+            const filter = cardsWithVotes.filter(
+              (item) => item.title === lowerCase
+            );
+            if (filter.length === 0) {
+              setCardsWithVotes((item) => [
+                ...item,
+                { title: lowerCase, type: currentCard.type, votes: 1 },
+              ]);
+            } else {
+              setCardsWithVotes((item) =>
+                item.map((currentItem) => {
+                  if (currentItem.title === currentCard.title) {
+                    return {
+                      ...currentItem,
+                      votes: currentItem.votes + 1,
+                    };
+                  }
+                  return currentItem;
+                })
+              );
+            }
+
+            return { ...currentCard, votes: currentCard.votes + 1 };
+          }
+          return currentCard;
+        })
+      );
+    }
+  };
+
+  //
+
   const renderTitle = () => {
     let message = 'Aguardando a dica da(o) streamer';
-    if (winner) {
-      message = `O time ${winner === Team.RED ? 'vermelho' : 'azul'} venceu`;
+    if (game.winner) {
+      message = `O time ${
+        game.winner === Team.RED ? 'vermelho' : 'azul'
+      } venceu`;
     }
     return (
       <S.Title
@@ -239,65 +228,20 @@ const Board: React.FC = () => {
     );
   };
 
+  //
+
   const getAmount = useCallback(() => {
-    if (clue != null) {
+    if (game.clue !== null) {
       setAnimateTitle(true);
-      if (isTimerRunning) {
-        setAmount(clue.amount);
+      if (game.isTimerRunning) {
+        setAmount(game.clue.amount);
       } else {
-        openCards();
+        handleOpen();
       }
     }
-  }, [clue, isTimerRunning]);
+  }, [game.clue, game.isTimerRunning]);
 
-  useEffect(() => {
-    getAmount();
-  }, [getAmount]);
-
-  const hasWinner = useCallback(() => {
-    if (winner && !finishedByGameOver.current) {
-      openAllCards();
-    }
-  }, [winner, finishedByGameOver.current]);
-
-  useEffect(() => {
-    hasWinner();
-  }, [hasWinner]);
-
-  const getCards = useCallback(() => {
-    const getType = (value: number) => {
-      if (value < amountOfRedCards) {
-        return CardType.RED;
-      }
-      if (value < amountOfRedCards + amountOfBlueCards) {
-        return CardType.BLUE;
-      }
-      if (value < 24) {
-        return CardType.NO_TEAM;
-      }
-      return CardType.GAME_OVER;
-    };
-
-    const cardsFromWords: CardProps[] = words.map((item, index) => ({
-      id: index,
-      title: item,
-      isOpen: false,
-      revealed: false,
-      type: getType(index),
-      votes: 0,
-      delayToOpen: 0,
-    }));
-
-    const shuffled = shuffleArray(cardsFromWords);
-
-    setCards(shuffled);
-  }, [words]);
-
-  useEffect(() => {
-    getCards();
-  }, [getCards]);
-
-  useEffect(() => {
+  const initClient = useCallback(() => {
     if (username && client === null) {
       const init = async () => {
         try {
@@ -310,7 +254,7 @@ const Board: React.FC = () => {
           _client.on('message', (_, __, message) => {
             // conferir se está em uma equipe
             // conferir se está no turno da equipe dele
-            handleCheckVote(message, Team.RED);
+            handleVote(message, Team.RED);
           });
 
           setClient(_client);
@@ -322,12 +266,55 @@ const Board: React.FC = () => {
     }
   }, [username]);
 
+  const initCards = useCallback(() => {
+    if (game.cards.length === 0) {
+      const getType = (value: number) => {
+        if (value < game.amount.red) {
+          return CardType.RED;
+        }
+        if (value < game.amount.red + game.amount.blue) {
+          return CardType.BLUE;
+        }
+        if (value < 24) {
+          return CardType.NO_TEAM;
+        }
+        return CardType.GAME_OVER;
+      };
+
+      const cardsFromWords: CardProps[] = words.map((item, index) => ({
+        id: index,
+        title: item,
+        isOpen: false,
+        revealed: false,
+        type: getType(index),
+        votes: 0,
+        delayToOpen: 0,
+      }));
+
+      const shuffled = shuffleArray(cardsFromWords);
+
+      game.handleCards(shuffled);
+    }
+  }, [words, game.cards]);
+
+  useEffect(() => {
+    getAmount();
+  }, [getAmount]);
+
+  useEffect(() => {
+    initClient();
+  }, [initClient]);
+
+  useEffect(() => {
+    initCards();
+  }, [initCards]);
+
   return (
     <S.Container>
       <S.Header>
-        {clue != null ? (
+        {game.clue !== null ? (
           <>
-            <S.Clue>{clue.description}</S.Clue>
+            <S.Clue>{game.clue.description}</S.Clue>
             <S.Amount>{amount}</S.Amount>
           </>
         ) : (
@@ -335,14 +322,16 @@ const Board: React.FC = () => {
         )}
       </S.Header>
       <S.Content>
-        {cards.map((card) => (
+        {game.cards.map((card) => (
           <Card
             key={card.id}
             {...card}
-            team={team}
-            totalVotes={totalVotes}
-            isStreamerTurn={clue === null}
-            onOpen={handleVote}
+            team={game.team}
+            totalVotes={totalVotes.current}
+            isStreamerTurn={game.clue === null}
+            onOpen={() => {
+              //
+            }}
           />
         ))}
       </S.Content>

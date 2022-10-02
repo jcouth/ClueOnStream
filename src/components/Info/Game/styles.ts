@@ -213,10 +213,19 @@ export const Timer = styled.div`
   height: 2.375vw;
 `;
 
-export const TimerIcon = styled.div<{
-  team: TeamProps;
+interface TimerIconProps {
   isStreamerTurn: boolean;
-}>`
+  team: TeamProps;
+}
+
+interface ProgressProps extends TimerIconProps {
+  isStreamerTurn: boolean;
+  team: TeamProps;
+  progress: number;
+  interval: number;
+}
+
+export const TimerIcon = styled.div<TimerIconProps>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -236,12 +245,7 @@ export const TimerIcon = styled.div<{
   box-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;
 
-export const Progress = styled.div<{
-  isStreamerTurn: boolean;
-  team: TeamProps;
-  progress: number;
-  interval: string;
-}>`
+export const TimerBar = styled.div<TimerIconProps>`
   position: relative;
 
   margin-left: 1.319vw;
@@ -256,22 +260,21 @@ export const Progress = styled.div<{
       ? theme.colors.secondary
       : theme.colors.team[team].secondary};
   box-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
+`;
 
-  transition: background-color ${({ interval }) => interval} ease-in-out;
+export const Progress = styled.span.attrs<ProgressProps>((props) => ({
+  style: {
+    width: `${props.progress}%`,
+    backgroundColor: props.isStreamerTurn
+      ? props.theme.colors.primary
+      : props.theme.colors.team[props.team].primary,
+  },
+}))<ProgressProps>`
+  position: absolute;
+  top: 0;
+  left: 0;
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
+  height: 100%;
 
-    width: ${({ progress }) => progress}%;
-    height: 100%;
-
-    border-radius: inherit;
-    background-color: ${({ theme, team, isStreamerTurn }) =>
-      isStreamerTurn ? theme.colors.primary : theme.colors.team[team].primary};
-
-    transition: width ${({ interval }) => interval} ease-in-out;
-  }
+  border-radius: inherit;
 `;

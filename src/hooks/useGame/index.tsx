@@ -3,9 +3,9 @@ import React, { createContext, useContext, useMemo, useState } from 'react';
 import { ChatUserstate, Client as ClientTMI } from 'tmi.js';
 
 import { HistoryProps } from 'components/Info';
+import { CardProps, Team } from 'interfaces/Card';
 import { ClueProps } from 'interfaces/Clue';
 import { Status } from 'interfaces/Status';
-import { CardProps, Team } from 'interfaces/Card';
 
 interface States {
   cards: CardProps[];

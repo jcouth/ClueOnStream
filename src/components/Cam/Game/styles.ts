@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 import { Content as ParentContent } from '../styles';
-
 import * as A from './attrs';
 
 export const Content = styled(ParentContent).attrs<A.ContentProps>(

@@ -8,8 +8,8 @@ import Cam from 'components/Cam';
 import { shuffleArray } from 'helpers/shuffleArray';
 import { useGame } from 'hooks/useGame';
 import { Status } from 'interfaces/Status';
-import { fetchVerbs } from 'services/words/api';
 import { fetchUser, logout } from 'services/twitch/api';
+import { fetchVerbs } from 'services/words/api';
 
 import * as S from './styles';
 

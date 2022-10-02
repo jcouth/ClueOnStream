@@ -8,9 +8,8 @@ import Button from 'components/Button';
 import { useGame } from 'hooks/useGame';
 import { Status } from 'interfaces/Status';
 
-import Game from './Game';
-
 import * as S from './styles';
+import Game from './Game';
 
 const {
   REACT_APP_TWITCH_LOGIN_URL,

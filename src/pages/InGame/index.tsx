@@ -21,9 +21,9 @@ const InGame: React.FC = () => {
   [ok] manter proporção quando redimensionar
   [ok] onWin
   [ok] integrar com a twitch
+  [ok] pegar votos pelo chat
+  [ok] attrs
   separar equipes pelo prediction
-  pegar votos pelo chat
-  attrs
   
   fonte carregar do local path
   evitar rerender quando redimensionar
@@ -38,6 +38,7 @@ const InGame: React.FC = () => {
     handleStatus,
     reset,
     initClient,
+    resetClient,
   } = useGame();
   const navigate = useNavigate();
 
@@ -69,6 +70,7 @@ const InGame: React.FC = () => {
   const handleDisconnect = () => {
     void (async () => {
       try {
+        resetClient();
         await logout(token);
 
         setUsername(null);

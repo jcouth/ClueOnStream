@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 export const Container = styled.div`
   display: grid;
@@ -39,29 +39,6 @@ export const Title = styled.p`
       transform: scale(1.05);
     }
   }
-`;
-
-export const Timer = styled.div<{ isStreamerTurn: boolean }>`
-  height: 0.792vw;
-
-  border-radius: 0.528vw;
-
-  ${({ isStreamerTurn }) =>
-    isStreamerTurn &&
-    css`
-      visibility: hidden;
-    `}
-`;
-
-export const Progress = styled.div<{ progress: number; interval: string }>`
-  width: ${({ progress }) => progress}%;
-  height: 100%;
-
-  border-radius: inherit;
-  background-color: ${({ theme }) => theme.colors.card.normal.primary};
-  box-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
-
-  transition: width ${({ interval }) => interval} ease-in-out;
 `;
 
 export const Content = styled.div`

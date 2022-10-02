@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { Team as TeamProps } from 'interfaces/Card';
+import * as A from './attrs';
 
 export const Container = styled.div`
   display: grid;
@@ -69,10 +69,9 @@ export const Status = styled(Title)`
   }
 `;
 
-export const TimerIcon = styled.div<{
-  team: TeamProps;
-  isStreamerTurn: boolean;
-}>`
+export const TimerIcon = styled.div.attrs<A.TimerIconProps>(
+  A.timerIcon
+)<A.TimerIconProps>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -87,12 +86,10 @@ export const TimerIcon = styled.div<{
 
   border: 0.198vw solid ${({ theme }) => theme.colors.white};
   border-radius: 6.596vw;
-  background-color: ${({ theme, team, isStreamerTurn }) =>
-    isStreamerTurn ? theme.colors.primary : theme.colors.team[team].primary};
   box-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;
 
-export const Timer = styled.div<{ expand: boolean }>`
+export const Timer = styled.div.attrs<A.TimerProps>(A.timer)<A.TimerProps>`
   display: grid;
   grid-row-gap: 0.528vw;
   align-items: flex-end;
@@ -105,21 +102,15 @@ export const Timer = styled.div<{ expand: boolean }>`
   border-radius: 0.792vw;
   background-color: ${({ theme }) => theme.colors.primary};
   box-shadow: inset 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
-
-  box-shadow: inset 0vw 0.264vw 0.264vw
-    ${({ theme, expand }) => (expand ? 'transparent' : theme.colors.shadow)};
-
-  transition: box-shadow 0.25s ease-out ${({ expand }) => (expand ? 0 : 0.5)}s;
 `;
 
-export const Selector = styled.div<{ expand: boolean; height: number }>`
+export const Selector = styled.div.attrs<A.SelectorProps>(
+  A.selector
+)<A.SelectorProps>`
   display: flex;
   flex-direction: column;
 
   position: absolute;
-  top: ${({ expand, height }) => (expand ? -height : 0.66)}vw;
-
-  padding: ${({ expand }) => (expand ? 0.396 : 0)}vw 0.923vw;
 
   width: 100%;
   height: ${({ expand, height }) => (expand ? height + 0.66 : 0)}vw;
@@ -128,8 +119,6 @@ export const Selector = styled.div<{ expand: boolean; height: number }>`
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   background-color: ${({ theme }) => theme.colors.primary};
-  box-shadow: inset 0vw 0.264vw 0.264vw
-    ${({ theme, expand }) => (expand ? theme.colors.shadow : 'transparent')};
 
   overflow: hidden;
   transition: height 0.5s ease-in-out, top 0.5s ease-in-out,
@@ -149,9 +138,10 @@ export const SelectorTitle = styled.p`
   text-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;
 
-export const SelectorContent = styled.div<{ columns: number }>`
+export const SelectorContent = styled.div.attrs<A.SelectorContentProps>(
+  A.selectorContent
+)<A.SelectorContentProps>`
   display: grid;
-  grid-template-columns: repeat(${({ columns }) => columns}, minmax(0, 1fr));
   grid-template-rows: 2.111vw;
   grid-column-gap: 0.528vw;
 

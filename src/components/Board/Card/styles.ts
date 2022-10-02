@@ -1,37 +1,14 @@
 import styled, { css } from 'styled-components';
 
 import CardOverlay from 'assets/card-overlay.svg';
-import theme from 'global/styles/theme';
-import { CardProps, CardType, Team } from 'interfaces/Card';
 
-interface StyledCardProps {
-  isOpen: CardProps['isOpen'];
-  revealed: CardProps['revealed'];
-  cardType: CardProps['type'];
-  delayToOpen: CardProps['delayToOpen'];
-}
+import * as A from './attrs';
 
-interface CardColorsProps {
-  principal: { [key in CardType]: string };
-  before: { [key in CardType]: string };
-}
+export const CardColors = A.CardColors;
 
-export const CardColors: CardColorsProps = {
-  principal: {
-    red: theme.colors.team.red.primary,
-    blue: theme.colors.team.blue.primary,
-    no_team: theme.colors.card.normal.secondary,
-    game_over: theme.colors.card.gameOver.primary,
-  },
-  before: {
-    red: theme.colors.team.red.secondary,
-    blue: theme.colors.team.blue.secondary,
-    no_team: theme.colors.card.normal.primary,
-    game_over: theme.colors.card.gameOver.secondary,
-  },
-};
-
-export const Container = styled.button<StyledCardProps>`
+export const Container = styled.button.attrs<A.ContainerProps>(
+  A.container
+)<A.ContainerProps>`
   position: relative;
 
   padding: 1.055vw;
@@ -73,15 +50,11 @@ export const Container = styled.button<StyledCardProps>`
     opacity: 0;
   }
 
-  ${({ isOpen, cardType, delayToOpen }) =>
+  ${({ isOpen, cardType }) =>
     isOpen &&
     css`
-      background-color: ${CardColors.principal[cardType]};
-
-      transition: background-color 0.5s ease-out ${0.5 + delayToOpen}s;
-
       &::before {
-        border-color: ${CardColors.before[cardType]};
+        border-color: ${A.CardColors.before[cardType]};
       }
     `}
 
@@ -151,7 +124,9 @@ export const Header = styled.div`
   align-items: center;
 `;
 
-export const Percentage = styled.div<{ team: Team; visible: boolean }>`
+export const Percentage = styled.div.attrs<A.PercentageProps>(
+  A.percentage
+)<A.PercentageProps>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -159,13 +134,6 @@ export const Percentage = styled.div<{ team: Team; visible: boolean }>`
   padding: 0.396vw 1.055vw;
 
   border-radius: 0.264vw;
-  background-color: ${({ theme, team }) => theme.colors.team[team].primary};
-
-  ${({ visible }) =>
-    !visible &&
-    css`
-      visibility: hidden;
-    `}
 `;
 
 export const PercentageText = styled.p`
@@ -179,7 +147,9 @@ export const PercentageText = styled.p`
   text-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;
 
-export const Content = styled.div<StyledCardProps>`
+export const Content = styled.div.attrs<A.ContentProps>(
+  A.content
+)<A.ContentProps>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -189,23 +159,11 @@ export const Content = styled.div<StyledCardProps>`
 
   border-radius: 0.264vw;
   background-color: ${({ theme }) => theme.colors.white};
-
-  ${({ isOpen, revealed, cardType, delayToOpen }) =>
-    revealed
-      ? css`
-          visibility: hidden;
-
-          transition: visibility ${0.5 + delayToOpen}s linear;
-        `
-      : isOpen &&
-        css`
-          background-color: ${CardColors.before[cardType]};
-
-          transition: background-color ${0.5 + delayToOpen}s ease-in;
-        `}
 `;
 
-export const ContentText = styled.p<Omit<StyledCardProps, 'cardType'>>`
+export const ContentText = styled.p.attrs<A.ContentTextProps>(
+  A.contentText
+)<A.ContentTextProps>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -220,18 +178,4 @@ export const ContentText = styled.p<Omit<StyledCardProps, 'cardType'>>`
   text-align: center;
   text-transform: uppercase;
   text-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
-
-  ${({ isOpen, revealed, delayToOpen }) =>
-    revealed
-      ? css`
-          visibility: hidden;
-
-          transition: visibility ${0.5 + delayToOpen}s linear;
-        `
-      : isOpen &&
-        css`
-          color: ${theme.colors.white};
-
-          transition: color ${0.5 + delayToOpen}s ease-in;
-        `}
 `;

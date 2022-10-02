@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import * as A from './attrs';
+
 export const Container = styled.div`
   display: grid;
   grid-template-rows: auto 1fr;
@@ -53,7 +55,7 @@ export const Content = styled.div`
   grid-gap: 1.055vw;
 `;
 
-export const Card = styled.div<{ delay: number }>`
+export const Card = styled.div.attrs<A.CardProps>(A.card)<A.CardProps>`
   display: grid;
   grid-template-rows: auto 1fr;
   grid-row-gap: 0.792vw;
@@ -69,7 +71,6 @@ export const Card = styled.div<{ delay: number }>`
   box-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 
   animation: blink 8s infinite;
-  animation-delay: ${({ delay }) => delay}s;
 
   @keyframes blink {
     0%,

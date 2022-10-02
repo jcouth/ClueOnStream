@@ -2,6 +2,8 @@ import styled from 'styled-components';
 
 import { Team as TeamProps } from 'interfaces/Card';
 
+import * as A from './attrs';
+
 export const Container = styled.div`
   display: flex;
 
@@ -26,7 +28,7 @@ export const Content = styled.div`
   box-shadow: inset 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;
 
-export const Team = styled.div<{ team: TeamProps }>`
+export const Team = styled.div.attrs<A.TeamProps>(A.team)<A.TeamProps>`
   display: flex;
   justify-content: space-between;
 
@@ -34,7 +36,6 @@ export const Team = styled.div<{ team: TeamProps }>`
 
   border: 0.264vw solid ${({ theme }) => theme.colors.white};
   border-radius: 0.792vw;
-  background-color: ${({ theme, team }) => theme.colors.team[team].primary};
   box-shadow: inset 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;
 
@@ -160,7 +161,9 @@ export const Clue = styled.div`
   margin-top: 0.396vw;
 `;
 
-export const ClueTitle = styled.p<{ team: TeamProps }>`
+export const ClueTitle = styled.p.attrs<A.ClueTitleProps>(
+  A.clueTitle
+)<A.ClueTitleProps>`
   flex-grow: 1;
   display: flex;
   align-items: center;
@@ -171,10 +174,7 @@ export const ClueTitle = styled.p<{ team: TeamProps }>`
   font-weight: ${({ theme }) => theme.fonts.primary.weight};
   font-size: ${({ theme }) => theme.fonts.primary.size};
 
-  border-left: 0.792vw solid
-    ${({ theme, team }) => theme.colors.team[team].primary};
   border-radius: 0.396vw;
-  background-color: ${({ theme, team }) => theme.colors.team[team].secondary};
   box-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 
   color: ${({ theme }) => theme.colors.white};
@@ -183,7 +183,9 @@ export const ClueTitle = styled.p<{ team: TeamProps }>`
   text-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;
 
-export const ClueAmount = styled.p<{ team: TeamProps }>`
+export const ClueAmount = styled.p.attrs<A.ClueAmountProps>(
+  A.clueAmount
+)<A.ClueAmountProps>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -195,7 +197,6 @@ export const ClueAmount = styled.p<{ team: TeamProps }>`
   font-size: ${({ theme }) => theme.fonts.primary.size};
 
   border-radius: 0.396vw;
-  background-color: ${({ theme, team }) => theme.colors.team[team].primary};
   box-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 
   color: ${({ theme }) => theme.colors.white};

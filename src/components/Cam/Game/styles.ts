@@ -2,31 +2,26 @@ import styled from 'styled-components';
 
 import { Content as ParentContent } from '../styles';
 
-export const Content = styled(ParentContent)<{ expand: boolean }>`
-  box-shadow: inset 0vw 0.264vw 0.264vw
-    ${({ theme, expand }) => (expand ? 'transparent' : theme.colors.shadow)};
+import * as A from './attrs';
 
-  transition: box-shadow 0.25s ease-out ${({ expand }) => (expand ? 0 : 0.5)}s;
-`;
+export const Content = styled(ParentContent).attrs<A.ContentProps>(
+  A.content
+)<A.ContentProps>``;
 
-export const Selector = styled.div<{ expand: boolean; height: number }>`
+export const Selector = styled.div.attrs<A.SelectorProps>(
+  A.selector
+)<A.SelectorProps>`
   display: flex;
   flex-direction: column;
 
   position: absolute;
-  top: ${({ expand, height }) => (expand ? -height : 0.792)}vw;
-
-  padding: ${({ expand }) => (expand ? 0.396 : 0)}vw 0.923vw;
 
   width: 100%;
-  height: ${({ expand, height }) => (expand ? height + 0.792 : 0)}vw;
 
   border-radius: 0.792vw;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   background-color: ${({ theme }) => theme.colors.primary};
-  box-shadow: inset 0vw 0.264vw 0.264vw
-    ${({ theme, expand }) => (expand ? theme.colors.shadow : 'transparent')};
 
   overflow: hidden;
   transition: height 0.5s ease-in-out, top 0.5s ease-in-out,
@@ -46,9 +41,10 @@ export const Title = styled.p`
   text-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;
 
-export const SelectorContent = styled.div<{ columns: number }>`
+export const SelectorContent = styled.div.attrs<A.SelectorContentProps>(
+  A.selectorContent
+)<A.SelectorContentProps>`
   display: grid;
-  grid-template-columns: repeat(${({ columns }) => columns}, minmax(0, 1fr));
   grid-template-rows: 2.111vw;
   grid-column-gap: 0.528vw;
 
@@ -61,9 +57,7 @@ export const Controls = styled.div`
   grid-column-gap: 0.528vw;
 `;
 
-export const Input = styled.input.attrs({
-  ariaAutocomplete: 'none',
-})`
+export const Input = styled.input.attrs(A.input)`
   padding: 0.792vw;
 
   width: 100%;

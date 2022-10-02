@@ -12,6 +12,7 @@ interface States {
   seconds: number;
   clue: ClueProps | null;
   winner: Team | null;
+  totalVotes: number;
   isStreamerTurn: boolean;
   isTimerRunning: boolean;
   history: HistoryProps;
@@ -24,6 +25,7 @@ interface StateActions extends States {
   handleSeconds: React.Dispatch<React.SetStateAction<States['seconds']>>;
   handleClue: React.Dispatch<React.SetStateAction<States['clue']>>;
   handleWinner: React.Dispatch<React.SetStateAction<States['winner']>>;
+  handleTotalVotes: React.Dispatch<React.SetStateAction<States['totalVotes']>>;
   handleIsStreamerTurn: React.Dispatch<
     React.SetStateAction<States['isStreamerTurn']>
   >;
@@ -56,6 +58,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   const [seconds, setSeconds] = useState<number>(60);
   const [cards, setCards] = useState<CardProps[]>([]);
   const [winner, setWinner] = useState<Team | null>(null);
+  const [totalVotes, setTotalVotes] = useState<number>(0);
   const [clue, setClue] = useState<ClueProps | null>(null);
   const [isStreamerTurn, setIsStreamerTurn] = useState<boolean>(true);
   const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
@@ -97,6 +100,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       seconds,
       clue,
       winner,
+      totalVotes,
       isStreamerTurn,
       isTimerRunning,
       history,
@@ -106,6 +110,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       handleSeconds: setSeconds,
       handleClue: setClue,
       handleWinner: setWinner,
+      handleTotalVotes: setTotalVotes,
       handleIsStreamerTurn: setIsStreamerTurn,
       handleIsTimerRunning: setIsTimerRunning,
       handleHistory: setHistory,
@@ -118,6 +123,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       setSeconds,
       setClue,
       setWinner,
+      setTotalVotes,
       setIsStreamerTurn,
       setIsTimerRunning,
       setHistory,

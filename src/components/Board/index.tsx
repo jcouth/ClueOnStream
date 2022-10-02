@@ -25,7 +25,6 @@ const Board: React.FC = () => {
   }>();
   const game = useGame();
 
-  const totalVotes = useRef<number>(0);
   const finishedByGameOver = useRef<boolean>(false);
   const [client, setClient] = useState<ClientTMI | null>(null);
 
@@ -164,8 +163,8 @@ const Board: React.FC = () => {
     }
 
     finishedByGameOver.current = isGameOver;
-    totalVotes.current = 0;
     setCardsWithVotes([]);
+    game.handleTotalVotes(0);
     game.handleCards(newCards);
     handleOnFinishTurn(opened, openedOtherTeam, isGameOver);
   };
@@ -173,39 +172,35 @@ const Board: React.FC = () => {
   const handleVote = (message: string, userTeam: Team | null) => {
     if (userTeam === game.team && game.isTimerRunning) {
       const lowerCase = message.toLowerCase();
+      let type: CardType;
 
-      game.handleCards((oldCards) =>
-        oldCards.map((currentCard) => {
-          if (currentCard.title === lowerCase) {
-            totalVotes.current += 1;
-
-            const filter = cardsWithVotes.filter(
-              (item) => item.title === lowerCase
-            );
-            if (filter.length === 0) {
-              setCardsWithVotes((item) => [
-                ...item,
-                { title: lowerCase, type: currentCard.type, votes: 1 },
-              ]);
-            } else {
-              setCardsWithVotes((item) =>
-                item.map((currentItem) => {
-                  if (currentItem.title === currentCard.title) {
-                    return {
-                      ...currentItem,
-                      votes: currentItem.votes + 1,
-                    };
-                  }
-                  return currentItem;
-                })
-              );
-            }
-
-            return { ...currentCard, votes: currentCard.votes + 1 };
+      game.handleTotalVotes((oldState) => oldState + 1);
+      game.handleCards((oldState) =>
+        oldState.map((oldCard) => {
+          if (oldCard.title === lowerCase) {
+            type = oldCard.type;
+            return { ...oldCard, votes: oldCard.votes + 1 };
           }
-          return currentCard;
+          return oldCard;
         })
       );
+
+      const filter = cardsWithVotes.filter((item) => item.title === lowerCase);
+      if (filter.length === 0) {
+        setCardsWithVotes((oldState) => [
+          ...oldState,
+          { title: lowerCase, type, votes: 1 },
+        ]);
+      } else {
+        setCardsWithVotes((oldState) =>
+          oldState.map((oldCard) => {
+            if (oldCard.title === lowerCase) {
+              return { ...oldCard, votes: oldCard.votes + 1 };
+            }
+            return oldCard;
+          })
+        );
+      }
     }
   };
 
@@ -327,7 +322,7 @@ const Board: React.FC = () => {
             key={card.id}
             {...card}
             team={game.team}
-            totalVotes={totalVotes.current}
+            totalVotes={game.totalVotes}
             isStreamerTurn={game.clue === null}
             onOpen={() => {
               //

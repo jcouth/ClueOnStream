@@ -15,21 +15,24 @@ import * as S from './styles';
 
 const Home: React.FC = () => {
   /*
-  [ok] título não sair do card
-  [ok] animação abrir cards
-  [ok] background-image pegar a url do local path
-  [ok] manter proporção quando redimensionar
-  [ok] onWin
-  [ok] integrar com a twitch
-  [ok] pegar votos pelo chat
-  [ok] attrs
-  separar equipes pelo prediction
+  estilo do card não descoberto
   
-  fonte carregar do local path
-  evitar rerender quando redimensionar
-  animação transição de layouts
-  limpar codigo
-  performance
+  -
+
+  modal de confirmação [voltar]
+  
+  -
+
+  separar equipes pelo prediction
+  finalizar prediction ao acabar a partida (escolher vencedor) ou voltar para o menu (cancelar)
+  
+  -
+  
+  usuário do chat ter voto único (se já tiver votado, alterar o voto e diminuir do card antigo)
+  
+  -
+
+  popup para o streamer saber qual os cards de cada time
   */
   const {
     team,
@@ -86,6 +89,8 @@ const Home: React.FC = () => {
 
   const handleNewGame = () => {
     try {
+      reset();
+
       const shuffled = shuffleArray(allWords.current);
       const newWords = shuffled.slice(0, max);
 
@@ -135,13 +140,13 @@ const Home: React.FC = () => {
   return (
     <S.Container>
       <S.Content
-        inLobby={status !== Status.GAME}
+        inLobby={status !== Status.GAME && status !== Status.FINISH_GAME}
         team={team}
         className={isAnimating ? 'animate' : ''}
         onAnimationEnd={() => setIsAnimating(false)}
       >
         <S.Aside>
-          {status === Status.GAME ? (
+          {status === Status.GAME || status === Status.FINISH_GAME ? (
             <Info.Game />
           ) : (
             <Info.Lobby username={username} />
@@ -153,7 +158,7 @@ const Home: React.FC = () => {
           />
         </S.Aside>
         <S.Main>
-          {status === Status.GAME ? (
+          {status === Status.GAME || status === Status.FINISH_GAME ? (
             <Content.Board words={words} />
           ) : (
             <Content.HowToPlay />

@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { Status } from 'components/Info/Lobby/styles';
 import { shuffleArray } from 'helpers/shuffleArray';
 import { OnMessageCallback, useGame } from 'hooks/useGame';
 import { CardProps, CardType, Team } from 'interfaces/Card';
+import { Status } from 'interfaces/Status';
 
 import Card from './Card';
 
@@ -89,7 +89,6 @@ const Board: React.FC<Props> = ({ words }) => {
       }
       game.handleStatus(Status.FINISH_GAME);
       game.handleTeam(nextTeam);
-      game.reset();
       disconnectClient();
     } else {
       game.handleClue(null);
@@ -113,6 +112,7 @@ const Board: React.FC<Props> = ({ words }) => {
         newCards = newCards.map((oldCard) => ({
           ...oldCard,
           isOpen: true,
+          revealed: oldCard.title === title || oldCard.revealed,
           votes: 0,
           delayToOpen: oldCard.type === CardType.GAME_OVER ? 0 : 0.5,
         }));
@@ -276,7 +276,7 @@ const Board: React.FC<Props> = ({ words }) => {
         }}
       /> */}
       <S.Header>
-        {game.clue !== null ? (
+        {game.clue !== null && game.status === Status.GAME ? (
           <>
             <S.Clue>{game.clue.description}</S.Clue>
             <S.Amount>{amount}</S.Amount>

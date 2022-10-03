@@ -69,7 +69,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   const [clue, setClue] = useState<ClueProps | null>(null);
   const [isStreamerTurn, setIsStreamerTurn] = useState<boolean>(true);
   const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
-  const [status, setStatus] = useState<Status>(Status.WAITING_CONNECTION);
+  const [status, setStatus] = useState<Status>(Status.WAITING_START);
   const [history, setHistory] = useState<HistoryProps>({
     remaining: {
       red: AMOUNT_OF_RED_CARDS,

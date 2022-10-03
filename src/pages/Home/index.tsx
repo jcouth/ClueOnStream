@@ -74,7 +74,7 @@ const Home: React.FC = () => {
         await logout(token);
 
         setUsername(null);
-        handleStatus(Status.WAITING_CONNECTION);
+        handleStatus(Status.WAITING_START);
         reset();
 
         navigate('/');

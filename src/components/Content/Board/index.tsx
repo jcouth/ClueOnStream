@@ -265,16 +265,6 @@ const Board: React.FC<Props> = ({ words }) => {
 
   return (
     <S.Container>
-      {/* <Modal
-        title="Você tem certeza?"
-        subtitle="Se você confirmar este jogo será abandonado e os pontos serão devolvidos para o chat"
-        onCancel={() => {
-          //
-        }}
-        onConfirm={() => {
-          //
-        }}
-      /> */}
       <S.Header>
         {game.clue !== null && game.status === Status.GAME ? (
           <>

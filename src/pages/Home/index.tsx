@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 
 import * as Content from 'components/Content';
 import * as Info from 'components/Info';
+import Modal from 'components/Modal';
 import Cam from 'components/Cam';
 import { shuffleArray } from 'helpers/shuffleArray';
 import { useAuth } from 'hooks/useAuth';
@@ -50,6 +51,7 @@ const Home: React.FC = () => {
 
   const [username, setUsername] = useState<string | null>(null);
   const [isAnimating, setIsAnimating] = useState<boolean>(true);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const handleConnect = async () => {
     try {
@@ -102,6 +104,7 @@ const Home: React.FC = () => {
   };
 
   const handleBackToLobby = () => {
+    setIsModalVisible(false);
     handleStatus(Status.WAITING_START);
     reset();
   };
@@ -146,12 +149,21 @@ const Home: React.FC = () => {
           <Cam
             onNewGame={handleNewGame}
             onDisconnect={handleDisconnect}
-            onBackToLobby={handleBackToLobby}
+            onBackToLobby={() => setIsModalVisible(true)}
           />
         </S.Aside>
         <S.Main>
           {status === Status.GAME || status === Status.FINISH_GAME ? (
-            <Content.Board words={words} />
+            <>
+              <Modal
+                isVisible={isModalVisible}
+                title="Você tem certeza?"
+                subtitle="Ao confirmar, a partida será !cancelada! e os pontos serão devolvidos para os usuários"
+                onCancel={() => setIsModalVisible(false)}
+                onConfirm={handleBackToLobby}
+              />
+              <Content.Board words={words} />
+            </>
           ) : (
             <Content.HowToPlay />
           )}

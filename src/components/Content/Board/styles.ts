@@ -6,8 +6,6 @@ export const Container = styled.div`
   grid-row-gap: 0.792vw;
   justify-content: center;
   align-items: center;
-
-  position: relative;
 `;
 
 export const Header = styled.div`

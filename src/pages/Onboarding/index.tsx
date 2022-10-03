@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { useNavigate } from 'react-router';
 
-import HowToPlay from 'components/Main/HowToPlay';
+import HowToPlay from 'components/Content/HowToPlay';
 import Cam from 'components/Cam';
 
 import * as S from './styles';

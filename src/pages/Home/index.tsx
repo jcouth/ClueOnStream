@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { useNavigate } from 'react-router';
 
-import * as Aside from 'components/Aside';
-import * as Main from 'components/Main';
+import * as Content from 'components/Content';
+import * as Info from 'components/Info';
 import Cam from 'components/Cam';
 import { shuffleArray } from 'helpers/shuffleArray';
 import { useGame } from 'hooks/useGame';
@@ -137,17 +137,17 @@ const Home: React.FC = () => {
       >
         <S.Aside>
           {status === Status.GAME ? (
-            <Aside.Game />
+            <Info.Game />
           ) : (
-            <Aside.Lobby username={username} />
+            <Info.Lobby username={username} />
           )}
           <Cam onDisconnect={handleDisconnect} onNewGame={handleNewGame} />
         </S.Aside>
         <S.Main>
           {status === Status.GAME ? (
-            <Main.Board words={words} />
+            <Content.Board words={words} />
           ) : (
-            <Main.HowToPlay />
+            <Content.HowToPlay />
           )}
         </S.Main>
       </S.Content>

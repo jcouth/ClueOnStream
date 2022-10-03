@@ -51,7 +51,7 @@ const Cam: React.FC<Props> = ({
   ) => {
     e.preventDefault();
 
-    const twitchState = uuid();
+    const state = uuid();
 
     const url = `${REACT_APP_TWITCH_LOGIN_URL ?? ''}/authorize?client_id=${
       REACT_APP_TWITCH_CLIENT_ID ?? ''
@@ -59,9 +59,9 @@ const Cam: React.FC<Props> = ({
       REACT_APP_TWITCH_REDIRECT_URL ?? ''
     )}&response_type=token&scope=${
       REACT_APP_TWITCH_SCOPES ?? ''
-    }&state=${twitchState}`;
+    }&state=${state}`;
 
-    localStorage.setItem('@ClueOnStream::state', twitchState);
+    localStorage.setItem('@ClueOnStream::state', state);
 
     window.location.href = url;
   };

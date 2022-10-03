@@ -4,11 +4,13 @@ import { useNavigate } from 'react-router';
 
 import HowToPlay from 'components/Content/HowToPlay';
 import Cam from 'components/Cam';
+import { useAuth } from 'hooks/useAuth';
 
 import * as S from './styles';
 
 const Onboarding: React.FC = () => {
   const navigate = useNavigate();
+  const { handleToken } = useAuth();
 
   const [isAnimating, setIsAnimating] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
@@ -22,15 +24,12 @@ const Onboarding: React.FC = () => {
         const parsedHash = new URLSearchParams(window.location.hash.slice(1));
         const accessToken = parsedHash.get('access_token');
         if (accessToken) {
-          const state = parsedHash.get('state');
-          const previousState = localStorage.getItem('@ClueOnStream::state');
+          const state = localStorage.getItem('@ClueOnStream::state');
+          const urlState = parsedHash.get('state');
           localStorage.removeItem('@ClueOnStream::state');
 
-          if (state === previousState) {
-            localStorage.setItem(
-              '@ClueOnStream::twitch_access_token',
-              accessToken
-            );
+          if (state === urlState) {
+            handleToken(accessToken);
             navigate('/home');
           } else {
             setInvalidState(true);

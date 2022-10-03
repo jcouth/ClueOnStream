@@ -6,6 +6,7 @@ import * as Content from 'components/Content';
 import * as Info from 'components/Info';
 import Cam from 'components/Cam';
 import { shuffleArray } from 'helpers/shuffleArray';
+import { useAuth } from 'hooks/useAuth';
 import { useGame } from 'hooks/useGame';
 import { Status } from 'interfaces/Status';
 import { fetchUser, logout } from 'services/twitch/api';
@@ -30,9 +31,11 @@ const Home: React.FC = () => {
   
   -
 
-  popup para o streamer saber qual os cards de cada time
-  
+  popup para o streamer saber os cards de cada time
+
   */
+  const navigate = useNavigate();
+  const { token, authenticated, handleAuthenticated, resetAuth } = useAuth();
   const {
     team,
     amount: { max },
@@ -42,25 +45,19 @@ const Home: React.FC = () => {
     initClient,
     resetClient,
   } = useGame();
-  const navigate = useNavigate();
 
   const allWords = useRef<string[]>([]);
   const [words, setWords] = useState<string[]>([]);
 
-  const [token, setToken] = useState<string>('');
   const [username, setUsername] = useState<string | null>(null);
   const [isAnimating, setIsAnimating] = useState<boolean>(true);
 
-  const handleConnect = async (token: string) => {
+  const handleConnect = async () => {
     try {
-      localStorage.removeItem('@ClueOnStream::twitch_access_token');
-      localStorage.removeItem('@ClueOnStream::twitch_state');
-      localStorage.removeItem('@ClueOnStream::state');
-
       const { data } = await fetchUser(token);
       const [userData] = data.data;
 
-      setToken(token);
+      handleAuthenticated(true);
       setUsername(userData.display_name);
       handleStatus(Status.WAITING_START);
       initClient(userData.display_name);
@@ -74,6 +71,7 @@ const Home: React.FC = () => {
       try {
         resetClient();
         await logout(token);
+        resetAuth();
 
         setUsername(null);
         handleStatus(Status.WAITING_START);
@@ -121,12 +119,8 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const connect = () => {
-      const accessToken = localStorage.getItem(
-        '@ClueOnStream::twitch_access_token'
-      );
-
-      if (accessToken) {
-        void handleConnect(accessToken);
+      if (!authenticated && token) {
+        void handleConnect();
 
         if (allWords.current.length === 0) {
           void getVerbs();

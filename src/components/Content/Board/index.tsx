@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { Status } from 'components/Info/Lobby/styles';
-import Modal from 'components/Modal';
 import { shuffleArray } from 'helpers/shuffleArray';
 import { OnMessageCallback, useGame } from 'hooks/useGame';
 import { CardProps, CardType, Team } from 'interfaces/Card';
@@ -9,12 +8,6 @@ import { CardProps, CardType, Team } from 'interfaces/Card';
 import Card from './Card';
 
 import * as S from './styles';
-
-interface VoteProps {
-  title: CardProps['title'];
-  type: CardProps['type'];
-  votes: CardProps['votes'];
-}
 
 interface Props {
   words: string[];
@@ -27,7 +20,6 @@ const Board: React.FC<Props> = ({ words }) => {
   const [cards, setCards] = useState<CardProps[]>([]);
   const [totalVotes, setTotalVotes] = useState<number>(0);
   const [animateTitle, setAnimateTitle] = useState<boolean>(false);
-  const [cardsWithVotes, setCardsWithVotes] = useState<VoteProps[]>([]);
 
   //
 
@@ -110,7 +102,8 @@ const Board: React.FC<Props> = ({ words }) => {
     let openedOtherTeam = 0;
     let isGameOver = false;
     let newCards = [...cards];
-    const cardsToOpen = cardsWithVotes
+    const cardsToOpen = cards
+      .filter((card) => card.votes > 0)
       .sort((a, b) => b.votes - a.votes)
       .slice(0, game.clue!.amount);
 
@@ -158,7 +151,6 @@ const Board: React.FC<Props> = ({ words }) => {
       }
     }
 
-    setCardsWithVotes([]);
     setTotalVotes(0);
     setCards(newCards);
     handleOnFinishTurn(opened, openedOtherTeam, isGameOver);
@@ -167,35 +159,16 @@ const Board: React.FC<Props> = ({ words }) => {
   const handleVote = (message: string, userTeam: Team | null) => {
     if (userTeam === game.team && game.isTimerRunning) {
       const lowerCase = message.toLowerCase();
-      let type: CardType;
 
       setTotalVotes((oldState) => oldState + 1);
       setCards((oldState) =>
         oldState.map((oldCard) => {
           if (oldCard.title === lowerCase) {
-            type = oldCard.type;
             return { ...oldCard, votes: oldCard.votes + 1 };
           }
           return oldCard;
         })
       );
-
-      const filter = cardsWithVotes.filter((item) => item.title === lowerCase);
-      if (filter.length === 0) {
-        setCardsWithVotes((oldState) => [
-          ...oldState,
-          { title: lowerCase, type, votes: 1 },
-        ]);
-      } else {
-        setCardsWithVotes((oldState) =>
-          oldState.map((oldCard) => {
-            if (oldCard.title === lowerCase) {
-              return { ...oldCard, votes: oldCard.votes + 1 };
-            }
-            return oldCard;
-          })
-        );
-      }
     }
   };
 

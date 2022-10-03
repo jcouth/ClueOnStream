@@ -15,10 +15,8 @@ import * as S from './styles';
 
 const Home: React.FC = () => {
   /*
-  estilo do card não descoberto
   
-  -
-
+  rotas privadas
   modal de confirmação [voltar]
   
   -
@@ -33,6 +31,7 @@ const Home: React.FC = () => {
   -
 
   popup para o streamer saber qual os cards de cada time
+  
   */
   const {
     team,

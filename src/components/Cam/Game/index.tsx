@@ -7,12 +7,12 @@ import * as S from './styles';
 interface Props {
   isStreamerTurn: boolean;
   onSend: (clue: string, amount: number) => void;
-  onDisconnect: () => void;
+  onBackToLobby: () => void;
 }
 
 const AMOUNTS = [1, 2, 3, 4, 5, 6, 7];
 
-const Game: React.FC<Props> = ({ isStreamerTurn, onSend, onDisconnect }) => {
+const Game: React.FC<Props> = ({ isStreamerTurn, onSend, onBackToLobby }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [shake, setShake] = useState<boolean>(false);
@@ -65,7 +65,7 @@ const Game: React.FC<Props> = ({ isStreamerTurn, onSend, onDisconnect }) => {
         />
       </S.Controls>
       <S.Buttons>
-        <Button title="Sair" variant="secondary" onClick={onDisconnect} />
+        <Button title="Voltar" variant="secondary" onClick={onBackToLobby} />
         <Button
           title="Enviar"
           variant="primary"

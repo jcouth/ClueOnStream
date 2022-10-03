@@ -21,16 +21,23 @@ const {
 type Props =
   | {
       lobby: true;
-      onDisconnect?: never;
       onNewGame?: never;
+      onDisconnect?: never;
+      onBackToLobby?: never;
     }
   | {
       lobby?: never;
-      onDisconnect: () => void;
       onNewGame: () => void;
+      onDisconnect: () => void;
+      onBackToLobby: () => void;
     };
 
-const Cam: React.FC<Props> = ({ lobby, onDisconnect, onNewGame }) => {
+const Cam: React.FC<Props> = ({
+  lobby,
+  onNewGame,
+  onDisconnect,
+  onBackToLobby,
+}) => {
   const {
     status,
     isStreamerTurn,
@@ -91,7 +98,7 @@ const Cam: React.FC<Props> = ({ lobby, onDisconnect, onNewGame }) => {
         <Game
           isStreamerTurn={isStreamerTurn}
           onSend={handleSendClue}
-          onDisconnect={onDisconnect}
+          onBackToLobby={onBackToLobby}
         />
       );
     }
@@ -99,10 +106,10 @@ const Cam: React.FC<Props> = ({ lobby, onDisconnect, onNewGame }) => {
       return (
         <S.Content>
           <Button
-            title="Sair"
+            title="Voltar"
             variant="secondary"
             isActive
-            onClick={onDisconnect}
+            onClick={onBackToLobby}
           />
           <Button
             title="Novo jogo"
@@ -117,7 +124,7 @@ const Cam: React.FC<Props> = ({ lobby, onDisconnect, onNewGame }) => {
       return (
         <S.Content>
           <Button
-            title="Sair"
+            title="Desconectar"
             variant="secondary"
             isActive
             onClick={onDisconnect}

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { Status } from 'components/Info/Lobby/styles';
+import Modal from 'components/Modal';
 import { shuffleArray } from 'helpers/shuffleArray';
 import { OnMessageCallback, useGame } from 'hooks/useGame';
 import { CardProps, CardType, Team } from 'interfaces/Card';
@@ -291,6 +292,16 @@ const Board: React.FC<Props> = ({ words }) => {
 
   return (
     <S.Container>
+      {/* <Modal
+        title="Você tem certeza?"
+        subtitle="Se você confirmar este jogo será abandonado e os pontos serão devolvidos para o chat"
+        onCancel={() => {
+          //
+        }}
+        onConfirm={() => {
+          //
+        }}
+      /> */}
       <S.Header>
         {game.clue !== null ? (
           <>

@@ -100,6 +100,11 @@ const Home: React.FC = () => {
     }
   };
 
+  const handleBackToLobby = () => {
+    handleStatus(Status.WAITING_START);
+    reset();
+  };
+
   const getVerbs = async () => {
     try {
       const { data } = await fetchVerbs();
@@ -141,7 +146,11 @@ const Home: React.FC = () => {
           ) : (
             <Info.Lobby username={username} />
           )}
-          <Cam onDisconnect={handleDisconnect} onNewGame={handleNewGame} />
+          <Cam
+            onNewGame={handleNewGame}
+            onDisconnect={handleDisconnect}
+            onBackToLobby={handleBackToLobby}
+          />
         </S.Aside>
         <S.Main>
           {status === Status.GAME ? (

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 import Onboarding from 'pages/Onboarding';
 import Home from 'pages/Home';
@@ -14,7 +14,7 @@ const Router = () => {
         <Route path="/home" element={<PrivateRoutes />}>
           <Route index element={<Home />} />
         </Route>
-        <Route path="*" element={<Onboarding />} />
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
   );

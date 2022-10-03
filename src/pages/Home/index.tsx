@@ -17,7 +17,6 @@ import * as S from './styles';
 const Home: React.FC = () => {
   /*
   
-  rotas privadas
   modal de confirmação [voltar]
   
   -

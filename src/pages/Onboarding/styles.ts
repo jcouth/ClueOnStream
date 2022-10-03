@@ -2,8 +2,6 @@ import styled from 'styled-components';
 
 import Overlay from 'assets/overlay.svg';
 
-import * as A from './attrs';
-
 export const Container = styled.div`
   display: flex;
   justify-content: center;
@@ -23,9 +21,7 @@ export const Container = styled.div`
   mix-blend-mode: overlay;
 `;
 
-export const Content = styled.div.attrs<A.ContentProps>(
-  A.content
-)<A.ContentProps>`
+export const Content = styled.div`
   display: grid;
   grid-template-columns: 23.087vw 1fr;
   grid-column-gap: 1.319vw;
@@ -36,6 +32,7 @@ export const Content = styled.div.attrs<A.ContentProps>(
   height: 100%;
 
   border-radius: 0.792vw;
+  background-color: ${({ theme }) => theme.colors.primary};
 
   overflow: hidden;
   transition: background-color 0.5s ease-in-out,
@@ -92,48 +89,67 @@ export const Main = styled.main`
   margin-right: 1.319vw; // same of content column gap
 `;
 
-export const HowToPlay = styled.div`
-  display: grid;
-  grid-template-rows: auto 1fr;
-  grid-row-gap: 2.375vw;
+export const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 
-  position: relative;
+  padding: 2vw;
 
-  margin: 4.222vw;
-  padding: 3.166vw 3.958vw;
+  width: 100%;
+  height: 100%;
 
   border: 0.264vw solid ${({ theme }) => theme.colors.white};
   border-radius: 0.792vw;
-  background-color: ${({ theme }) => theme.colors.secondary};
+  background-color: ${({ theme }) => theme.colors.team.red.primary_90};
   box-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 1.319vw;
-    left: 1.319vw;
-
-    width: calc(100% - 2.639vw);
-    height: calc(100% - 2.639vw);
-
-    border-radius: inherit;
-    background-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: inset 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
-  }
 `;
 
-export const Title = styled.div`
-  z-index: 1;
-
+export const Title = styled.p`
   font-family: ${({ theme }) => theme.fonts.primary.family};
   font-weight: ${({ theme }) => theme.fonts.primary.weight};
-  font-size: 3.166vw;
+  font-size: ${({ theme }) => theme.fonts.primary.subtitle};
 
   color: ${({ theme }) => theme.colors.white};
 
   text-align: center;
   text-transform: uppercase;
-  text-shadow: 0vw 0.528vw 0.528vw ${({ theme }) => theme.colors.black};
+  text-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
+`;
+
+export const Subtitle = styled(Title)`
+  font-size: ${({ theme }) => theme.fonts.primary.size};
+`;
+
+export const Loading = styled.span`
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+
+  @keyframes spinner {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: calc(50% - 1.649vw);
+    left: calc(50% - 1.649vw);
+
+    width: 3.298vw;
+    height: 3.298vw;
+
+    border: 0.528vw solid ${({ theme }) => theme.colors.white_90};
+    border-top: 0.528vw solid transparent;
+    border-radius: 50%;
+
+    animation: spinner 1s linear infinite;
+  }
 `;

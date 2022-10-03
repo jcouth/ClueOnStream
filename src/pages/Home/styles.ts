@@ -2,6 +2,8 @@ import styled from 'styled-components';
 
 import Overlay from 'assets/overlay.svg';
 
+import * as A from './attrs';
+
 export const Container = styled.div`
   display: flex;
   justify-content: center;
@@ -21,7 +23,9 @@ export const Container = styled.div`
   mix-blend-mode: overlay;
 `;
 
-export const Content = styled.div`
+export const Content = styled.div.attrs<A.ContentProps>(
+  A.content
+)<A.ContentProps>`
   display: grid;
   grid-template-columns: 23.087vw 1fr;
   grid-column-gap: 1.319vw;
@@ -32,7 +36,6 @@ export const Content = styled.div`
   height: 100%;
 
   border-radius: 0.792vw;
-  background-color: ${({ theme }) => theme.colors.primary};
 
   overflow: hidden;
   transition: background-color 0.5s ease-in-out,
@@ -77,8 +80,8 @@ export const Content = styled.div`
 
 export const Aside = styled.aside`
   display: grid;
-  grid-template-rows: auto;
-  align-items: flex-end;
+  grid-template-rows: 1fr auto;
+  grid-row-gap: 1.319vw;
 `;
 
 export const Main = styled.main`
@@ -87,4 +90,50 @@ export const Main = styled.main`
   align-items: center;
 
   margin-right: 1.319vw; // same of content column gap
+`;
+
+export const HowToPlay = styled.div`
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-row-gap: 2.375vw;
+  justify-content: center;
+  align-items: center;
+
+  position: relative;
+
+  margin: 4.222vw;
+  padding: 3.166vw 3.958vw;
+
+  border: 0.264vw solid ${({ theme }) => theme.colors.white};
+  border-radius: 0.792vw;
+  background-color: ${({ theme }) => theme.colors.secondary};
+  box-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 1.319vw;
+    left: 1.319vw;
+
+    width: calc(100% - 2.639vw);
+    height: calc(100% - 2.639vw);
+
+    border-radius: inherit;
+    background-color: ${({ theme }) => theme.colors.primary};
+    box-shadow: inset 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
+  }
+`;
+
+export const Title = styled.div`
+  z-index: 1;
+
+  font-family: ${({ theme }) => theme.fonts.primary.family};
+  font-weight: ${({ theme }) => theme.fonts.primary.weight};
+  font-size: 3.166vw;
+
+  color: ${({ theme }) => theme.colors.white};
+
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow: 0vw 0.528vw 0.528vw ${({ theme }) => theme.colors.black};
 `;

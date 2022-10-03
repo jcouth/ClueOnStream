@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { Outlet, Routes, Route, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
-import Lobby from 'components/Info/Lobby';
-import Game from 'components/Info/Game';
+import * as Aside from 'components/Aside';
+import * as Main from 'components/Main';
 import Cam from 'components/Cam';
 import { shuffleArray } from 'helpers/shuffleArray';
 import { useGame } from 'hooks/useGame';
@@ -94,8 +94,6 @@ const Home: React.FC = () => {
 
       setTimeout(() => {
         handleStatus(Status.GAME);
-
-        navigate('/game');
       }, 5000);
     } catch (error) {
       console.error(error);
@@ -138,14 +136,19 @@ const Home: React.FC = () => {
         onAnimationEnd={() => setIsAnimating(false)}
       >
         <S.Aside>
-          <Routes>
-            <Route path="/game" element={<Game />} />
-            <Route path="*" element={<Lobby username={username} />} />
-          </Routes>
+          {status === Status.GAME ? (
+            <Aside.Game />
+          ) : (
+            <Aside.Lobby username={username} />
+          )}
           <Cam onDisconnect={handleDisconnect} onNewGame={handleNewGame} />
         </S.Aside>
         <S.Main>
-          <Outlet context={{ words, username }} />
+          {status === Status.GAME ? (
+            <Main.Board words={words} />
+          ) : (
+            <Main.HowToPlay />
+          )}
         </S.Main>
       </S.Content>
     </S.Container>

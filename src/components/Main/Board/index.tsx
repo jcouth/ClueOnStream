@@ -1,8 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { useOutletContext } from 'react-router';
-
-import { Status } from 'components/Info/Lobby/styles';
+import { Status } from 'components/Aside/Lobby/styles';
 import { shuffleArray } from 'helpers/shuffleArray';
 import { OnMessageCallback, useGame } from 'hooks/useGame';
 import { CardProps, CardType, Team } from 'interfaces/Card';
@@ -17,10 +15,11 @@ interface VoteProps {
   votes: CardProps['votes'];
 }
 
-const Board: React.FC = () => {
-  const { words } = useOutletContext<{
-    words: string[];
-  }>();
+interface Props {
+  words: string[];
+}
+
+const Board: React.FC<Props> = ({ words }) => {
   const game = useGame();
 
   const [amount, setAmount] = useState<number>(0);

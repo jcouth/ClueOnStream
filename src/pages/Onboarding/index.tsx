@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
-import { Outlet, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
+import HowToPlay from 'components/Main/HowToPlay';
 import Cam from 'components/Cam';
 
 import * as S from './styles';
@@ -30,7 +31,7 @@ const Onboarding: React.FC = () => {
               '@ClueOnStream::twitch_access_token',
               accessToken
             );
-            navigate('/lobby');
+            navigate('/home');
           } else {
             setInvalidState(true);
             setLoading(false);
@@ -66,7 +67,7 @@ const Onboarding: React.FC = () => {
           <Cam lobby />
         </S.Aside>
         <S.Main>
-          <Outlet />
+          <HowToPlay />
         </S.Main>
       </S.Content>
     </S.Container>

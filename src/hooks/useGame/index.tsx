@@ -2,8 +2,7 @@ import React, { createContext, useContext, useMemo, useState } from 'react';
 
 import { ChatUserstate, Client as ClientTMI } from 'tmi.js';
 
-import { HistoryProps } from 'components/Info';
-import { ClueProps } from 'interfaces/Clue';
+import { ClueProps, HistoryProps } from 'interfaces/Clue';
 import { Status } from 'interfaces/Status';
 import { Team } from 'interfaces/Card';
 

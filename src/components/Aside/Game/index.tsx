@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ReactComponent as AlarmIcon } from 'assets/alarm.svg';
 import { ReactComponent as Logo } from 'assets/logo.svg';
 import { useGame } from 'hooks/useGame';
-import { ClueProps } from 'interfaces/Clue';
 import { Team } from 'interfaces/Card';
 
 import * as S from './styles';
@@ -12,17 +11,6 @@ interface Properties {
   seconds: number;
   interval: number;
   decay: number;
-}
-
-type RemainingProps = { [key in Team]: number };
-
-interface HistoryClueProps extends ClueProps {
-  team: Team;
-}
-
-export interface HistoryProps {
-  remaining: RemainingProps;
-  clues: HistoryClueProps[];
 }
 
 const Game: React.FC = () => {

@@ -10,7 +10,7 @@ import * as S from './styles';
 
 const SECONDS_OPTIONS = [30, 45, 60, 75, 90];
 
-export interface LobbyProps {
+interface LobbyProps {
   username: string | null;
 }
 

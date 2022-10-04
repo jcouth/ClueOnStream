@@ -84,6 +84,41 @@ export const Aside = styled.aside`
   grid-row-gap: 1.319vw;
 `;
 
+export const ErrorWrapper = styled.div`
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-row-gap: 24px;
+  justify-content: center;
+  align-items: center;
+
+  padding: 2vw;
+
+  border: 0.264vw solid ${({ theme }) => theme.colors.white};
+  border-radius: 0.792vw;
+  background-color: ${({ theme }) => theme.colors.team.red.primary_90};
+  box-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
+`;
+
+export const ErrorTitle = styled.p`
+  align-self: flex-end;
+
+  font-family: ${({ theme }) => theme.fonts.primary.family};
+  font-weight: ${({ theme }) => theme.fonts.primary.weight};
+  font-size: ${({ theme }) => theme.fonts.primary.subtitle};
+
+  color: ${({ theme }) => theme.colors.white};
+
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
+`;
+
+export const ErrorSubtitle = styled(ErrorTitle)`
+  align-self: flex-start;
+
+  font-size: ${({ theme }) => theme.fonts.primary.size};
+`;
+
 export const Main = styled.main`
   display: flex;
   justify-content: center;

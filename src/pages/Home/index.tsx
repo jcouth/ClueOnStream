@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { useNavigate } from 'react-router';
+import axios from 'axios';
 
 import * as Content from 'components/Content';
 import * as Info from 'components/Info';
@@ -9,18 +10,24 @@ import Cam from 'components/Cam';
 import { shuffleArray } from 'helpers/shuffleArray';
 import { useAuth } from 'hooks/useAuth';
 import { useGame } from 'hooks/useGame';
+import { Prediction } from 'interfaces/TwitchResponse';
 import { Status } from 'interfaces/Status';
-import { fetchUser, logout } from 'services/twitch/api';
+import { Team } from 'interfaces/Card';
+import {
+  fetchUser,
+  finishPrediction,
+  getPrediction,
+  logout,
+  makePrediction,
+} from 'services/twitch/api';
 import { fetchVerbs } from 'services/words/api';
 
 import * as S from './styles';
 
+const PREDICTION_WINDOW = 60;
+
 const Home: React.FC = () => {
   /*
-  
-  modal de confirmação [voltar]
-  
-  -
 
   separar equipes pelo prediction
   finalizar prediction ao acabar a partida (escolher vencedor) ou voltar para o menu (cancelar)
@@ -40,18 +47,23 @@ const Home: React.FC = () => {
     team,
     amount: { max },
     status,
+    winner,
     handleStatus,
     reset,
     initClient,
     resetClient,
   } = useGame();
 
+  const timerRef = useRef<NodeJS.Timeout>();
   const allWords = useRef<string[]>([]);
   const [words, setWords] = useState<string[]>([]);
 
+  const [id, setId] = useState<string | null>(null);
   const [username, setUsername] = useState<string | null>(null);
   const [isAnimating, setIsAnimating] = useState<boolean>(true);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [prediction, setPrediction] = useState<Prediction | null>(null);
+  const [gameNotAvailable, setGameNotAvailable] = useState<boolean>(false);
 
   const handleConnect = async () => {
     try {
@@ -59,6 +71,7 @@ const Home: React.FC = () => {
       const [userData] = data.data;
 
       handleAuthenticated(true);
+      setId(userData.id);
       setUsername(userData.display_name);
       handleStatus(Status.WAITING_START);
       initClient(userData.display_name);
@@ -74,6 +87,7 @@ const Home: React.FC = () => {
         await logout(token);
         resetAuth();
 
+        setId(null);
         setUsername(null);
         handleStatus(Status.WAITING_START);
         reset();
@@ -86,7 +100,7 @@ const Home: React.FC = () => {
   };
 
   const handleNewGame = () => {
-    try {
+    if (id) {
       reset();
 
       const shuffled = shuffleArray(allWords.current);
@@ -95,18 +109,51 @@ const Home: React.FC = () => {
       setWords(newWords);
       handleStatus(Status.WAITING_TEAMS);
 
-      setTimeout(() => {
-        handleStatus(Status.GAME);
-      }, 5000);
-    } catch (error) {
-      console.error(error);
+      void (async () => {
+        try {
+          const { data } = await makePrediction(token, {
+            id,
+            title: 'Escolha uma equipe para jogar ClueOnStream',
+            outcomes: [
+              { id: 'red_team', title: 'Equipe vermelha', color: 'RED' },
+              { id: 'blue_team', title: 'Equipe azul', color: 'BLUE' },
+            ],
+            prediction_window: PREDICTION_WINDOW,
+          });
+          setPrediction(data.data[0]);
+        } catch (error: unknown) {
+          if (axios.isAxiosError(error)) {
+            switch (error.response?.status) {
+              case 400:
+              case 403:
+                setGameNotAvailable(true);
+                handleStatus(Status.WAITING_START);
+                break;
+            }
+          }
+        }
+      })();
     }
   };
 
   const handleBackToLobby = () => {
-    setIsModalVisible(false);
-    handleStatus(Status.WAITING_START);
-    reset();
+    if (id && prediction && winner) {
+      void (async () => {
+        await finishPrediction(token, {
+          id,
+          winning_outcome_id: winner === Team.RED ? 'red_team' : 'blue_team',
+        });
+        setPrediction(null);
+        setIsModalVisible(false);
+        handleStatus(Status.WAITING_START);
+        reset();
+      })();
+    } else {
+      console.log('não tem id, prediction ou winner');
+      setIsModalVisible(false);
+      handleStatus(Status.WAITING_START);
+      reset();
+    }
   };
 
   const getVerbs = async () => {
@@ -132,6 +179,31 @@ const Home: React.FC = () => {
     void connect();
   }, []);
 
+  useEffect(() => {
+    if (prediction && id) {
+      timerRef.current = setInterval(() => {
+        void (async () => {
+          const { data } = await getPrediction(token, id);
+          const [current] = data.data;
+          if (current.status === 'LOCKED') {
+            clearTimeout(timerRef.current);
+            handleStatus(Status.GAME);
+          } else if (
+            current.status === 'CANCELED' ||
+            current.status === 'RESOLVED'
+          ) {
+            clearTimeout(timerRef.current);
+            handleStatus(Status.WAITING_START);
+          }
+        })();
+      }, PREDICTION_WINDOW / 10);
+    }
+
+    return () => {
+      clearTimeout(timerRef.current);
+    };
+  }, [prediction]);
+
   return (
     <S.Container>
       <S.Content
@@ -141,7 +213,16 @@ const Home: React.FC = () => {
         onAnimationEnd={() => setIsAnimating(false)}
       >
         <S.Aside>
-          {status === Status.GAME || status === Status.FINISH_GAME ? (
+          {gameNotAvailable ? (
+            <S.ErrorWrapper>
+              <S.ErrorTitle>Desculpe pelo inconveniente 😫</S.ErrorTitle>
+              <S.ErrorSubtitle>
+                Parece que você não possui a opção de palpite (/prediction)
+                disponível no seu canal, sendo assim, não será possível separar
+                as equipes para iniciar o jogo
+              </S.ErrorSubtitle>
+            </S.ErrorWrapper>
+          ) : status === Status.GAME || status === Status.FINISH_GAME ? (
             <Info.Game />
           ) : (
             <Info.Lobby username={username} />

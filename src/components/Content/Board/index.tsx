@@ -2,19 +2,15 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { shuffleArray } from 'helpers/shuffleArray';
 import { OnMessageCallback, useGame } from 'hooks/useGame';
-import { CardProps, CardType, Team } from 'interfaces/Card';
+import useCrossTabState from 'hooks/useCrossTabState';
+import { CardProps, CardType, ObjectCardProps, Team } from 'interfaces/Card';
 import { Status } from 'interfaces/Status';
 
-import Card from './Card';
-
 import * as S from './styles';
+import Card from './Card';
 
 interface VoteProps {
   [key: string]: CardProps['title'];
-}
-
-interface ArrayOfCardProps {
-  [key: string]: CardProps;
 }
 
 interface Props {
@@ -27,9 +23,11 @@ const Board: React.FC<Props> = ({ words }) => {
   const votes = useRef<VoteProps>({});
 
   const [amount, setAmount] = useState<number>(0);
-  const [cards, setCards] = useState<ArrayOfCardProps>({});
+  const [cards, setCards] = useState<ObjectCardProps>({});
   const [totalVotes, setTotalVotes] = useState<number>(0);
   const [animateTitle, setAnimateTitle] = useState<boolean>(false);
+
+  const [_, setCrossCards] = useCrossTabState<ObjectCardProps>('cards', {});
 
   //
 
@@ -48,7 +46,7 @@ const Board: React.FC<Props> = ({ words }) => {
 
   const handleOpenAllCards = () => {
     setCards((oldState) =>
-      Object.entries(oldState).reduce<ArrayOfCardProps>(
+      Object.entries(oldState).reduce<ObjectCardProps>(
         (previous, [title, card]) => ({
           ...previous,
           [title]: {
@@ -124,7 +122,7 @@ const Board: React.FC<Props> = ({ words }) => {
 
     for (const [title, { type }] of cardsToOpen) {
       if (type === CardType.GAME_OVER) {
-        newCards = Object.entries(newCards).reduce<ArrayOfCardProps>(
+        newCards = Object.entries(newCards).reduce<ObjectCardProps>(
           (previous, [key, card]) => ({
             ...previous,
             [key]: {
@@ -283,7 +281,7 @@ const Board: React.FC<Props> = ({ words }) => {
 
       const shuffledWords = shuffleArray(words);
 
-      const cardsFromWords: ArrayOfCardProps = shuffledWords.reduce(
+      const cardsFromWords: ObjectCardProps = shuffledWords.reduce(
         (previous, word, index) => ({
           ...previous,
           [word]: {
@@ -300,6 +298,7 @@ const Board: React.FC<Props> = ({ words }) => {
       );
 
       setCards(cardsFromWords);
+      setCrossCards(cardsFromWords);
     }
   }, [words]);
 

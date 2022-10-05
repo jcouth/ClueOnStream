@@ -19,3 +19,7 @@ export interface CardProps {
   votes: number;
   delayToOpen: number;
 }
+
+export interface ObjectCardProps {
+  [key: string]: CardProps;
+}

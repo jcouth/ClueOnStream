@@ -63,14 +63,16 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [client, setClient] = useState<ClientTMI | null>(null);
 
-  const [team, setTeam] = useState<Team>(Team.RED);
-  const [seconds, setSeconds] = useState<number>(60);
-  const [winner, setWinner] = useState<Team | null>(null);
-  const [clue, setClue] = useState<ClueProps | null>(null);
-  const [isStreamerTurn, setIsStreamerTurn] = useState<boolean>(true);
-  const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
-  const [status, setStatus] = useState<Status>(Status.WAITING_START);
-  const [history, setHistory] = useState<HistoryProps>({
+  const [team, setTeam] = useState<States['team']>(Team.RED);
+  const [seconds, setSeconds] = useState<States['seconds']>(60);
+  const [winner, setWinner] = useState<States['winner']>(null);
+  const [clue, setClue] = useState<States['clue']>(null);
+  const [isStreamerTurn, setIsStreamerTurn] =
+    useState<States['isStreamerTurn']>(true);
+  const [isTimerRunning, setIsTimerRunning] =
+    useState<States['isTimerRunning']>(false);
+  const [status, setStatus] = useState<States['status']>(Status.WAITING_START);
+  const [history, setHistory] = useState<States['history']>({
     remaining: {
       red: AMOUNT_OF_RED_CARDS,
       blue: AMOUNT_OF_BLUE_CARDS,

@@ -40,9 +40,10 @@ const Router = () => {
           >
             <Route index element={<Streamer />} />
           </Route>
-          <Route path="*" element={<PublicRoute isAuthenticated={!!token} />}>
-            <Route index element={<Navigate to="/home" />} />
-          </Route>
+          <Route
+            path="*"
+            element={<PublicRoute isAuthenticated={!!token} notFound />}
+          />
         </Routes>
       </Suspense>
     </BrowserRouter>

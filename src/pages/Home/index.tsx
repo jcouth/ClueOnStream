@@ -208,7 +208,6 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const clearStorage = () => {
-      localStorage.removeItem('@ClueOnStream::token');
       localStorage.removeItem('@ClueOnStream::cards');
     };
 

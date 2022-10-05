@@ -1,13 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-import useCrossTabState from 'hooks/useCrossTabState';
 import { ObjectCardProps } from 'interfaces/Card';
 
 import * as S from './styles';
 import Card from './Card';
 
 const Streamer: React.FC = () => {
-  const [cards] = useCrossTabState<ObjectCardProps>('cards', {});
+  const [cards, setCards] = useState<ObjectCardProps>({});
+
+  useEffect(() => {
+    const onReceieveMessage = (e: StorageEvent) => {
+      console.log('aqui', e);
+      const { key, newValue } = e;
+      if (key === '@ClueOnStream::cards') {
+        setCards(newValue ? JSON.parse(newValue) : {});
+      }
+    };
+
+    window.addEventListener('storage', onReceieveMessage);
+
+    return () => window.removeEventListener('storage', onReceieveMessage);
+  }, [setCards]);
 
   return (
     <S.Container>

@@ -13,6 +13,7 @@ import { useGame } from 'hooks/useGame';
 import { Prediction } from 'interfaces/TwitchResponse';
 import { Status } from 'interfaces/Status';
 import { Team } from 'interfaces/Card';
+import { fetchVerbs } from 'services/words/api';
 import {
   fetchUser,
   finishPrediction,
@@ -20,7 +21,6 @@ import {
   logout,
   makePrediction,
 } from 'services/twitch/api';
-import { fetchVerbs } from 'services/words/api';
 
 import * as S from './styles';
 
@@ -34,12 +34,8 @@ const Home: React.FC = () => {
   
   -
   
-  usuário do chat ter voto único (se já tiver votado, alterar o voto e diminuir do card antigo)
-  
-  -
-
   popup para o streamer saber os cards de cada time
-
+  
   */
   const navigate = useNavigate();
   const { token, authenticated, handleAuthenticated, resetAuth } = useAuth();
@@ -87,6 +83,7 @@ const Home: React.FC = () => {
         await logout(token);
         resetAuth();
 
+        localStorage.removeItem('@ClueOnStream::cards');
         setId(null);
         setUsername(null);
         handleStatus(Status.WAITING_START);
@@ -139,10 +136,14 @@ const Home: React.FC = () => {
   const handleBackToLobby = () => {
     if (id && prediction && winner) {
       void (async () => {
+        localStorage.removeItem('@ClueOnStream::cards');
+        resetClient();
+
         await finishPrediction(token, {
           id,
           winning_outcome_id: winner === Team.RED ? 'red_team' : 'blue_team',
         });
+
         setPrediction(null);
         setIsModalVisible(false);
         handleStatus(Status.WAITING_START);
@@ -150,6 +151,8 @@ const Home: React.FC = () => {
       })();
     } else {
       console.log('não tem id, prediction ou winner');
+      localStorage.removeItem('@ClueOnStream::cards');
+      resetClient();
       setIsModalVisible(false);
       handleStatus(Status.WAITING_START);
       reset();
@@ -203,6 +206,17 @@ const Home: React.FC = () => {
       clearTimeout(timerRef.current);
     };
   }, [prediction]);
+
+  useEffect(() => {
+    const clearCardsOnStorage = () => {
+      localStorage.removeItem('@ClueOnStream::cards');
+    };
+
+    window.addEventListener('beforeunload', clearCardsOnStorage);
+
+    return () =>
+      window.removeEventListener('beforeunload', clearCardsOnStorage);
+  }, []);
 
   return (
     <S.Container>

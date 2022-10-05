@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { shuffleArray } from 'helpers/shuffleArray';
 import { OnMessageCallback, useGame } from 'hooks/useGame';
-import useCrossTabState from 'hooks/useCrossTabState';
 import { CardProps, CardType, ObjectCardProps, Team } from 'interfaces/Card';
 import { Status } from 'interfaces/Status';
 
@@ -26,8 +25,6 @@ const Board: React.FC<Props> = ({ words }) => {
   const [cards, setCards] = useState<ObjectCardProps>({});
   const [totalVotes, setTotalVotes] = useState<number>(0);
   const [animateTitle, setAnimateTitle] = useState<boolean>(false);
-
-  const [_, setCrossCards] = useCrossTabState<ObjectCardProps>('cards', {});
 
   //
 
@@ -298,7 +295,10 @@ const Board: React.FC<Props> = ({ words }) => {
       );
 
       setCards(cardsFromWords);
-      setCrossCards(cardsFromWords);
+      localStorage.setItem(
+        '@ClueOnStream::cards',
+        JSON.stringify(cardsFromWords)
+      );
     }
   }, [words]);
 
@@ -319,6 +319,17 @@ const Board: React.FC<Props> = ({ words }) => {
   useEffect(() => {
     initCards();
   }, [initCards]);
+
+  useEffect(() => {
+    const clearCardsOnStorage = () => {
+      localStorage.removeItem('@ClueOnStream::cards');
+    };
+
+    window.addEventListener('beforeunload', clearCardsOnStorage);
+
+    return () =>
+      window.removeEventListener('beforeunload', clearCardsOnStorage);
+  }, []);
 
   return (
     <S.Container>

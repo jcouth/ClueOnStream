@@ -1,18 +1,17 @@
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 interface States {
   token: string;
-  authenticated: boolean;
 }
 
-interface StateActions extends States {
-  handleToken: React.Dispatch<React.SetStateAction<States['token']>>;
-  handleAuthenticated: React.Dispatch<
-    React.SetStateAction<States['authenticated']>
-  >;
-}
-
-interface AuthContextData extends StateActions {
+interface AuthContextData extends States {
+  handleToken: (_: States['token']) => void;
   resetAuth: () => void;
 }
 
@@ -23,24 +22,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [token, setToken] = useState<States['token']>('');
-  const [authenticated, setAuthenticated] =
-    useState<States['authenticated']>(false);
+
+  const handleToken = (value: States['token']) => {
+    localStorage.setItem('@ClueOnStream::token', value);
+    setToken(value);
+  };
 
   const resetAuth = () => {
+    localStorage.removeItem('@ClueOnStream::token');
     setToken('');
-    setAuthenticated(false);
   };
 
   const provider = useMemo(
     () => ({
       token,
-      authenticated,
-      handleToken: setToken,
-      handleAuthenticated: setAuthenticated,
+      handleToken,
       resetAuth,
     }),
-    [setToken, setAuthenticated, resetAuth]
+    [handleToken, resetAuth]
   );
+
+  useEffect(() => {
+    const localToken = localStorage.getItem('@ClueOnStream::token');
+    if (localToken && !token) {
+      setToken(localToken);
+    }
+  }, []);
 
   return (
     <AuthContext.Provider value={provider}>{children}</AuthContext.Provider>

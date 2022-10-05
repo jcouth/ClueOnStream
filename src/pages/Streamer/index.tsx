@@ -10,7 +10,6 @@ const Streamer: React.FC = () => {
 
   useEffect(() => {
     const onReceieveMessage = (e: StorageEvent) => {
-      console.log('aqui', e);
       const { key, newValue } = e;
       if (key === '@ClueOnStream::cards') {
         setCards(newValue ? JSON.parse(newValue) : {});

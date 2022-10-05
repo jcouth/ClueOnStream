@@ -38,7 +38,7 @@ const Home: React.FC = () => {
   
   */
   const navigate = useNavigate();
-  const { token, authenticated, handleAuthenticated, resetAuth } = useAuth();
+  const { token, resetAuth } = useAuth();
   const {
     team,
     amount: { max },
@@ -66,7 +66,6 @@ const Home: React.FC = () => {
       const { data } = await fetchUser(token);
       const [userData] = data.data;
 
-      handleAuthenticated(true);
       setId(userData.id);
       setUsername(userData.display_name);
       handleStatus(Status.WAITING_START);
@@ -171,7 +170,7 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const connect = () => {
-      if (!authenticated && token) {
+      if (!id && token) {
         void handleConnect();
 
         if (allWords.current.length === 0) {
@@ -208,14 +207,14 @@ const Home: React.FC = () => {
   }, [prediction]);
 
   useEffect(() => {
-    const clearCardsOnStorage = () => {
+    const clearStorage = () => {
+      localStorage.removeItem('@ClueOnStream::token');
       localStorage.removeItem('@ClueOnStream::cards');
     };
 
-    window.addEventListener('beforeunload', clearCardsOnStorage);
+    window.addEventListener('beforeunload', clearStorage);
 
-    return () =>
-      window.removeEventListener('beforeunload', clearCardsOnStorage);
+    return () => window.removeEventListener('beforeunload', clearStorage);
   }, []);
 
   return (

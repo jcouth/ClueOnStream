@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-import CardOverlay from 'assets/card-overlay.svg';
 import { CardColors } from 'components/Content/Board/Card/styles';
 import { CardProps } from 'interfaces/Card';
 

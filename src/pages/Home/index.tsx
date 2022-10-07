@@ -13,14 +13,8 @@ import { useGame } from 'hooks/useGame';
 import { Prediction } from 'interfaces/TwitchResponse';
 import { Status } from 'interfaces/Status';
 import { Team } from 'interfaces/Card';
+import { apiPrediction, apiToken, fetchUser } from 'services/twitch/api';
 import { fetchVerbs } from 'services/words/api';
-import {
-  fetchUser,
-  finishPrediction,
-  getPrediction,
-  logout,
-  makePrediction,
-} from 'services/twitch/api';
 
 import * as S from './styles';
 
@@ -79,7 +73,7 @@ const Home: React.FC = () => {
     void (async () => {
       try {
         resetClient();
-        await logout(token);
+        await apiToken.revoke(token);
         resetAuth();
 
         localStorage.removeItem('@ClueOnStream::cards');
@@ -107,12 +101,12 @@ const Home: React.FC = () => {
 
       void (async () => {
         try {
-          const { data } = await makePrediction(token, {
+          const { data } = await apiPrediction.start(token, {
             id,
             title: 'Escolha uma equipe para jogar ClueOnStream',
             outcomes: [
-              { id: 'red_team', title: 'Equipe vermelha', color: 'RED' },
               { id: 'blue_team', title: 'Equipe azul', color: 'BLUE' },
+              { id: 'red_team', title: 'Equipe vermelha', color: 'RED' },
             ],
             prediction_window: PREDICTION_WINDOW,
           });
@@ -133,15 +127,17 @@ const Home: React.FC = () => {
   };
 
   const handleBackToLobby = () => {
-    if (id && prediction && winner) {
+    if (id && prediction) {
       void (async () => {
         localStorage.removeItem('@ClueOnStream::cards');
         resetClient();
 
-        await finishPrediction(token, {
-          id,
-          winning_outcome_id: winner === Team.RED ? 'red_team' : 'blue_team',
-        });
+        const data: apiPrediction.EndDataProps = { id };
+        if (winner) {
+          data.winning_outcome_id =
+            winner === Team.RED ? 'red_team' : 'blue_team';
+        }
+        await apiPrediction.end(token, data);
 
         setPrediction(null);
         setIsModalVisible(false);
@@ -185,7 +181,7 @@ const Home: React.FC = () => {
     if (prediction && id) {
       timerRef.current = setInterval(() => {
         void (async () => {
-          const { data } = await getPrediction(token, id);
+          const { data } = await apiPrediction.status(token, id, prediction.id);
           const [current] = data.data;
           if (current.status === 'LOCKED') {
             clearTimeout(timerRef.current);

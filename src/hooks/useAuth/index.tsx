@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, {
   createContext,
   useContext,
@@ -6,8 +7,12 @@ import React, {
   useState,
 } from 'react';
 
+import { apiToken } from 'services/twitch/api';
+
 interface States {
   token: string;
+  loading: boolean;
+  invalidState: boolean;
 }
 
 interface AuthContextData extends States {
@@ -22,6 +27,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [token, setToken] = useState<States['token']>('');
+  const [loading, setLoading] = useState<States['loading']>(true);
+  const [invalidState, setInvalidState] =
+    useState<States['invalidState']>(false);
 
   const handleToken = (value: States['token']) => {
     localStorage.setItem('@ClueOnStream::token', value);
@@ -36,17 +44,56 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const provider = useMemo(
     () => ({
       token,
+      loading,
+      invalidState,
       handleToken,
       resetAuth,
     }),
     [handleToken, resetAuth]
   );
 
-  useEffect(() => {
-    const localToken = localStorage.getItem('@ClueOnStream::token');
-    if (localToken && !token) {
-      setToken(localToken);
+  const initToken = () => {
+    const { hash } = document.location;
+    if (hash.length > 0) {
+      const parsedHash = new URLSearchParams(hash.slice(1));
+      const accessToken = parsedHash.get('access_token');
+
+      if (accessToken) {
+        const state = localStorage.getItem('@ClueOnStream::state');
+        const urlState = parsedHash.get('state');
+        localStorage.removeItem('@ClueOnStream::state');
+
+        if (state && state === urlState) {
+          localStorage.setItem('@ClueOnStream::token', accessToken);
+          setToken(accessToken);
+        } else {
+          setInvalidState(true);
+        }
+      }
     }
+    setLoading(false);
+  };
+
+  const checkToken = async () => {
+    const currentToken = localStorage.getItem('@ClueOnStream::token');
+    if (currentToken) {
+      try {
+        await apiToken.check(currentToken);
+        setToken(currentToken);
+        setLoading(false);
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          localStorage.removeItem('@ClueOnStream::token');
+          initToken();
+        }
+      }
+    } else {
+      initToken();
+    }
+  };
+
+  useEffect(() => {
+    void checkToken();
   }, []);
 
   return (

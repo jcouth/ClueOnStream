@@ -219,7 +219,17 @@ const Board: React.FC<Props> = ({ words }) => {
 
   const callback: OnMessageCallback = (_, userState, message) => {
     if (userState.username) {
-      handleVote(userState.username, message, Team.RED);
+      const raw = (userState['badge-info-raw'] ?? '').replace(
+        'predictions/',
+        ''
+      );
+      if (raw.length > 0) {
+        if (raw.includes('vermelha')) {
+          handleVote(userState.username, message, Team.RED);
+        } else if (raw.includes('azul')) {
+          handleVote(userState.username, message, Team.BLUE);
+        }
+      }
     }
   };
 
@@ -319,17 +329,6 @@ const Board: React.FC<Props> = ({ words }) => {
   useEffect(() => {
     initCards();
   }, [initCards]);
-
-  useEffect(() => {
-    const clearCardsOnStorage = () => {
-      localStorage.removeItem('@ClueOnStream::cards');
-    };
-
-    window.addEventListener('beforeunload', clearCardsOnStorage);
-
-    return () =>
-      window.removeEventListener('beforeunload', clearCardsOnStorage);
-  }, []);
 
   return (
     <S.Container>

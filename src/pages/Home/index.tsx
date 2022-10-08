@@ -53,7 +53,10 @@ const Home: React.FC = () => {
   const [isAnimating, setIsAnimating] = useState<boolean>(true);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [prediction, setPrediction] = useState<Prediction | null>(null);
-  const [gameNotAvailable, setGameNotAvailable] = useState<boolean>(false);
+  const [predictionAlreadyExists, setPredictionAlreadyExists] =
+    useState<boolean>(false);
+  const [predictionNotAvailable, setPredictionNotAvailable] =
+    useState<boolean>(false);
 
   const handleConnect = async () => {
     try {
@@ -91,14 +94,6 @@ const Home: React.FC = () => {
 
   const handleNewGame = () => {
     if (id) {
-      reset();
-
-      const shuffled = shuffleArray(allWords.current);
-      const newWords = shuffled.slice(0, max);
-
-      setWords(newWords);
-      handleStatus(Status.WAITING_TEAMS);
-
       void (async () => {
         try {
           const { data } = await apiPrediction.start(token, {
@@ -110,14 +105,26 @@ const Home: React.FC = () => {
             ],
             prediction_window: PREDICTION_WINDOW,
           });
+
+          reset();
+
+          const shuffled = shuffleArray(allWords.current);
+          const newWords = shuffled.slice(0, max);
+
+          setWords(newWords);
+          handleStatus(Status.WAITING_TEAMS);
+
+          setPredictionNotAvailable(false);
+          setPredictionAlreadyExists(false);
           setPrediction(data.data[0]);
         } catch (error: unknown) {
           if (axios.isAxiosError(error)) {
             switch (error.response?.status) {
               case 400:
+                setPredictionAlreadyExists(true);
+                break;
               case 403:
-                setGameNotAvailable(true);
-                handleStatus(Status.WAITING_START);
+                setPredictionNotAvailable(true);
                 break;
             }
           }
@@ -127,12 +134,15 @@ const Home: React.FC = () => {
   };
 
   const handleBackToLobby = () => {
-    if (id && prediction) {
+    if (prediction) {
       void (async () => {
         localStorage.removeItem('@ClueOnStream::cards');
         resetClient();
 
-        const data: apiPrediction.EndDataProps = { id };
+        const data: apiPrediction.EndDataProps = {
+          broadcasterId: prediction.broadcaster_id,
+          predictionId: prediction.id,
+        };
         if (winner) {
           data.winning_outcome_id =
             winner === Team.RED ? 'red_team' : 'blue_team';
@@ -145,7 +155,6 @@ const Home: React.FC = () => {
         reset();
       })();
     } else {
-      console.log('não tem id, prediction ou winner');
       localStorage.removeItem('@ClueOnStream::cards');
       resetClient();
       setIsModalVisible(false);
@@ -178,10 +187,14 @@ const Home: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (prediction && id) {
+    if (prediction) {
       timerRef.current = setInterval(() => {
         void (async () => {
-          const { data } = await apiPrediction.status(token, id, prediction.id);
+          const { data } = await apiPrediction.status(
+            token,
+            prediction.broadcaster_id,
+            prediction.id
+          );
           const [current] = data.data;
           if (current.status === 'LOCKED') {
             clearTimeout(timerRef.current);
@@ -194,7 +207,7 @@ const Home: React.FC = () => {
             handleStatus(Status.WAITING_START);
           }
         })();
-      }, PREDICTION_WINDOW / 10);
+      }, PREDICTION_WINDOW * 100);
     }
 
     return () => {
@@ -221,7 +234,16 @@ const Home: React.FC = () => {
         onAnimationEnd={() => setIsAnimating(false)}
       >
         <S.Aside>
-          {gameNotAvailable ? (
+          {predictionAlreadyExists ? (
+            <S.ErrorWrapper>
+              <S.ErrorTitle>Já tem um palpite na live? 🤨</S.ErrorTitle>
+              <S.ErrorSubtitle>
+                Parece que já existe um palpite (/prediction) ativo na sua live,
+                sendo assim, não será possível separar as equipes até que você
+                finalize o palpite existente
+              </S.ErrorSubtitle>
+            </S.ErrorWrapper>
+          ) : predictionNotAvailable ? (
             <S.ErrorWrapper>
               <S.ErrorTitle>Desculpe pelo inconveniente 😫</S.ErrorTitle>
               <S.ErrorSubtitle>

@@ -42,10 +42,12 @@ export const start = async (
 export const status = async (
   token: string,
   broadcasterId: Prediction['broadcaster_id'],
-  predictionId: Prediction['id']
+  predictionId?: Prediction['id']
 ) => {
   return await api.get<PredictionResponse>(
-    `/predictions?broadcaster_id=${broadcasterId}&id=${predictionId}`,
+    `/predictions?broadcaster_id=${broadcasterId}${
+      predictionId ? `&id=${predictionId}` : ''
+    }`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -56,19 +58,22 @@ export const status = async (
 
 const cancel = async (
   token: string,
-  broadcasterId: Prediction['broadcaster_id']
+  broadcasterId: Prediction['broadcaster_id'],
+  predictionId: Prediction['id']
 ) => {
   return await api.patch<
     PredictionResponse,
     AxiosResponse<PredictionResponse>,
     {
       broadcaster_id: Prediction['broadcaster_id'];
+      id: Prediction['id'];
       status: Prediction['status'];
     }
   >(
     '/predictions',
     {
       broadcaster_id: broadcasterId,
+      id: predictionId,
       status: 'CANCELED',
     },
     {
@@ -82,6 +87,7 @@ const cancel = async (
 const resolve = async (
   token: string,
   broadcasterId: Prediction['broadcaster_id'],
+  predictionId: Prediction['id'],
   winnerId: PredictionTeamId
 ) => {
   return await api.patch<
@@ -89,6 +95,7 @@ const resolve = async (
     AxiosResponse<PredictionResponse>,
     {
       broadcaster_id: Prediction['broadcaster_id'];
+      id: Prediction['id'];
       status: Prediction['status'];
       winning_outcome_id: PredictionTeamId;
     }
@@ -96,6 +103,7 @@ const resolve = async (
     '/predictions',
     {
       broadcaster_id: broadcasterId,
+      id: predictionId,
       status: 'RESOLVED',
       winning_outcome_id: winnerId,
     },
@@ -108,13 +116,19 @@ const resolve = async (
 };
 
 export interface EndDataProps {
-  id: Prediction['broadcaster_id'];
+  broadcasterId: Prediction['broadcaster_id'];
+  predictionId: Prediction['id'];
   winning_outcome_id?: PredictionTeamId;
 }
 
 export const end = async (token: string, data: EndDataProps) => {
   if (data.winning_outcome_id) {
-    return await resolve(token, data.id, data.winning_outcome_id);
+    return await resolve(
+      token,
+      data.broadcasterId,
+      data.predictionId,
+      data.winning_outcome_id
+    );
   }
-  return await cancel(token, data.id);
+  return await cancel(token, data.broadcasterId, data.predictionId);
 };

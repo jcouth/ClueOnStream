@@ -218,12 +218,27 @@ const Home: React.FC = () => {
   useEffect(() => {
     const clearStorage = () => {
       localStorage.removeItem('@ClueOnStream::cards');
+
+      if (prediction) {
+        const data: apiPrediction.EndDataProps = {
+          broadcasterId: prediction.broadcaster_id,
+          predictionId: prediction.id,
+        };
+        if (winner) {
+          data.winning_outcome_id =
+            winner === Team.RED ? 'red_team' : 'blue_team';
+        }
+        void apiPrediction.end(token, data).then((res) => {
+          //
+        });
+      }
     };
 
+    window.removeEventListener('beforeunload', clearStorage);
     window.addEventListener('beforeunload', clearStorage);
 
     return () => window.removeEventListener('beforeunload', clearStorage);
-  }, []);
+  }, [prediction]);
 
   return (
     <S.Container>

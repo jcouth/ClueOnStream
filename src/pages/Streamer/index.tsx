@@ -9,6 +9,13 @@ const Streamer: React.FC = () => {
   const [cards, setCards] = useState<ObjectCardProps>({});
 
   useEffect(() => {
+    const storageCards = localStorage.getItem('@ClueOnStream::cards');
+    if (storageCards) {
+      setCards(JSON.parse(storageCards));
+    }
+  }, []);
+
+  useEffect(() => {
     const onReceieveMessage = (e: StorageEvent) => {
       const { key, newValue } = e;
       if (key === '@ClueOnStream::cards') {

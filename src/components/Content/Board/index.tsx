@@ -2,14 +2,19 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { shuffleArray } from 'helpers/shuffleArray';
 import { OnMessageCallback, useGame } from 'hooks/useGame';
-import { CardProps, CardType, ObjectCardProps, Team } from 'interfaces/Card';
+import { CardProps, CardType, Team } from 'interfaces/Card';
 import { Status } from 'interfaces/Status';
 
 import * as S from './styles';
 import Card from './Card';
 
 interface VoteProps {
-  [key: string]: Array<CardProps['title']>;
+  [key: CardProps['title']]: string[];
+}
+
+interface CardWithVotesProps {
+  title: CardProps['title'];
+  votes: CardProps['votes'];
 }
 
 interface Props {
@@ -17,44 +22,35 @@ interface Props {
 }
 
 const Board: React.FC<Props> = ({ words }) => {
+  /*
+
+  streamer selecionar o tempo da prediction
+
+  infinity % card on open
+
+  ao acabar o jogo, pagar
+
+  */
   const game = useGame();
 
   const votes = useRef<VoteProps>({});
   const amountRef = useRef<number>(0);
+  const cardsWithVotes = useRef<CardWithVotesProps[]>([]);
 
   const [amount, setAmount] = useState<number>(0);
-  const [cards, setCards] = useState<ObjectCardProps>({});
+  const [cards, setCards] = useState<CardProps[]>([]);
   const [totalVotes, setTotalVotes] = useState<number>(0);
   const [animateTitle, setAnimateTitle] = useState<boolean>(false);
 
   //
 
-  const disconnectClient = () => {
-    // void (async () => {
-    //   try {
-    //     await client?.disconnect();
-    //     setClient(null);
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // })();
-  };
-
-  //
-
   const handleOpenAllCards = () => {
     setCards((oldState) =>
-      Object.entries(oldState).reduce<ObjectCardProps>(
-        (previous, [title, card]) => ({
-          ...previous,
-          [title]: {
-            ...card,
-            isOpen: true,
-            votes: 0,
-          },
-        }),
-        {}
-      )
+      oldState.map((oldCard) => ({
+        ...oldCard,
+        isOpen: true,
+        votes: 0,
+      }))
     );
   };
 
@@ -100,7 +96,6 @@ const Board: React.FC<Props> = ({ words }) => {
         handleOpenAllCards();
       }
       game.handleStatus(Status.FINISH_GAME);
-      disconnectClient();
     } else {
       game.handleClue(null);
     }
@@ -112,42 +107,57 @@ const Board: React.FC<Props> = ({ words }) => {
     let delayToOpen = 0;
     let openedOtherTeam = 0;
     let isGameOver = false;
-    let newCards = { ...cards };
-    const cardsToOpen = Object.entries(cards)
-      .filter(([_, card]) => card.votes > 0)
-      .sort(([_, a], [__, b]) => b.votes - a.votes)
+    let newCards = [...cards];
+    const titleOfCardsWithVotes = cardsWithVotes.current.map(
+      (item) => item.title
+    );
+    const cardsToOpen = cards
+      .filter((card) => card.votes > 0)
+      .sort((a, b) => {
+        if (a.votes > b.votes) return -1;
+        if (a.votes < b.votes) return 1;
+
+        if (
+          titleOfCardsWithVotes.indexOf(a.title) >
+          titleOfCardsWithVotes.indexOf(b.title)
+        )
+          return 1;
+        if (
+          titleOfCardsWithVotes.indexOf(a.title) <
+          titleOfCardsWithVotes.indexOf(b.title)
+        )
+          return -1;
+
+        return 0;
+      })
       .slice(0, game.clue!.amount);
 
-    for (const [title, { type }] of cardsToOpen) {
+    for (const { title, type } of cardsToOpen) {
       if (type === CardType.GAME_OVER) {
-        newCards = Object.entries(newCards).reduce<ObjectCardProps>(
-          (previous, [key, card]) => ({
-            ...previous,
-            [key]: {
-              ...card,
-              isOpen: true,
-              revealed: card.title === title || card.revealed,
-              votes: 0,
-              delayToOpen: card.type === CardType.GAME_OVER ? 0 : 0.5,
-            },
-          }),
-          {}
-        );
+        newCards = newCards.map((oldCard) => ({
+          ...oldCard,
+          isOpen: true,
+          revealed: oldCard.title === title || oldCard.revealed,
+          votes: 0,
+          delayToOpen: oldCard.type === CardType.GAME_OVER ? 0 : 0.5,
+        }));
         isGameOver = true;
         break;
       } else {
         delayToOpen += 0.1;
 
-        newCards = {
-          ...newCards,
-          [title]: {
-            ...newCards[title],
-            isOpen: true,
-            revealed: true,
-            votes: 0,
-            delayToOpen,
-          },
-        };
+        newCards = newCards.map((oldCard) => {
+          if (oldCard.title === title) {
+            return {
+              ...oldCard,
+              isOpen: true,
+              revealed: true,
+              votes: 0,
+              delayToOpen,
+            };
+          }
+          return { ...oldCard, votes: 0 };
+        });
 
         if (
           (game.team === Team.RED && type === CardType.RED) ||
@@ -168,6 +178,7 @@ const Board: React.FC<Props> = ({ words }) => {
     }
 
     votes.current = {};
+    cardsWithVotes.current = [];
     setTotalVotes(0);
     setCards(newCards);
     handleOnFinishTurn(opened, openedOtherTeam, isGameOver);
@@ -182,77 +193,88 @@ const Board: React.FC<Props> = ({ words }) => {
       const lowerCase = message.toLowerCase();
 
       if (words.includes(lowerCase)) {
+        const computeVote = (newVotes: string[], toAdd = true) => {
+          const value = toAdd ? 1 : -1;
+
+          cardsWithVotes.current = cardsWithVotes.current
+            .map((item) => {
+              if (item.title === lowerCase) {
+                return { ...item, votes: item.votes + value };
+              }
+              return item;
+            })
+            .filter((item) => item.votes > 0);
+
+          votes.current = {
+            ...votes.current,
+            [username]: newVotes,
+          };
+
+          setTotalVotes((oldState) => oldState + value);
+          setCards((oldState) =>
+            oldState.map((oldCard) => {
+              if (oldCard.title === lowerCase) {
+                return {
+                  ...oldCard,
+                  votes: oldCard.votes + value,
+                };
+              }
+              return oldCard;
+            })
+          );
+        };
+
         const userVote = Object.entries(votes.current).filter(
           ([user]) => user === username
         );
 
         if (userVote.length === 0) {
-          setTotalVotes((oldState) => oldState + 1);
-          setCards((oldState) => ({
-            ...oldState,
-            [lowerCase]: {
-              ...oldState[lowerCase],
-              votes: oldState[lowerCase].votes + 1,
-            },
-          }));
-
-          votes.current = {
-            ...votes.current,
-            [username]: [lowerCase],
-          };
+          computeVote([lowerCase]);
         } else {
           const [_, currentVotes] = userVote[0];
 
           if (currentVotes.includes(lowerCase)) {
-            setCards((oldState) => ({
-              ...oldState,
-              [lowerCase]: {
-                ...oldState[lowerCase],
-                votes: oldState[lowerCase].votes - 1,
-              },
-            }));
-
-            votes.current = {
-              ...votes.current,
-              [username]: currentVotes.filter((item) => item !== lowerCase),
-            };
+            computeVote(
+              currentVotes.filter((item) => item !== lowerCase),
+              false
+            );
           } else {
-            console.log(currentVotes.length, amount);
             if (currentVotes.length < amountRef.current) {
-              setCards((oldState) => ({
-                ...oldState,
-                [lowerCase]: {
-                  ...oldState[lowerCase],
-                  votes: oldState[lowerCase].votes + 1,
-                },
-              }));
-
-              votes.current = {
-                ...votes.current,
-                [username]: [...currentVotes, lowerCase],
-              };
+              computeVote([...currentVotes, lowerCase]);
             } else {
               const [firstVote] = currentVotes;
-              setCards((oldState) => ({
-                ...oldState,
-                [firstVote]: {
-                  ...oldState[firstVote],
-                  votes: oldState[firstVote].votes - 1,
-                },
-                [lowerCase]: {
-                  ...oldState[lowerCase],
-                  votes: oldState[lowerCase].votes + 1,
-                },
-              }));
+
+              cardsWithVotes.current = cardsWithVotes.current
+                .map((oldCard) => {
+                  if (oldCard.title === lowerCase) {
+                    return { ...oldCard, votes: oldCard.votes + 1 };
+                  }
+                  if (oldCard.title === firstVote) {
+                    return { ...oldCard, votes: oldCard.votes - 1 };
+                  }
+                  return oldCard;
+                })
+                .filter((oldCard) => oldCard.votes > 0);
 
               votes.current = {
                 ...votes.current,
                 [username]: [...currentVotes, lowerCase].slice(1),
               };
+
+              setCards((oldState) =>
+                oldState.map((oldCard) => {
+                  if (oldCard.title === lowerCase) {
+                    return { ...oldCard, votes: oldCard.votes + 1 };
+                  }
+                  if (oldCard.title === firstVote) {
+                    return { ...oldCard, votes: oldCard.votes - 1 };
+                  }
+                  return oldCard;
+                })
+              );
             }
           }
         }
-        console.log('votes', votes.current);
       }
     }
   };
@@ -327,29 +349,21 @@ const Board: React.FC<Props> = ({ words }) => {
         return CardType.GAME_OVER;
       };
 
-      const shuffledWords = shuffleArray(words);
+      const cardsFromWords: CardProps[] = words.map((word, index) => ({
+        id: index,
+        title: word,
+        isOpen: false,
+        revealed: false,
+        type: getType(index),
+        votes: 0,
+        delayToOpen: 0,
+      }));
 
-      const cardsFromWords: ObjectCardProps = shuffledWords.reduce(
-        (previous, word, index) => ({
-          ...previous,
-          [word]: {
-            id: index,
-            title: word,
-            isOpen: false,
-            revealed: false,
-            type: getType(index),
-            votes: 0,
-            delayToOpen: 0,
-          },
-        }),
-        {}
-      );
+      const shuffled = shuffleArray(cardsFromWords);
 
-      setCards(cardsFromWords);
-      localStorage.setItem(
-        '@ClueOnStream::cards',
-        JSON.stringify(cardsFromWords)
-      );
+      setCards(shuffled);
+
+      localStorage.setItem('@ClueOnStream::cards', JSON.stringify(shuffled));
     }
   }, [words]);
 
@@ -371,6 +385,8 @@ const Board: React.FC<Props> = ({ words }) => {
     initCards();
   }, [initCards]);
 
+  //
+
   return (
     <S.Container>
       <S.Header>
@@ -384,10 +400,10 @@ const Board: React.FC<Props> = ({ words }) => {
         )}
       </S.Header>
       <S.Content>
-        {Object.entries(cards).map(([titleKey, { title, ...cardRest }]) => (
+        {cards.map(({ title, ...cardRest }) => (
           <Card
-            key={titleKey}
-            title={titleKey}
+            key={title}
+            title={title}
             {...cardRest}
             team={game.team}
             totalVotes={totalVotes}

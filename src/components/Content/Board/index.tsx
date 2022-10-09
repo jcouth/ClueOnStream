@@ -9,7 +9,7 @@ import * as S from './styles';
 import Card from './Card';
 
 interface VoteProps {
-  [key: string]: CardProps['title'];
+  [key: string]: Array<CardProps['title']>;
 }
 
 interface Props {
@@ -20,6 +20,7 @@ const Board: React.FC<Props> = ({ words }) => {
   const game = useGame();
 
   const votes = useRef<VoteProps>({});
+  const amountRef = useRef<number>(0);
 
   const [amount, setAmount] = useState<number>(0);
   const [cards, setCards] = useState<ObjectCardProps>({});
@@ -194,25 +195,64 @@ const Board: React.FC<Props> = ({ words }) => {
               votes: oldState[lowerCase].votes + 1,
             },
           }));
-        } else {
-          const [_, title] = userVote[0];
-          setCards((oldState) => ({
-            ...oldState,
-            [title]: {
-              ...oldState[title],
-              votes: oldState[title].votes - 1,
-            },
-            [lowerCase]: {
-              ...oldState[lowerCase],
-              votes: oldState[lowerCase].votes + 1,
-            },
-          }));
-        }
 
-        votes.current = {
-          ...votes.current,
-          [username]: lowerCase,
-        };
+          votes.current = {
+            ...votes.current,
+            [username]: [lowerCase],
+          };
+        } else {
+          const [_, currentVotes] = userVote[0];
+
+          if (currentVotes.includes(lowerCase)) {
+            setCards((oldState) => ({
+              ...oldState,
+              [lowerCase]: {
+                ...oldState[lowerCase],
+                votes: oldState[lowerCase].votes - 1,
+              },
+            }));
+
+            votes.current = {
+              ...votes.current,
+              [username]: currentVotes.filter((item) => item !== lowerCase),
+            };
+          } else {
+            console.log(currentVotes.length, amount);
+            if (currentVotes.length < amountRef.current) {
+              setCards((oldState) => ({
+                ...oldState,
+                [lowerCase]: {
+                  ...oldState[lowerCase],
+                  votes: oldState[lowerCase].votes + 1,
+                },
+              }));
+
+              votes.current = {
+                ...votes.current,
+                [username]: [...currentVotes, lowerCase],
+              };
+            } else {
+              const [firstVote] = currentVotes;
+              setCards((oldState) => ({
+                ...oldState,
+                [firstVote]: {
+                  ...oldState[firstVote],
+                  votes: oldState[firstVote].votes - 1,
+                },
+                [lowerCase]: {
+                  ...oldState[lowerCase],
+                  votes: oldState[lowerCase].votes + 1,
+                },
+              }));
+
+              votes.current = {
+                ...votes.current,
+                [username]: [...currentVotes, lowerCase].slice(1),
+              };
+            }
+          }
+        }
+        console.log('votes', votes.current);
       }
     }
   };
@@ -258,6 +298,7 @@ const Board: React.FC<Props> = ({ words }) => {
     if (game.clue !== null) {
       setAnimateTitle(true);
       if (game.isTimerRunning) {
+        amountRef.current = game.clue.amount;
         setAmount(game.clue.amount);
       } else {
         handleOpen();

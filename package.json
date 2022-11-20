@@ -22,13 +22,16 @@
     "typescript": "^4.4.2",
     "web-vitals": "^2.1.0"
   },
+  "homepage": "https://jcouth.github.io/clueonstream",
   "scripts": {
     "startp": "yarn prettier && react-scripts start",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "prettier": "prettier --write ."
+    "prettier": "prettier --write .",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -65,6 +68,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-react": "^7.31.8",
+    "gh-pages": "^4.0.0",
     "prettier": "^2.7.1",
     "tsconfig-paths": "^4.1.0"
   }

@@ -15,7 +15,6 @@
     "react-dom": "^18.2.0",
     "react-router": "^6.4.1",
     "react-router-dom": "^6.4.1",
-    "react-scripts": "5.0.1",
     "react-uuid": "^1.0.3",
     "styled-components": "^5.3.5",
     "tmi.js": "^1.8.5",
@@ -70,6 +69,7 @@
     "eslint-plugin-react": "^7.31.8",
     "gh-pages": "^4.0.0",
     "prettier": "^2.7.1",
+    "react-scripts": "^5.0.1",
     "tsconfig-paths": "^4.1.0"
   }
 }

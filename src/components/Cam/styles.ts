@@ -1,34 +1,17 @@
 import styled from 'styled-components';
 
-import theme from '../../global/styles/theme';
-
-export type ButtonVariant = 'primary' | 'secondary' | 'tertiary';
-
-export const buttonColors = {
-  primary: {
-    background: theme.colors.primary,
-    color: theme.colors.white,
-  },
-  secondary: {
-    background: theme.colors.secondary,
-    color: theme.colors.white,
-  },
-  tertiary: {
-    background: theme.colors.white,
-    color: theme.colors.black,
-  },
-};
+import { buttonCssStyle, ButtonProps } from 'components/Button/styles';
 
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
 
-  padding: 12px 16px;
+  padding: 0.792vw 1.055vw;
 
-  border: 4px solid ${({ theme }) => theme.colors.white};
-  border-radius: 12px;
+  border: 0.264vw solid ${({ theme }) => theme.colors.white};
+  border-radius: 0.792vw;
   background-color: ${({ theme }) => theme.colors.secondary};
-  box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  box-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;
 
 export const Header = styled.div`
@@ -39,11 +22,11 @@ export const Header = styled.div`
 
   position: relative;
 
-  padding-bottom: 12px;
+  padding-bottom: 0.792vw;
 `;
 
 export const Title = styled.p`
-  margin-top: 6px;
+  margin-top: 0.396vw;
 
   font-family: ${({ theme }) => theme.fonts.primary.family};
   font-weight: ${({ theme }) => theme.fonts.primary.weight};
@@ -52,85 +35,37 @@ export const Title = styled.p`
   color: ${({ theme }) => theme.colors.white};
 
   text-transform: uppercase;
-  text-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  text-shadow: 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;
 
 export const Content = styled.div`
   flex-grow: 1;
   display: grid;
-  grid-row-gap: 8px;
+  grid-row-gap: 0.528vw;
+  align-items: flex-end;
 
-  padding: 18px 14px;
+  position: relative;
 
-  border-radius: 12px;
+  padding: 1.187vw 0.923vw;
+
+  min-height: 8.905vw;
+
+  border-radius: 0.792vw;
   background-color: ${({ theme }) => theme.colors.primary};
-  box-shadow: inset 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  box-shadow: inset 0vw 0.264vw 0.264vw ${({ theme }) => theme.colors.shadow};
 `;
 
-export const Button = styled.button<{
-  variant: ButtonVariant;
-  isActive?: boolean;
-}>`
+export const ContentInfo = styled(Title)`
   display: flex;
-  justify-content: center;
   align-items: center;
 
-  padding: 12px;
+  margin-top: unset;
 
-  border: ${({ theme, variant, isActive }) =>
-    variant === 'primary'
-      ? `4px solid ${isActive ? theme.colors.white : theme.colors.secondary}`
-      : 'none'};
-  border-radius: 6px;
-  background-color: ${({ variant }) => buttonColors[variant].background};
-  box-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+  height: 100%;
 
-  color: ${({ variant, isActive }) =>
-    variant === 'primary'
-      ? isActive
-        ? buttonColors.primary.color
-        : theme.colors.secondary
-      : buttonColors[variant].color};
-
-  /* &:hover {
-    background-color: ${({ theme }) => theme.colors.white_90};
-  } */
-
-  &.shake {
-    animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-  }
-
-  @keyframes shake {
-    10%,
-    90% {
-      transform: translate3d(-1px, 0, 0);
-    }
-
-    20%,
-    80% {
-      transform: translate3d(2px, 0, 0);
-    }
-
-    30%,
-    50%,
-    70% {
-      transform: translate3d(-4px, 0, 0);
-    }
-
-    40%,
-    60% {
-      transform: translate3d(4px, 0, 0);
-    }
-  }
+  text-align: center;
 `;
 
-export const ButtonText = styled.p`
-  font-family: ${({ theme }) => theme.fonts.primary.family};
-  font-weight: ${({ theme }) => theme.fonts.primary.weight};
-  font-size: ${({ theme }) => theme.fonts.primary.size};
-
-  color: inherit;
-
-  text-transform: uppercase;
-  text-shadow: 0px 4px 4px ${({ theme }) => theme.colors.shadow};
+export const ButtonLink = styled.a<ButtonProps>`
+  ${buttonCssStyle}
 `;

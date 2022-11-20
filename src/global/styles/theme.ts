@@ -39,9 +39,9 @@ const theme: DefaultTheme = {
     primary: {
       family: "'Inter', sans-serif",
       weight: 700,
-      size: '16px',
-      title: '24px',
-      subtitle: '20px',
+      size: '1.055vw',
+      title: '1.583vw',
+      subtitle: '1.319vw',
     },
   },
 };

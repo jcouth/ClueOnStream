@@ -1,39 +1,152 @@
 import React from 'react';
 
-import { ReactComponent as CameraIcon } from '../../assets/camera.svg';
+import uuid from 'react-uuid';
 
-import Game from './Game';
+import { ReactComponent as TwitchLogo } from 'assets/twitch-logo.svg';
+import { ReactComponent as CameraIcon } from 'assets/camera.svg';
+import Button from 'components/Button';
+import { useGame } from 'hooks/useGame';
+import { Status } from 'interfaces/Status';
 
 import * as S from './styles';
+import Game from './Game';
 
-interface Props {
-  isStreamerTurn: boolean;
-  onSend(clue: string, amount: number): void;
-  inLobby?: boolean;
-}
+const {
+  REACT_APP_TWITCH_LOGIN_URL,
+  REACT_APP_TWITCH_CLIENT_ID,
+  REACT_APP_TWITCH_REDIRECT_URL,
+  REACT_APP_TWITCH_SCOPES,
+} = process.env;
 
-const Cam: React.FC<Props> = ({ isStreamerTurn, onSend, inLobby = false }) => {
-  const handleSettings = () => {};
+type Props =
+  | {
+      lobby: true;
+      onNewGame?: never;
+      onDisconnect?: never;
+      onBackToLobby?: never;
+    }
+  | {
+      lobby?: never;
+      onNewGame: () => void;
+      onDisconnect: () => void;
+      onBackToLobby: () => void;
+    };
 
-  // const handleLogOut = () => {};
+const Cam: React.FC<Props> = ({
+  lobby,
+  onNewGame,
+  onDisconnect,
+  onBackToLobby,
+}) => {
+  const {
+    status,
+    isStreamerTurn,
+    handleClue,
+    handleIsStreamerTurn,
+    handleIsTimerRunning,
+  } = useGame();
 
-  // const handleStart = () => {};
+  const handleConnect = (
+    e: React.MouseEvent<HTMLAnchorElement, globalThis.MouseEvent>
+  ) => {
+    e.preventDefault();
 
-  const renderLobby = () => (
-    <>
-      <S.Button variant='secondary' onClick={handleSettings}>
-        <S.ButtonText>Configurações</S.ButtonText>
-      </S.Button>
-      {/* <S.Buttons>
-        <S.Button variant='secondary' onClick={handleLogOut}>
-          <S.ButtonText>Deslogar</S.ButtonText>
-        </S.Button>
-        <S.Button variant='primary' onClick={handleStart}>
-          <S.ButtonText>Iniciar</S.ButtonText>
-        </S.Button>
-      </S.Buttons> */}
-    </>
-  );
+    const state = uuid();
+
+    const url = `${REACT_APP_TWITCH_LOGIN_URL ?? ''}/authorize?client_id=${
+      REACT_APP_TWITCH_CLIENT_ID ?? ''
+    }&redirect_uri=${encodeURIComponent(
+      REACT_APP_TWITCH_REDIRECT_URL ?? ''
+    )}&response_type=token&scope=${
+      REACT_APP_TWITCH_SCOPES ?? ''
+    }&state=${state}`;
+
+    localStorage.setItem('@ClueOnStream::state', state);
+
+    window.location.href = url;
+  };
+
+  const handleSendClue = (description: string, amount: number) => {
+    handleClue({
+      description,
+      amount,
+    });
+    handleIsStreamerTurn(false);
+    handleIsTimerRunning(true);
+  };
+
+  const renderContent = () => {
+    if (lobby) {
+      return (
+        <S.Content>
+          <S.ContentInfo>Conecte-se à Twitch para acessar o jogo</S.ContentInfo>
+          <S.ButtonLink
+            href="#"
+            onClick={handleConnect}
+            variant="primary"
+            isActive
+            aria-label="Botão para conectar-se à twitch"
+          >
+            <TwitchLogo width="100%" height="1.583vw" fill="white" />
+          </S.ButtonLink>
+        </S.Content>
+      );
+    }
+
+    if (status === Status.GAME) {
+      return (
+        <Game
+          isStreamerTurn={isStreamerTurn}
+          onSend={handleSendClue}
+          onBackToLobby={onBackToLobby}
+        />
+      );
+    }
+    if (status === Status.FINISH_GAME) {
+      return (
+        <S.Content>
+          <Button
+            title="Voltar"
+            variant="secondary"
+            isActive
+            onClick={onBackToLobby}
+          />
+          <Button
+            title="Novo jogo"
+            variant="primary"
+            isActive
+            onClick={onNewGame}
+          />
+        </S.Content>
+      );
+    }
+    if (status === Status.WAITING_START) {
+      return (
+        <S.Content>
+          <Button
+            title="Desconectar"
+            variant="secondary"
+            isActive
+            onClick={onDisconnect}
+          />
+          <Button
+            title="Iniciar"
+            variant="primary"
+            isActive
+            onClick={onNewGame}
+          />
+        </S.Content>
+      );
+    }
+
+    return (
+      <S.Content>
+        <S.ContentInfo>
+          Espere o chat entrar nas equipes através do palpite
+        </S.ContentInfo>
+      </S.Content>
+    );
+  };
 
   return (
     <S.Container>
@@ -41,11 +154,7 @@ const Cam: React.FC<Props> = ({ isStreamerTurn, onSend, inLobby = false }) => {
         <CameraIcon />
         <S.Title>Posicione sua câmera aqui</S.Title>
       </S.Header>
-      {inLobby ? (
-        renderLobby()
-      ) : (
-        <Game isStreamerTurn={isStreamerTurn} onSend={onSend} />
-      )}
+      {renderContent()}
     </S.Container>
   );
 };

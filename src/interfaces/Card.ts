@@ -14,6 +14,12 @@ export interface CardProps {
   id: number;
   title: string;
   isOpen: boolean;
+  revealed: boolean;
   type: CardType;
   votes: number;
+  delayToOpen: number;
+}
+
+export interface ObjectCardProps {
+  [key: string]: CardProps;
 }

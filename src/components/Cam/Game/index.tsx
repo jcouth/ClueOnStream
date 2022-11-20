@@ -1,22 +1,23 @@
 import React, { memo, useRef, useState } from 'react';
 
-import { Button, ButtonText, Title } from '../styles';
+import Button from 'components/Button';
 
 import * as S from './styles';
 
 interface Props {
   isStreamerTurn: boolean;
-  onSend(clue: string, amount: number): void;
+  onSend: (clue: string, amount: number) => void;
+  onBackToLobby: () => void;
 }
 
 const AMOUNTS = [1, 2, 3, 4, 5, 6, 7];
 
-const Game: React.FC<Props> = ({ isStreamerTurn, onSend }) => {
+const Game: React.FC<Props> = ({ isStreamerTurn, onSend, onBackToLobby }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [shake, setShake] = useState<boolean>(false);
-  const [amount, setAmount] = useState<number | null>(null);
   const [expand, setExpand] = useState<boolean>(false);
+  const [amount, setAmount] = useState<number | null>(null);
 
   const handleNewAmount = (value: number) => {
     setAmount(value);
@@ -26,8 +27,6 @@ const Game: React.FC<Props> = ({ isStreamerTurn, onSend }) => {
   const handleExpand = () => {
     setExpand((oldState) => !oldState);
   };
-
-  const handleLobby = () => {};
 
   const handleSend = () => {
     if (isStreamerTurn && inputRef.current?.value && amount !== null) {
@@ -44,39 +43,37 @@ const Game: React.FC<Props> = ({ isStreamerTurn, onSend }) => {
 
   return (
     <S.Content expand={expand}>
-      <S.Selector expand={expand} height={66}>
-        <Title>Selecione o número de dicas:</Title>
+      <S.Selector expand={expand} height={4.354}>
+        <S.Title>Selecione o número de dicas:</S.Title>
         <S.SelectorContent columns={AMOUNTS.length}>
           {AMOUNTS.map((value) => (
             <Button
               key={value}
-              variant='tertiary'
+              title={value}
+              variant="tertiary"
               onClick={() => handleNewAmount(value)}
-            >
-              <ButtonText>{value}</ButtonText>
-            </Button>
+            />
           ))}
         </S.SelectorContent>
       </S.Selector>
       <S.Controls>
-        <S.Input ref={inputRef} placeholder='Digite aqui' />
-        <Button variant='tertiary' onClick={handleExpand}>
-          <ButtonText>{amount || '-'}</ButtonText>
-        </Button>
+        <S.Input ref={inputRef} placeholder="Digite aqui" />
+        <Button
+          title={amount ?? '-'}
+          variant="tertiary"
+          onClick={handleExpand}
+        />
       </S.Controls>
       <S.Buttons>
-        <Button variant='secondary' onClick={handleLobby}>
-          <ButtonText>Sair</ButtonText>
-        </Button>
+        <Button title="Voltar" variant="secondary" onClick={onBackToLobby} />
         <Button
-          variant='primary'
+          title="Enviar"
+          variant="primary"
           isActive={isStreamerTurn}
           className={shake ? 'shake' : ''}
           onClick={handleSend}
           onAnimationEnd={() => setShake(false)}
-        >
-          <ButtonText>Enviar</ButtonText>
-        </Button>
+        />
       </S.Buttons>
     </S.Content>
   );

@@ -22,7 +22,7 @@
     "typescript": "^4.4.2",
     "web-vitals": "^2.1.0"
   },
-  "homepage": "https://jcouth.github.io/clueonstream",
+  "homepage": "https://jcouth.github.io/ClueOnStream/",
   "scripts": {
     "startp": "yarn prettier && react-scripts start",
     "start": "react-scripts start",

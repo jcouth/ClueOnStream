@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 
-import { ReactComponent as ProfileCard } from 'assets/profile-card.svg';
+import ProfileCard from 'assets/profile-card.svg';
 import { CardColors } from 'components/Content/Board/Card/styles';
 import { CardProps } from 'interfaces/Card';
 

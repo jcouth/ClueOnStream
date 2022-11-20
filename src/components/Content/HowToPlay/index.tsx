@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { ReactComponent as PredictionIcon } from 'assets/prediction.svg';
-import { ReactComponent as OfferIcon } from 'assets/offer.svg';
-import { ReactComponent as BuldIcon } from 'assets/bulb.svg';
-import { ReactComponent as ChatIcon } from 'assets/chat.svg';
+import PredictionIcon from 'assets/prediction.svg';
+import OfferIcon from 'assets/offer.svg';
+import BuldIcon from 'assets/bulb.svg';
+import ChatIcon from 'assets/chat.svg';
 
 import * as S from './styles';
 

@@ -2,8 +2,8 @@ import React from 'react';
 
 import uuid from 'react-uuid';
 
-import { ReactComponent as TwitchLogo } from 'assets/twitch-logo.svg';
-import { ReactComponent as CameraIcon } from 'assets/camera.svg';
+import TwitchLogo from 'assets/twitch-logo.svg';
+import CameraIcon from 'assets/camera.svg';
 import Button from 'components/Button';
 import { useGame } from 'hooks/useGame';
 import { Status } from 'interfaces/Status';
@@ -53,7 +53,7 @@ const Cam: React.FC<Props> = ({
 
     const state = uuid();
 
-    const url = `${REACT_APP_TWITCH_LOGIN_URL ?? ''}/authorize?client_id=${
+    const url = `https://id.twitch.tv/oauth2/authorize?client_id=${
       REACT_APP_TWITCH_CLIENT_ID ?? ''
     }&redirect_uri=${encodeURIComponent(
       REACT_APP_TWITCH_REDIRECT_URL ?? ''

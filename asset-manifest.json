@@ -1,0 +1,36 @@
+{
+  "files": {
+    "main.css": "/clueonstream/static/css/main.2fba2578.css",
+    "main.js": "/clueonstream/static/js/main.387e063d.js",
+    "static/js/680.21c1c797.chunk.js": "/clueonstream/static/js/680.21c1c797.chunk.js",
+    "static/js/898.40b2902c.chunk.js": "/clueonstream/static/js/898.40b2902c.chunk.js",
+    "static/js/152.a04d69ff.chunk.js": "/clueonstream/static/js/152.a04d69ff.chunk.js",
+    "static/js/787.b227490b.chunk.js": "/clueonstream/static/js/787.b227490b.chunk.js",
+    "static/js/742.06dff99b.chunk.js": "/clueonstream/static/js/742.06dff99b.chunk.js",
+    "static/js/618.9ec037cc.chunk.js": "/clueonstream/static/js/618.9ec037cc.chunk.js",
+    "static/media/overlay.svg": "/clueonstream/static/media/overlay.f8c335e4bd776b2ebc5dff63e238d45b.svg",
+    "static/media/card-overlay.svg": "/clueonstream/static/media/card-overlay.39fcad6041937aa8d1eae628ed6914aa.svg",
+    "static/media/logo.svg": "/clueonstream/static/media/logo.cda2e9a79176fae26a20e21f6b5d7c8f.svg",
+    "static/media/twitch-logo.svg": "/clueonstream/static/media/twitch-logo.325a98d73431ab1da4730f4b8d9fbcba.svg",
+    "static/media/offer.svg": "/clueonstream/static/media/offer.d7e9b45531107ddbfbff5c9dc04867f8.svg",
+    "index.html": "/clueonstream/index.html",
+    "static/media/alarm.svg": "/clueonstream/static/media/alarm.2c3f59563a72a67281fb0d24c406e610.svg",
+    "static/media/bulb.svg": "/clueonstream/static/media/bulb.29ff45db3813a594e8d5af9ce702d215.svg",
+    "static/media/camera.svg": "/clueonstream/static/media/camera.827a15169e32f04ef1909bedb6191829.svg",
+    "static/media/chat.svg": "/clueonstream/static/media/chat.7804904028cab403a9336bf88b90a583.svg",
+    "static/media/profile-card.svg": "/clueonstream/static/media/profile-card.217102d277bc8bada59364cde9e1cd57.svg",
+    "static/media/prediction.svg": "/clueonstream/static/media/prediction.7ae205ede66985da52dddd7a4725b3ae.svg",
+    "main.2fba2578.css.map": "/clueonstream/static/css/main.2fba2578.css.map",
+    "main.387e063d.js.map": "/clueonstream/static/js/main.387e063d.js.map",
+    "680.21c1c797.chunk.js.map": "/clueonstream/static/js/680.21c1c797.chunk.js.map",
+    "898.40b2902c.chunk.js.map": "/clueonstream/static/js/898.40b2902c.chunk.js.map",
+    "152.a04d69ff.chunk.js.map": "/clueonstream/static/js/152.a04d69ff.chunk.js.map",
+    "787.b227490b.chunk.js.map": "/clueonstream/static/js/787.b227490b.chunk.js.map",
+    "742.06dff99b.chunk.js.map": "/clueonstream/static/js/742.06dff99b.chunk.js.map",
+    "618.9ec037cc.chunk.js.map": "/clueonstream/static/js/618.9ec037cc.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.2fba2578.css",
+    "static/js/main.387e063d.js"
+  ]
+}

@@ -53,7 +53,7 @@ const Cam: React.FC<Props> = ({
 
     const state = uuid();
 
-    const url = `https://id.twitch.tv/oauth2/authorize?client_id=${
+    const url = `${REACT_APP_TWITCH_LOGIN_URL ?? ''}=${
       REACT_APP_TWITCH_CLIENT_ID ?? ''
     }&redirect_uri=${encodeURIComponent(
       REACT_APP_TWITCH_REDIRECT_URL ?? ''

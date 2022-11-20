@@ -118,16 +118,16 @@ const resolve = async (
 export interface EndDataProps {
   broadcasterId: Prediction['broadcaster_id'];
   predictionId: Prediction['id'];
-  winning_outcome_id?: PredictionTeamId;
+  winningOutcomeId?: PredictionTeamId;
 }
 
 export const end = async (token: string, data: EndDataProps) => {
-  if (data.winning_outcome_id) {
+  if (data.winningOutcomeId) {
     return await resolve(
       token,
       data.broadcasterId,
       data.predictionId,
-      data.winning_outcome_id
+      data.winningOutcomeId
     );
   }
   return await cancel(token, data.broadcasterId, data.predictionId);

@@ -23,12 +23,11 @@ const PREDICTION_WINDOW = 60;
 const Home: React.FC = () => {
   /*
 
-  separar equipes pelo prediction
   finalizar prediction ao acabar a partida (escolher vencedor) ou voltar para o menu (cancelar)
   
   -
   
-  popup para o streamer saber os cards de cada time
+  streamer selecionar o tempo da prediction
   
   */
   const navigate = useNavigate();
@@ -144,7 +143,7 @@ const Home: React.FC = () => {
           predictionId: prediction.id,
         };
         if (winner) {
-          data.winning_outcome_id =
+          data.winningOutcomeId =
             winner === Team.RED ? 'red_team' : 'blue_team';
         }
         await apiPrediction.end(token, data);
@@ -174,6 +173,23 @@ const Home: React.FC = () => {
   };
 
   useEffect(() => {
+    const finishPrediction = () => {
+      if (winner && prediction) {
+        void (async () => {
+          const data: apiPrediction.EndDataProps = {
+            broadcasterId: prediction.broadcaster_id,
+            predictionId: prediction.id,
+            winningOutcomeId: Team.RED ? 'red_team' : 'blue_team',
+          };
+          await apiPrediction.end(token, data);
+          setPrediction(null);
+        })();
+      }
+    };
+    void finishPrediction();
+  }, [prediction, winner]);
+
+  useEffect(() => {
     const connect = () => {
       if (!id && token) {
         void handleConnect();
@@ -187,33 +203,40 @@ const Home: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (prediction) {
-      timerRef.current = setInterval(() => {
-        void (async () => {
-          const { data } = await apiPrediction.status(
-            token,
-            prediction.broadcaster_id,
-            prediction.id
-          );
-          const [current] = data.data;
-          if (current.status === 'LOCKED') {
-            clearTimeout(timerRef.current);
-            handleStatus(Status.GAME);
-          } else if (
-            current.status === 'CANCELED' ||
-            current.status === 'RESOLVED'
-          ) {
-            clearTimeout(timerRef.current);
-            handleStatus(Status.WAITING_START);
-          }
-        })();
-      }, PREDICTION_WINDOW * 100);
-    }
+    const timeout = () => {
+      if (
+        prediction &&
+        status !== Status.GAME &&
+        status !== Status.FINISH_GAME
+      ) {
+        timerRef.current = setInterval(() => {
+          void (async () => {
+            const { data } = await apiPrediction.status(
+              token,
+              prediction.broadcaster_id,
+              prediction.id
+            );
+            const [current] = data.data;
+            if (current.status === 'LOCKED') {
+              clearTimeout(timerRef.current);
+              handleStatus(Status.GAME);
+            } else if (
+              current.status === 'CANCELED' ||
+              current.status === 'RESOLVED'
+            ) {
+              clearTimeout(timerRef.current);
+              handleStatus(Status.WAITING_START);
+            }
+          })();
+        }, PREDICTION_WINDOW * 100);
+      }
+    };
+    void timeout();
 
     return () => {
       clearTimeout(timerRef.current);
     };
-  }, [prediction]);
+  }, [prediction, status]);
 
   useEffect(() => {
     const clearStorage = () => {
@@ -225,7 +248,7 @@ const Home: React.FC = () => {
           predictionId: prediction.id,
         };
         if (winner) {
-          data.winning_outcome_id =
+          data.winningOutcomeId =
             winner === Team.RED ? 'red_team' : 'blue_team';
         }
         void apiPrediction.end(token, data).then((res) => {

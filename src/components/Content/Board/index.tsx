@@ -22,15 +22,6 @@ interface Props {
 }
 
 const Board: React.FC<Props> = ({ words }) => {
-  /*
-
-  streamer selecionar o tempo da prediction
-
-  infinity % card on open
-
-  ao acabar o jogo, pagar
-
-  */
   const game = useGame();
 
   const votes = useRef<VoteProps>({});

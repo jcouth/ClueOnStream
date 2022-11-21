@@ -53,7 +53,7 @@ const Cam: React.FC<Props> = ({
 
     const state = uuid();
 
-    const url = `${REACT_APP_TWITCH_LOGIN_URL ?? ''}=${
+    const url = `${REACT_APP_TWITCH_LOGIN_URL ?? ''}/authorize?client_id=${
       REACT_APP_TWITCH_CLIENT_ID ?? ''
     }&redirect_uri=${encodeURIComponent(
       REACT_APP_TWITCH_REDIRECT_URL ?? ''

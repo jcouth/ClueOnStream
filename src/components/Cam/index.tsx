@@ -2,8 +2,8 @@ import React from 'react';
 
 import uuid from 'react-uuid';
 
-import { ReactComponent as TwitchLogo } from 'assets/twitch-logo.svg';
-import { ReactComponent as CameraIcon } from 'assets/camera.svg';
+import TwitchLogo from 'assets/twitch-logo.svg';
+import CameraIcon from 'assets/camera.svg';
 import Button from 'components/Button';
 import { useGame } from 'hooks/useGame';
 import { Status } from 'interfaces/Status';

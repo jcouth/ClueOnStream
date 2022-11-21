@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import { ReactComponent as AlarmIcon } from 'assets/alarm.svg';
-import { ReactComponent as Logo } from 'assets/logo.svg';
+import AlarmIcon from 'assets/alarm.svg';
+import Logo from 'assets/logo.svg';
 import { useGame } from 'hooks/useGame';
 import { Team } from 'interfaces/Card';
 
